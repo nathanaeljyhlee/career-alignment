@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Uploaded resumes and sensitive run data
+*.pdf
+runs/
+latest_run.json
+
+# Internal planning docs
+PROJECT_LOG.md
+10x-effectiveness-brainstorm.md
+IMPLEMENTATION_PLAN_10x.md
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+secrets/
+*.env

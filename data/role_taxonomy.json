@@ -1,0 +1,799 @@
+{
+  "version": "1.0.0",
+  "created": "2026-02-27",
+  "description": "MBA-relevant role taxonomy with O*NET occupation codes, skill requirements, and motivation profiles",
+  "roles": [
+    {
+      "role_id": "product-manager",
+      "role_name": "Product Manager (Tech)",
+      "onet_code": "11-2021.00",
+      "category": "product",
+      "description": "Drives product strategy, roadmap, and execution for technology products. MBA interns typically own a feature or product area, working cross-functionally with engineering, design, and data teams.",
+      "required_skills": [
+        "Product Roadmapping",
+        "Stakeholder Management",
+        "Data Analysis",
+        "User Research",
+        "Cross-Functional Leadership",
+        "Strategic Planning",
+        "Communication",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "SQL",
+        "A/B Testing",
+        "Agile Methodology",
+        "Prototyping",
+        "Python"
+      ],
+      "barrier_conditions": [
+        "No demonstrated interest in technology or digital products",
+        "Unable to articulate user-centric thinking or empathy for end users",
+        "No experience working cross-functionally or influencing without authority"
+      ],
+      "expected_signals": [
+        "Prior product ownership or product-adjacent experience",
+        "Evidence of data-informed decision making",
+        "Track record of shipping features or products end-to-end",
+        "Technical fluency demonstrated through projects or prior roles"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "low",
+        "innovation": "high",
+        "leadership_scale": "moderate",
+        "autonomy": "high",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "moderate"
+      }
+    },
+    {
+      "role_id": "product-manager-healthcare",
+      "role_name": "Product Manager (HealthTech)",
+      "onet_code": "11-2021.00",
+      "category": "product",
+      "description": "Manages product strategy for healthcare technology platforms including EHR systems, telehealth, clinical decision support, and patient engagement tools. MBA interns navigate regulated environments while driving user-centered innovation.",
+      "required_skills": [
+        "Product Roadmapping",
+        "Stakeholder Management",
+        "User Research",
+        "Regulatory Awareness",
+        "Data Analysis",
+        "Cross-Functional Leadership",
+        "Communication",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "Healthcare Domain Knowledge",
+        "HIPAA Compliance",
+        "Clinical Workflow Understanding",
+        "SQL",
+        "Agile Methodology"
+      ],
+      "barrier_conditions": [
+        "No interest in healthcare or social impact domains",
+        "Discomfort working within heavy regulatory constraints",
+        "No experience with complex stakeholder environments"
+      ],
+      "expected_signals": [
+        "Prior healthcare, biotech, or life sciences experience",
+        "Evidence of navigating regulated or compliance-heavy environments",
+        "Demonstrated empathy for patient or clinician end users",
+        "Interest in health equity or access articulated in application materials"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "low",
+        "innovation": "high",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "low"
+      }
+    },
+    {
+      "role_id": "product-manager-edtech",
+      "role_name": "Product Manager (EdTech)",
+      "onet_code": "11-2021.00",
+      "category": "product",
+      "description": "Leads product development for education technology platforms including LMS, adaptive learning, and student engagement tools. MBA interns balance pedagogical outcomes with product metrics and business viability.",
+      "required_skills": [
+        "Product Roadmapping",
+        "User Research",
+        "Stakeholder Management",
+        "Data Analysis",
+        "Communication",
+        "Strategic Planning",
+        "Cross-Functional Leadership",
+        "Active Listening"
+      ],
+      "preferred_skills": [
+        "Education Domain Knowledge",
+        "Learning Science Familiarity",
+        "A/B Testing",
+        "Agile Methodology",
+        "Accessibility Standards"
+      ],
+      "barrier_conditions": [
+        "No passion for education or learning outcomes",
+        "Inability to balance mission-driven work with business metrics",
+        "No experience with user research or empathy-driven design"
+      ],
+      "expected_signals": [
+        "Prior teaching, tutoring, or education sector experience",
+        "Demonstrated interest in learning outcomes and student success",
+        "Experience building or improving tools for non-technical users",
+        "Evidence of mission-driven career trajectory"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "low",
+        "innovation": "high",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      }
+    },
+    {
+      "role_id": "management-consultant",
+      "role_name": "Management Consultant",
+      "onet_code": "13-1111.00",
+      "category": "consulting",
+      "description": "Advises organizations on operational efficiency, organizational strategy, and business transformation. MBA interns work on client engagements solving structured business problems with data-driven recommendations.",
+      "required_skills": [
+        "Problem Solving",
+        "Data Analysis",
+        "Communication",
+        "Presentation Skills",
+        "Stakeholder Management",
+        "Strategic Planning",
+        "Critical Thinking",
+        "Project Management"
+      ],
+      "preferred_skills": [
+        "Financial Modeling",
+        "Market Research",
+        "Change Management",
+        "Industry Expertise",
+        "Excel Advanced"
+      ],
+      "barrier_conditions": [
+        "Inability to structure ambiguous problems into workable frameworks",
+        "Poor communication or presentation skills",
+        "Unwillingness to travel or work in high-intensity client environments"
+      ],
+      "expected_signals": [
+        "Strong case interview performance or structured thinking examples",
+        "Prior client-facing or advisory experience",
+        "Evidence of rapid learning across industries",
+        "Leadership in team-based project delivery"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "low",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "high"
+      }
+    },
+    {
+      "role_id": "strategy-consultant",
+      "role_name": "Strategy Consultant",
+      "onet_code": "13-1111.00",
+      "category": "consulting",
+      "description": "Focuses on high-level corporate strategy including market entry, growth strategy, M&A diligence, and competitive positioning. MBA interns conduct deep market analyses and develop strategic recommendations for C-suite clients.",
+      "required_skills": [
+        "Strategic Planning",
+        "Competitive Analysis",
+        "Financial Modeling",
+        "Market Research",
+        "Communication",
+        "Critical Thinking",
+        "Data Analysis",
+        "Presentation Skills"
+      ],
+      "preferred_skills": [
+        "M&A Analysis",
+        "Industry Mapping",
+        "Scenario Planning",
+        "Executive Communication",
+        "Due Diligence"
+      ],
+      "barrier_conditions": [
+        "No quantitative or analytical foundation",
+        "Inability to synthesize large amounts of information into clear recommendations",
+        "No demonstrated interest in business strategy or competitive dynamics"
+      ],
+      "expected_signals": [
+        "Prior strategy, corporate development, or investment banking experience",
+        "Strong academic record in analytical or quantitative disciplines",
+        "Published analyses, strategy case competition wins, or thought leadership",
+        "Evidence of CEO-level or board-level communication ability"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "moderate",
+        "innovation": "moderate",
+        "leadership_scale": "high",
+        "autonomy": "low",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "high"
+      }
+    },
+    {
+      "role_id": "corporate-strategy-analyst",
+      "role_name": "Corporate Strategy Analyst",
+      "onet_code": "13-1111.00",
+      "category": "strategy",
+      "description": "Works within a corporation's strategy team on market assessment, competitive intelligence, growth initiatives, and strategic planning. MBA interns support executive decision-making with research and financial analysis.",
+      "required_skills": [
+        "Strategic Planning",
+        "Financial Modeling",
+        "Competitive Analysis",
+        "Market Research",
+        "Data Analysis",
+        "Communication",
+        "Presentation Skills",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "Industry Knowledge",
+        "M&A Analysis",
+        "Scenario Planning",
+        "SQL",
+        "Business Case Development"
+      ],
+      "barrier_conditions": [
+        "No financial literacy or modeling capability",
+        "Inability to work within corporate hierarchy and influence senior stakeholders",
+        "No experience synthesizing market data into actionable strategy"
+      ],
+      "expected_signals": [
+        "Prior corporate strategy, consulting, or business development experience",
+        "Evidence of building business cases or investment memos",
+        "Track record of influencing strategic decisions with analysis",
+        "Industry-specific knowledge relevant to the target company"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "moderate",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "moderate"
+      }
+    },
+    {
+      "role_id": "data-analytics-manager",
+      "role_name": "Data & Analytics Manager",
+      "onet_code": "15-2051.00",
+      "category": "data_analytics",
+      "description": "Leads analytics initiatives that drive business decisions through data infrastructure, dashboards, and statistical analysis. MBA interns bridge technical data work with business stakeholder needs and strategic framing.",
+      "required_skills": [
+        "Data Analysis",
+        "SQL",
+        "Data Visualization",
+        "Statistical Analysis",
+        "Communication",
+        "Stakeholder Management",
+        "Critical Thinking",
+        "Python"
+      ],
+      "preferred_skills": [
+        "Machine Learning",
+        "Tableau or Power BI",
+        "A/B Testing",
+        "Data Pipeline Architecture",
+        "R"
+      ],
+      "barrier_conditions": [
+        "No quantitative background or statistical literacy",
+        "No hands-on experience with data tools (SQL, Python, or BI platforms)",
+        "Inability to translate technical findings into business recommendations"
+      ],
+      "expected_signals": [
+        "Prior analytics, data science, or quantitative research experience",
+        "Portfolio of data projects or dashboards",
+        "Evidence of using data to drive business decisions",
+        "Comfort with ambiguous data problems and iterative analysis"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "high",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      }
+    },
+    {
+      "role_id": "business-intelligence-analyst",
+      "role_name": "Business Intelligence Analyst",
+      "onet_code": "15-1211.01",
+      "category": "data_analytics",
+      "description": "Designs and maintains BI dashboards, reporting systems, and data pipelines that support organizational decision-making. MBA interns typically own a reporting domain and build self-serve analytics capabilities.",
+      "required_skills": [
+        "SQL",
+        "Data Visualization",
+        "Data Analysis",
+        "Business Acumen",
+        "Communication",
+        "Critical Thinking",
+        "Reporting",
+        "Stakeholder Management"
+      ],
+      "preferred_skills": [
+        "Tableau or Power BI",
+        "Python",
+        "ETL Processes",
+        "Data Modeling",
+        "Excel Advanced"
+      ],
+      "barrier_conditions": [
+        "No SQL or database querying experience",
+        "No experience with visualization or reporting tools",
+        "Inability to connect data insights to business outcomes"
+      ],
+      "expected_signals": [
+        "Prior BI, analytics, or reporting experience",
+        "Proficiency in at least one major BI tool",
+        "Evidence of building dashboards used by business stakeholders",
+        "Comfort with data quality issues and ETL challenges"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "low",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      }
+    },
+    {
+      "role_id": "operations-manager",
+      "role_name": "Operations Manager",
+      "onet_code": "11-1021.00",
+      "category": "operations",
+      "description": "Oversees business operations including process optimization, resource allocation, and cross-functional coordination. MBA interns lead operational improvement projects and drive efficiency across teams.",
+      "required_skills": [
+        "Process Improvement",
+        "Project Management",
+        "Data Analysis",
+        "Communication",
+        "Cross-Functional Leadership",
+        "Problem Solving",
+        "Stakeholder Management",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "Lean Six Sigma",
+        "Supply Chain Optimization",
+        "Change Management",
+        "Financial Analysis",
+        "Agile Methodology"
+      ],
+      "barrier_conditions": [
+        "No experience managing or improving operational processes",
+        "Discomfort with detailed execution and follow-through",
+        "No quantitative skills for measuring process improvements"
+      ],
+      "expected_signals": [
+        "Prior operations, supply chain, or process improvement experience",
+        "Evidence of measurable efficiency gains in past roles",
+        "Track record of managing cross-functional initiatives",
+        "Comfort with both strategic thinking and tactical execution"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      }
+    },
+    {
+      "role_id": "supply-chain-analyst",
+      "role_name": "Supply Chain Analyst",
+      "onet_code": "13-1081.00",
+      "category": "operations",
+      "description": "Analyzes and optimizes supply chain operations including procurement, logistics, inventory management, and demand planning. MBA interns typically lead a supply chain improvement initiative or build analytical models.",
+      "required_skills": [
+        "Supply Chain Optimization",
+        "Data Analysis",
+        "Excel Advanced",
+        "Process Improvement",
+        "Communication",
+        "Problem Solving",
+        "Critical Thinking",
+        "Project Management"
+      ],
+      "preferred_skills": [
+        "SQL",
+        "Lean Six Sigma",
+        "ERP Systems",
+        "Python",
+        "Demand Forecasting"
+      ],
+      "barrier_conditions": [
+        "No quantitative or analytical skills",
+        "No interest in operations or logistics domains",
+        "No experience with data-driven process optimization"
+      ],
+      "expected_signals": [
+        "Prior supply chain, logistics, or manufacturing experience",
+        "Evidence of optimization or cost reduction projects",
+        "Familiarity with supply chain planning tools or ERP systems",
+        "Quantitative skills applied to operational problems"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "low",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      }
+    },
+    {
+      "role_id": "government-digital-services",
+      "role_name": "Government Digital Services (GovTech)",
+      "onet_code": "11-9199.11",
+      "category": "government",
+      "description": "Drives digital transformation in government agencies, improving citizen-facing services through technology modernization, UX design, and agile delivery. MBA interns work on high-impact civic technology projects.",
+      "required_skills": [
+        "Stakeholder Management",
+        "Project Management",
+        "User Research",
+        "Communication",
+        "Strategic Planning",
+        "Cross-Functional Leadership",
+        "Change Management",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "Agile Methodology",
+        "Service Design",
+        "Data Analysis",
+        "Policy Knowledge",
+        "Accessibility Standards"
+      ],
+      "barrier_conditions": [
+        "No interest in public service or civic impact",
+        "Inability to work within bureaucratic constraints and slow-moving organizations",
+        "No experience navigating complex stakeholder environments"
+      ],
+      "expected_signals": [
+        "Prior government, nonprofit, or public sector experience",
+        "Demonstrated commitment to public service or social impact",
+        "Experience with digital transformation or technology modernization",
+        "Comfort working in ambiguous, resource-constrained environments"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "low",
+        "innovation": "high",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      }
+    },
+    {
+      "role_id": "government-analytics",
+      "role_name": "Government Data & Analytics",
+      "onet_code": "15-2051.00",
+      "category": "government",
+      "description": "Applies data analytics and evidence-based methods to improve government operations, policy evaluation, and program outcomes. MBA interns build dashboards, conduct analyses, and present findings to agency leadership.",
+      "required_skills": [
+        "Data Analysis",
+        "Data Visualization",
+        "Communication",
+        "Statistical Analysis",
+        "SQL",
+        "Critical Thinking",
+        "Stakeholder Management",
+        "Reporting"
+      ],
+      "preferred_skills": [
+        "Python",
+        "Policy Analysis",
+        "Tableau or Power BI",
+        "Program Evaluation",
+        "GIS or Geospatial Analysis"
+      ],
+      "barrier_conditions": [
+        "No quantitative or analytical background",
+        "No interest in government or public policy domains",
+        "Inability to communicate technical findings to non-technical audiences"
+      ],
+      "expected_signals": [
+        "Prior government, policy research, or public sector analytics experience",
+        "Evidence of using data to improve program outcomes",
+        "Demonstrated public service orientation",
+        "Experience presenting analytical findings to leadership"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      }
+    },
+    {
+      "role_id": "venture-capital-analyst",
+      "role_name": "Venture Capital Analyst",
+      "onet_code": "13-2051.00",
+      "category": "finance",
+      "description": "Evaluates startup investment opportunities, conducts market research and due diligence, and supports portfolio company operations. MBA interns source deals, build investment memos, and attend pitch meetings.",
+      "required_skills": [
+        "Financial Modeling",
+        "Due Diligence",
+        "Market Research",
+        "Competitive Analysis",
+        "Communication",
+        "Critical Thinking",
+        "Networking",
+        "Strategic Planning"
+      ],
+      "preferred_skills": [
+        "Startup Ecosystem Knowledge",
+        "Cap Table Modeling",
+        "Industry Expertise",
+        "Presentation Skills",
+        "Data Analysis"
+      ],
+      "barrier_conditions": [
+        "No financial literacy or valuation skills",
+        "No demonstrated interest in startups or innovation ecosystems",
+        "Inability to evaluate business models and market opportunities"
+      ],
+      "expected_signals": [
+        "Prior startup, investing, or entrepreneurial experience",
+        "Evidence of deal sourcing, thesis development, or investment analysis",
+        "Strong network in startup or technology ecosystems",
+        "Published writing on market trends or investment theses"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "high",
+        "innovation": "high",
+        "leadership_scale": "low",
+        "autonomy": "high",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "high"
+      }
+    },
+    {
+      "role_id": "private-equity-associate",
+      "role_name": "Private Equity Associate",
+      "onet_code": "13-2051.00",
+      "category": "finance",
+      "description": "Supports deal execution, portfolio company management, and investment analysis for private equity funds. MBA interns build LBO models, conduct due diligence, and work directly with portfolio company management teams.",
+      "required_skills": [
+        "Financial Modeling",
+        "Due Diligence",
+        "M&A Analysis",
+        "Data Analysis",
+        "Communication",
+        "Presentation Skills",
+        "Critical Thinking",
+        "Excel Advanced"
+      ],
+      "preferred_skills": [
+        "LBO Modeling",
+        "Industry Expertise",
+        "Operational Improvement",
+        "Capital Markets Knowledge",
+        "Accounting"
+      ],
+      "barrier_conditions": [
+        "No financial modeling or accounting foundation",
+        "No prior finance, banking, or investing experience",
+        "Inability to work under high-pressure, detail-intensive conditions"
+      ],
+      "expected_signals": [
+        "Prior investment banking, consulting, or investing experience",
+        "Advanced financial modeling skills demonstrated through work or coursework",
+        "Evidence of deal execution or transaction experience",
+        "Strong quantitative academic background"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "high",
+        "innovation": "low",
+        "leadership_scale": "moderate",
+        "autonomy": "low",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "high"
+      }
+    },
+    {
+      "role_id": "marketing-manager",
+      "role_name": "Marketing Manager",
+      "onet_code": "11-2021.00",
+      "category": "product",
+      "description": "Develops and executes marketing strategies including brand positioning, demand generation, and customer acquisition. MBA interns typically own a channel, campaign, or segment strategy.",
+      "required_skills": [
+        "Market Research",
+        "Strategic Planning",
+        "Data Analysis",
+        "Communication",
+        "Competitive Analysis",
+        "Pricing Strategy",
+        "Presentation Skills",
+        "Creative Thinking"
+      ],
+      "preferred_skills": [
+        "Digital Marketing",
+        "A/B Testing",
+        "Customer Segmentation",
+        "Brand Management",
+        "Marketing Analytics"
+      ],
+      "barrier_conditions": [
+        "No customer-facing or market-oriented experience",
+        "Inability to balance creative and analytical thinking",
+        "No experience with data-driven marketing or campaign measurement"
+      ],
+      "expected_signals": [
+        "Prior marketing, brand management, or customer insights experience",
+        "Evidence of data-driven campaign optimization",
+        "Strong storytelling and positioning skills in application materials",
+        "Understanding of customer acquisition funnels and metrics"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "moderate"
+      }
+    },
+    {
+      "role_id": "financial-analyst",
+      "role_name": "Financial Analyst",
+      "onet_code": "13-2051.00",
+      "category": "finance",
+      "description": "Performs financial analysis, forecasting, budgeting, and reporting to support corporate decision-making. MBA interns build financial models, analyze variances, and present recommendations to finance leadership.",
+      "required_skills": [
+        "Financial Modeling",
+        "Data Analysis",
+        "Excel Advanced",
+        "Accounting",
+        "Communication",
+        "Reporting",
+        "Critical Thinking",
+        "Presentation Skills"
+      ],
+      "preferred_skills": [
+        "SQL",
+        "Tableau or Power BI",
+        "Forecasting",
+        "ERP Systems",
+        "Budgeting"
+      ],
+      "barrier_conditions": [
+        "No financial literacy or accounting knowledge",
+        "No experience with financial modeling or spreadsheet analysis",
+        "Inability to translate financial data into business insights"
+      ],
+      "expected_signals": [
+        "Prior finance, accounting, or FP&A experience",
+        "Strong Excel and financial modeling skills",
+        "CFA, CPA, or finance-specific certifications or coursework",
+        "Evidence of supporting executive decision-making with analysis"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "moderate",
+        "innovation": "low",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "moderate"
+      }
+    },
+    {
+      "role_id": "technology-program-manager",
+      "role_name": "Technology Program Manager",
+      "onet_code": "11-3021.00",
+      "category": "technology",
+      "description": "Manages complex technology programs spanning multiple teams, workstreams, and delivery milestones. MBA interns coordinate cross-functional execution, manage stakeholder communications, and drive program-level decisions.",
+      "required_skills": [
+        "Project Management",
+        "Stakeholder Management",
+        "Communication",
+        "Cross-Functional Leadership",
+        "Problem Solving",
+        "Agile Methodology",
+        "Critical Thinking",
+        "Reporting"
+      ],
+      "preferred_skills": [
+        "Technical Fluency",
+        "Change Management",
+        "Risk Management",
+        "Data Analysis",
+        "Process Improvement"
+      ],
+      "barrier_conditions": [
+        "No experience managing multi-workstream initiatives",
+        "No technical fluency or comfort working with engineering teams",
+        "Inability to manage ambiguity and competing priorities"
+      ],
+      "expected_signals": [
+        "Prior program management, technical project management, or IT leadership experience",
+        "Evidence of managing complex, multi-stakeholder initiatives",
+        "Track record of delivering programs on time and within scope",
+        "Comfort navigating technical and business conversations"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "high",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "moderate"
+      }
+    },
+    {
+      "role_id": "startup-operations",
+      "role_name": "Startup Operations / Chief of Staff",
+      "onet_code": "11-1011.00",
+      "category": "operations",
+      "description": "Operates as a generalist in early-stage startups, handling strategy, operations, fundraising support, and team-building. MBA interns wear multiple hats and drive high-priority initiatives directly with founders.",
+      "required_skills": [
+        "Strategic Planning",
+        "Problem Solving",
+        "Communication",
+        "Project Management",
+        "Data Analysis",
+        "Cross-Functional Leadership",
+        "Financial Modeling",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "Fundraising",
+        "Hiring and Recruiting",
+        "Product Sense",
+        "Market Research",
+        "Growth Strategy"
+      ],
+      "barrier_conditions": [
+        "No comfort with ambiguity, rapid context-switching, or undefined roles",
+        "Need for structured processes and clear organizational hierarchy",
+        "No entrepreneurial or small-team experience"
+      ],
+      "expected_signals": [
+        "Prior startup, entrepreneurial, or founding experience",
+        "Evidence of thriving in ambiguous, resource-constrained environments",
+        "Track record of wearing multiple hats and delivering across functions",
+        "Demonstrated bias toward action and scrappy execution"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "moderate",
+        "innovation": "high",
+        "leadership_scale": "low",
+        "autonomy": "high",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "low"
+      }
+    }
+  ]
+}

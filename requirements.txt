@@ -1,0 +1,20 @@
+# Candidate-Market Fit Engine dependencies
+
+# --- Core ---
+streamlit>=1.30.0
+pydantic>=2.0.0
+pyyaml>=6.0
+
+# --- PDF Parsing ---
+pdfplumber>=0.10.0
+
+# --- Embeddings & Similarity ---
+# Embeddings via Ollama (nomic-embed-text) -- no sentence-transformers needed
+faiss-cpu>=1.7.4
+
+# --- Local LLM ---
+ollama>=0.4.0
+
+# --- Data ---
+numpy>=1.24.0
+pandas>=2.0.0

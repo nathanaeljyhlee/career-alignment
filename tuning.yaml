@@ -1,0 +1,253 @@
+# ============================================================
+# CANDIDATE-MARKET FIT ENGINE — TUNING CONFIGURATION
+# ============================================================
+# This file controls how the engine scores, classifies, and
+# recommends. Every value here is a judgment call that can be
+# reviewed and adjusted. Comments explain the reasoning.
+#
+# Designed for a non-technical career advisor to understand
+# the "why" behind each parameter. Phase 2+ will add a
+# Streamlit GUI for interactive adjustment.
+# ============================================================
+
+
+# --- SKILL EXTRACTION ---
+# Controls how skills are pulled from resume/LinkedIn text
+# and matched to standardized O*NET occupation taxonomy.
+skill_extraction:
+  # Minimum cosine similarity to match an extracted skill mention
+  # to an O*NET canonical skill. Lower = more matches but more
+  # false positives. 0.70 is conservative; try 0.65 for broader recall.
+  onet_match_threshold: 0.70
+
+  # Skills below this confidence from the LLM extraction step
+  # are discarded. Prevents low-quality extractions from polluting
+  # the profile. Range: 0.0-1.0
+  llm_extraction_min_confidence: 0.60
+
+  # Maximum number of skills to extract per resume section.
+  # Caps runaway extraction from verbose resumes.
+  max_skills_per_section: 25
+
+  # Maximum tokens for LLM extraction responses.
+  # Extraction responses are typically 300-800 tokens; 2048 is generous.
+  extraction_num_predict: 2048
+
+  # Skill inference: a second LLM pass that checks the full resume
+  # against the role taxonomy's skill checklist to catch implied skills.
+  inference_enabled: true
+  inference_num_predict: 2048
+
+  # Surface-form alias matching threshold. When a skill mention
+  # matches a known alias (e.g., "ML" -> "Machine Learning"),
+  # it bypasses embedding matching entirely. This threshold
+  # controls fuzzy string matching for the alias lookup.
+  alias_fuzzy_threshold: 0.90
+
+
+# --- PROFILE SYNTHESIS (Agent 1 — Qwen 7B) ---
+# Controls how the profile is assembled from multiple input sources.
+profile_synthesis:
+  # How much weight resume vs LinkedIn vs coursework get when
+  # signals conflict. Must sum to 1.0.
+  # Default: resume is primary (hard evidence), LinkedIn supplements
+  # (self-reported), coursework reinforces (academic signal).
+  source_weights:
+    resume: 0.50
+    linkedin: 0.35
+    coursework: 0.15
+
+  # Narrative coherence thresholds. Score is 0-1 from the LLM.
+  # These map the continuous score to qualitative bands shown to users.
+  # "How well does this person's story hold together?"
+  narrative_coherence_bands:
+    strong: 0.75      # >= 0.75 = "Strong narrative" — clear career thread
+    moderate: 0.45     # >= 0.45 = "Moderate" — some gaps or pivots
+    # below 0.45 = "Fragmented" — unclear direction
+
+  # Maximum skills per cluster in the output profile.
+  # Keeps clusters meaningful (not dumping grounds).
+  max_skills_per_cluster: 8
+
+  # Minimum evidence count to include a skill cluster.
+  # A cluster with only 1 mention is likely noise.
+  min_evidence_per_cluster: 2
+
+
+# --- MOTIVATION EXTRACTION (Agent 2 — Qwen 7B) ---
+# Controls how the WHY statement is parsed into structured themes.
+motivation_extraction:
+  # Minimum WHY statement length (characters) to produce reliable
+  # theme extraction. Below this, the engine warns the user that
+  # results may be shallow.
+  min_why_length: 200
+
+  # Theme dimensions extracted from WHY statement, with default
+  # neutral weights. Adjust to emphasize certain motivational
+  # signals in role matching.
+  # All set to 1.0 = equal weight. Increase a dimension to make
+  # it count more in role-motivation alignment scoring.
+  theme_weights:
+    impact_orientation: 1.0       # desire to create measurable change
+    capital_allocation: 1.0       # interest in resource/investment decisions
+    innovation: 1.0               # draw to new tech/approaches
+    leadership_scale: 1.0         # preference for team/org size
+    autonomy: 1.0                 # independent vs structured work
+    stability_vs_volatility: 1.0  # startup vs established preference
+    prestige_sensitivity: 1.0     # brand/reputation importance
+
+
+# --- ROLE MATCHING (Agent 3 — Phi-4 14B) ---
+# Controls how candidate profiles are compared against role taxonomy.
+role_matching:
+  # Number of top roles to pass from embedding pre-match to
+  # the LLM reasoning stage. More = broader analysis but slower.
+  # 5-7 is the sweet spot per research.
+  embedding_top_k: 6
+
+  # Minimum embedding similarity score to even consider a role.
+  # Prevents clearly irrelevant roles from reaching the LLM.
+  # 0.30 is permissive; raise to 0.40 if too many weak matches appear.
+  embedding_min_similarity: 0.30
+
+  # Number of parallel workers for role comparison.
+  # Each role comparison is independent and thread-safe.
+  # 3 workers = ~3x speedup on the sequential 18-call loop.
+  parallel_workers: 3
+
+  # Self-consistency: number of independent reasoning paths
+  # sampled for each role comparison. More = more stable but slower.
+  # 3 is minimum for meaningful majority vote.
+  # 5 gives better stability but doubles inference time.
+  self_consistency_samples: 3
+
+  # Temperature for self-consistency sampling. Higher = more
+  # diverse reasoning paths (good for self-consistency).
+  # Lower = more deterministic (good for single-pass).
+  self_consistency_temperature: 0.7
+
+  # How structural fit vs motivational alignment are weighted
+  # in the overall role ranking. Must sum to 1.0.
+  #
+  # For 1Y internship: structural matters more because employers
+  # screen hard on skills/experience for short engagements.
+  # For 2Y full-time: motivation matters more because fit is
+  # deeper and employers invest in development.
+  fit_weights:
+    1y_internship:
+      structural_fit: 0.65
+      motivation_alignment: 0.35
+    2y_fulltime:
+      structural_fit: 0.50
+      motivation_alignment: 0.50
+
+  # Fit classification thresholds (composite score 0-1).
+  # These determine the qualitative labels shown to users.
+  fit_bands:
+    strong: 0.70        # >= 0.70 = "Strong Structural Match"
+    competitive: 0.45   # >= 0.45 = "Competitive Match"
+    # below 0.45 = "Developmental" — significant gaps exist
+
+
+# --- GAP ANALYSIS (Agent 4 — Phi-4 14B) ---
+# Controls how gaps between candidate profile and target roles
+# are identified, scored, and communicated.
+gap_analysis:
+  # Gap severity band thresholds (composite score 0-1).
+  # These determine the qualitative severity labels shown to users.
+  severity_bands:
+    low: 0.25          # <= 0.25 = "Low" — minor, addressable gaps
+    moderate: 0.50     # <= 0.50 = "Moderate" — real work needed
+    high: 0.75         # <= 0.75 = "High" — significant barriers
+    # above 0.75 = "Extreme" — fundamental misalignment
+
+  # Weight of different gap types in the composite severity score.
+  # Hard skill gaps weighted highest because they're most
+  # objectively measurable and hardest to acquire quickly.
+  gap_type_weights:
+    hard_skills: 0.45
+    market_signals: 0.30      # industry experience, brand signals
+    narrative_coherence: 0.25  # story consistency, motivation fit
+
+  # The pivot viability guardrail threshold. If composite gap
+  # severity exceeds this, the system recommends AGAINST pivoting
+  # to that role. This is the most behavior-shaping parameter
+  # in the entire engine.
+  #
+  # Lower = more conservative (fewer pivot recommendations).
+  # Higher = more aggressive (more pivots suggested).
+  # 0.75 means: only recommend against pivot if gaps are "High" or worse.
+  pivot_viability_cutoff: 0.75
+
+  # Maximum gap items to surface per role.
+  # Too many gaps overwhelm the user. Focus on highest-leverage.
+  max_gaps_per_role: 5
+
+  # Maximum skills passed to gap analysis context.
+  # 30 was too low (cut 51 of 81 extracted skills). 50 fits well
+  # within qwen2.5:7b's 16k context window.
+  max_skills_for_context: 50
+
+
+# --- CONFIDENCE BANDS ---
+# Controls how the engine communicates certainty about its outputs.
+confidence:
+  # Self-consistency agreement threshold for "high confidence."
+  # If >= this fraction of sampled paths agree, confidence is high.
+  high_agreement: 0.80    # 80% agreement = high confidence
+  moderate_agreement: 0.60
+  # Below 0.60 = "Low confidence" — results may be unreliable
+
+  # If embedding pre-match similarity for best role is below this,
+  # flag as "structural gap / unknown" — the profile may not fit
+  # any role in the taxonomy well. Triggers a special warning.
+  structural_gap_threshold: 0.35
+
+
+# --- OUTPUT CONTROLS ---
+# Controls what appears in the final results dashboard.
+output:
+  # Maximum roles shown per category in the results
+  max_win_now_roles: 3
+  max_pivot_roles: 2
+
+  # Maximum highest-leverage moves shown per pivot role.
+  # These are the specific actions that would most improve fit.
+  max_leverage_moves: 3
+
+  # Whether to show raw confidence scores alongside qualitative bands.
+  # Useful for debugging/calibration, distracting for end users.
+  show_raw_scores: false
+
+
+# --- MODEL CONFIGURATION ---
+# Which models to use for each pipeline stage.
+# Swap models without touching code — just change these values.
+models:
+  # Tier 1: Fast extraction tasks (profile parsing, skill extraction, motivation parsing)
+  extraction_model: "qwen2.5:7b"
+  extraction_context_window: 16384
+  extraction_temperature: 0.1    # low = deterministic extraction
+
+  # Tier 2: Deep reasoning tasks (role comparison, gap analysis)
+  # Using qwen2.5:7b for now (already downloaded). Upgrade to phi4:14b
+  # for better reasoning quality: just change value + run `ollama pull phi4:14b`
+  reasoning_model: "qwen2.5:7b"
+  reasoning_context_window: 16384
+  reasoning_temperature: 0.3     # moderate = thoughtful but focused
+
+  # Embedding model for skill/role similarity matching
+  # Using nomic-embed-text via Ollama (already downloaded, 274MB).
+  # Alternative: "all-MiniLM-L6-v2" (sentence-transformers, ~80MB, needs pip install)
+  embedding_model: "nomic-embed-text"
+
+  # Quantization level for Ollama models.
+  # Q4_K_M = ~75% VRAM savings, minimal quality loss for RAG tasks.
+  # Q5_K_M = better quality, more VRAM. Q8_0 = near-full quality.
+  quantization: "Q4_K_M"
+
+  # Optional Claude API fallback. Set to true to enable.
+  # When enabled, if local model confidence is below threshold,
+  # the engine will retry with Claude for that specific step.
+  claude_fallback_enabled: false
+  claude_fallback_model: "claude-sonnet-4-6"

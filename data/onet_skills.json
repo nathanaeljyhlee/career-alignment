@@ -1,0 +1,693 @@
+{
+  "version": "1.0.0",
+  "created": "2026-02-27",
+  "description": "Curated O*NET skills subset relevant to MBA roles, with aliases for resume text matching",
+  "skills": [
+    {
+      "skill_id": "onet-2.A.1.a",
+      "skill_name": "Reading Comprehension",
+      "category": "basic",
+      "description": "Understanding written sentences and paragraphs in work-related documents",
+      "aliases": ["reading", "document analysis", "written comprehension", "reading skills", "document review"]
+    },
+    {
+      "skill_id": "onet-2.A.1.b",
+      "skill_name": "Active Listening",
+      "category": "basic",
+      "description": "Giving full attention to what other people are saying, taking time to understand the points being made",
+      "aliases": ["active listening", "listening skills", "listening", "attentive listening"]
+    },
+    {
+      "skill_id": "onet-2.A.1.c",
+      "skill_name": "Writing",
+      "category": "basic",
+      "description": "Communicating effectively in writing as appropriate for the needs of the audience",
+      "aliases": ["writing", "written communication", "business writing", "technical writing", "copywriting", "content writing", "report writing"]
+    },
+    {
+      "skill_id": "onet-2.A.1.d",
+      "skill_name": "Speaking",
+      "category": "basic",
+      "description": "Talking to others to convey information effectively",
+      "aliases": ["speaking", "oral communication", "verbal communication", "public speaking", "presentations", "presenting"]
+    },
+    {
+      "skill_id": "onet-2.A.1.e",
+      "skill_name": "Mathematics",
+      "category": "basic",
+      "description": "Using mathematics to solve problems",
+      "aliases": ["math", "mathematics", "quantitative skills", "quantitative analysis", "numerical analysis", "numeracy"]
+    },
+    {
+      "skill_id": "onet-2.A.1.f",
+      "skill_name": "Science",
+      "category": "basic",
+      "description": "Using scientific rules and methods to solve problems",
+      "aliases": ["science", "scientific method", "research methodology", "scientific reasoning"]
+    },
+    {
+      "skill_id": "onet-2.A.2.a",
+      "skill_name": "Critical Thinking",
+      "category": "basic",
+      "description": "Using logic and reasoning to identify the strengths and weaknesses of alternative solutions, conclusions, or approaches to problems",
+      "aliases": ["critical thinking", "analytical thinking", "logical reasoning", "analytical skills", "logic", "reasoning", "problem analysis"]
+    },
+    {
+      "skill_id": "onet-2.A.2.b",
+      "skill_name": "Active Learning",
+      "category": "basic",
+      "description": "Understanding the implications of new information for both current and future problem-solving and decision-making",
+      "aliases": ["active learning", "continuous learning", "self-directed learning", "fast learner", "quick learner", "learning agility"]
+    },
+    {
+      "skill_id": "onet-2.A.2.c",
+      "skill_name": "Learning Strategies",
+      "category": "basic",
+      "description": "Selecting and using training/instructional methods and procedures appropriate for the situation when learning or teaching new things",
+      "aliases": ["learning strategies", "training", "teaching", "instructional design", "curriculum development"]
+    },
+    {
+      "skill_id": "onet-2.A.2.d",
+      "skill_name": "Monitoring",
+      "category": "basic",
+      "description": "Monitoring/assessing performance of yourself, other individuals, or organizations to make improvements or take corrective action",
+      "aliases": ["monitoring", "performance monitoring", "KPI tracking", "performance assessment", "quality monitoring", "oversight"]
+    },
+    {
+      "skill_id": "onet-2.B.1.a",
+      "skill_name": "Social Perceptiveness",
+      "category": "social",
+      "description": "Being aware of others' reactions and understanding why they react as they do",
+      "aliases": ["social perceptiveness", "emotional intelligence", "EQ", "empathy", "interpersonal awareness", "reading the room", "social awareness"]
+    },
+    {
+      "skill_id": "onet-2.B.1.b",
+      "skill_name": "Coordination",
+      "category": "social",
+      "description": "Adjusting actions in relation to others' actions",
+      "aliases": ["coordination", "team coordination", "cross-team coordination", "orchestration", "aligning teams"]
+    },
+    {
+      "skill_id": "onet-2.B.1.c",
+      "skill_name": "Persuasion",
+      "category": "social",
+      "description": "Persuading others to change their minds or behavior",
+      "aliases": ["persuasion", "influence", "influencing", "selling ideas", "advocacy", "convincing stakeholders"]
+    },
+    {
+      "skill_id": "onet-2.B.1.d",
+      "skill_name": "Negotiation",
+      "category": "social",
+      "description": "Bringing others together and trying to reconcile differences",
+      "aliases": ["negotiation", "negotiating", "conflict resolution", "mediation", "deal negotiation", "contract negotiation"]
+    },
+    {
+      "skill_id": "onet-2.B.1.e",
+      "skill_name": "Instructing",
+      "category": "social",
+      "description": "Teaching others how to do something",
+      "aliases": ["instructing", "teaching", "coaching", "mentoring", "training others", "onboarding"]
+    },
+    {
+      "skill_id": "onet-2.B.1.f",
+      "skill_name": "Service Orientation",
+      "category": "social",
+      "description": "Actively looking for ways to help people",
+      "aliases": ["service orientation", "customer service", "client service", "customer focus", "client-facing", "customer success", "customer experience"]
+    },
+    {
+      "skill_id": "onet-2.B.4.a",
+      "skill_name": "Complex Problem Solving",
+      "category": "complex_problem_solving",
+      "description": "Identifying complex problems and reviewing related information to develop and evaluate options and implement solutions",
+      "aliases": ["complex problem solving", "problem solving", "problem-solving", "troubleshooting", "root cause analysis", "issue resolution", "solutioning"]
+    },
+    {
+      "skill_id": "onet-2.B.3.a",
+      "skill_name": "Operations Analysis",
+      "category": "technical",
+      "description": "Analyzing needs and product requirements to create a design",
+      "aliases": ["operations analysis", "requirements analysis", "needs analysis", "business requirements", "requirements gathering", "BRD"]
+    },
+    {
+      "skill_id": "onet-2.B.3.b",
+      "skill_name": "Technology Design",
+      "category": "technical",
+      "description": "Generating or adapting equipment and technology to serve user needs",
+      "aliases": ["technology design", "systems design", "solution architecture", "technical architecture", "system design"]
+    },
+    {
+      "skill_id": "onet-2.B.3.d",
+      "skill_name": "Programming",
+      "category": "technical",
+      "description": "Writing computer programs for various purposes",
+      "aliases": ["programming", "coding", "software development", "software engineering", "web development", "app development", "scripting"]
+    },
+    {
+      "skill_id": "onet-2.B.3.g",
+      "skill_name": "Quality Control Analysis",
+      "category": "technical",
+      "description": "Conducting tests and inspections of products, services, or processes to evaluate quality or performance",
+      "aliases": ["quality control", "QA", "quality assurance", "testing", "quality management", "QC", "inspection"]
+    },
+    {
+      "skill_id": "onet-2.B.4.e",
+      "skill_name": "Systems Analysis",
+      "category": "systems",
+      "description": "Determining how a system should work and how changes in conditions, operations, and the environment will affect outcomes",
+      "aliases": ["systems analysis", "systems thinking", "system analysis", "business analysis", "process analysis"]
+    },
+    {
+      "skill_id": "onet-2.B.4.f",
+      "skill_name": "Systems Evaluation",
+      "category": "systems",
+      "description": "Identifying measures or indicators of system performance and the actions needed to improve or correct performance relative to the goals of the system",
+      "aliases": ["systems evaluation", "performance evaluation", "system evaluation", "program evaluation", "impact assessment"]
+    },
+    {
+      "skill_id": "onet-2.B.4.g",
+      "skill_name": "Judgment and Decision Making",
+      "category": "systems",
+      "description": "Considering the relative costs and benefits of potential actions to choose the most appropriate one",
+      "aliases": ["judgment", "decision making", "decision-making", "sound judgment", "executive judgment", "strategic decision making"]
+    },
+    {
+      "skill_id": "onet-2.B.5.a",
+      "skill_name": "Time Management",
+      "category": "resource_management",
+      "description": "Managing one's own time and the time of others",
+      "aliases": ["time management", "prioritization", "task management", "deadline management", "workload management", "multitasking"]
+    },
+    {
+      "skill_id": "onet-2.B.5.b",
+      "skill_name": "Management of Financial Resources",
+      "category": "resource_management",
+      "description": "Determining how money will be spent to get the work done, and accounting for these expenditures",
+      "aliases": ["financial management", "budget management", "budgeting", "financial planning", "cost management", "P&L management", "revenue management"]
+    },
+    {
+      "skill_id": "onet-2.B.5.c",
+      "skill_name": "Management of Material Resources",
+      "category": "resource_management",
+      "description": "Obtaining and seeing to the appropriate use of equipment, facilities, and materials needed to do certain work",
+      "aliases": ["material resource management", "resource allocation", "procurement", "inventory management", "asset management", "resource planning"]
+    },
+    {
+      "skill_id": "onet-2.B.5.d",
+      "skill_name": "Management of Personnel Resources",
+      "category": "resource_management",
+      "description": "Motivating, developing, and directing people as they work, identifying the best people for the job",
+      "aliases": ["people management", "personnel management", "team management", "team leadership", "talent management", "HR management", "hiring", "recruiting"]
+    },
+    {
+      "skill_id": "mba-applied-001",
+      "skill_name": "Financial Modeling",
+      "category": "mba_applied",
+      "description": "Building quantitative models to represent a company's financial performance, including DCF, LBO, and comparable company analyses",
+      "aliases": ["financial modeling", "financial modelling", "DCF", "discounted cash flow", "LBO model", "three-statement model", "3-statement model", "valuation modeling", "pro forma", "financial projections"]
+    },
+    {
+      "skill_id": "mba-applied-002",
+      "skill_name": "Product Roadmapping",
+      "category": "mba_applied",
+      "description": "Defining and communicating product vision, strategy, and feature prioritization over time",
+      "aliases": ["product roadmap", "product roadmapping", "roadmap planning", "product planning", "feature prioritization", "product backlog management", "product vision"]
+    },
+    {
+      "skill_id": "mba-applied-003",
+      "skill_name": "Stakeholder Management",
+      "category": "mba_applied",
+      "description": "Identifying, engaging, and managing relationships with key stakeholders to achieve project and organizational goals",
+      "aliases": ["stakeholder management", "stakeholder engagement", "stakeholder communication", "managing stakeholders", "executive communication", "managing up", "client management", "relationship management"]
+    },
+    {
+      "skill_id": "mba-applied-004",
+      "skill_name": "Market Research",
+      "category": "mba_applied",
+      "description": "Gathering and analyzing data about target markets, customer segments, and competitive landscapes",
+      "aliases": ["market research", "market analysis", "market sizing", "TAM SAM SOM", "total addressable market", "customer research", "market intelligence", "industry research", "industry analysis"]
+    },
+    {
+      "skill_id": "mba-applied-005",
+      "skill_name": "Data Visualization",
+      "category": "mba_applied",
+      "description": "Creating visual representations of data to communicate insights effectively",
+      "aliases": ["data visualization", "data viz", "dashboards", "dashboard design", "charting", "infographics", "visual analytics", "reporting dashboards"]
+    },
+    {
+      "skill_id": "mba-applied-006",
+      "skill_name": "SQL",
+      "category": "mba_applied",
+      "description": "Writing structured query language to extract, manipulate, and analyze data from relational databases",
+      "aliases": ["SQL", "structured query language", "database querying", "MySQL", "PostgreSQL", "BigQuery", "Snowflake", "Redshift", "T-SQL", "database management"]
+    },
+    {
+      "skill_id": "mba-applied-007",
+      "skill_name": "Python",
+      "category": "mba_applied",
+      "description": "Using the Python programming language for data analysis, automation, scripting, and application development",
+      "aliases": ["Python", "python programming", "pandas", "numpy", "scipy", "jupyter", "jupyter notebooks", "python scripting"]
+    },
+    {
+      "skill_id": "mba-applied-008",
+      "skill_name": "Project Management",
+      "category": "mba_applied",
+      "description": "Planning, executing, and closing projects by managing scope, timeline, budget, and team resources",
+      "aliases": ["project management", "PM", "PMP", "project planning", "project execution", "project delivery", "program management", "portfolio management", "PMO", "PRINCE2"]
+    },
+    {
+      "skill_id": "mba-applied-009",
+      "skill_name": "Agile Methodology",
+      "category": "mba_applied",
+      "description": "Applying agile frameworks including Scrum, Kanban, and SAFe to iterative product and project delivery",
+      "aliases": ["agile", "agile methodology", "scrum", "kanban", "SAFe", "sprint planning", "scrum master", "product owner", "agile development", "lean agile", "iterative development"]
+    },
+    {
+      "skill_id": "mba-applied-010",
+      "skill_name": "Strategic Planning",
+      "category": "mba_applied",
+      "description": "Developing long-term organizational strategies, defining goals, and creating actionable plans to achieve them",
+      "aliases": ["strategic planning", "strategy development", "corporate strategy", "business strategy", "strategic vision", "strategic initiatives", "long-term planning", "strategic roadmap"]
+    },
+    {
+      "skill_id": "mba-applied-011",
+      "skill_name": "Competitive Analysis",
+      "category": "mba_applied",
+      "description": "Systematically evaluating competitors' strategies, strengths, weaknesses, and market positioning",
+      "aliases": ["competitive analysis", "competitor analysis", "competitive intelligence", "competitive landscape", "competitive benchmarking", "Porter's Five Forces", "SWOT analysis", "market positioning"]
+    },
+    {
+      "skill_id": "mba-applied-012",
+      "skill_name": "User Research",
+      "category": "mba_applied",
+      "description": "Conducting qualitative and quantitative research to understand user needs, behaviors, and pain points",
+      "aliases": ["user research", "UX research", "usability testing", "user interviews", "customer interviews", "customer discovery", "design research", "ethnographic research", "voice of customer", "VOC"]
+    },
+    {
+      "skill_id": "mba-applied-013",
+      "skill_name": "A/B Testing",
+      "category": "mba_applied",
+      "description": "Designing and running controlled experiments to compare variants and measure impact on key metrics",
+      "aliases": ["A/B testing", "AB testing", "split testing", "experimentation", "controlled experiments", "multivariate testing", "hypothesis testing", "experiment design"]
+    },
+    {
+      "skill_id": "mba-applied-014",
+      "skill_name": "Pricing Strategy",
+      "category": "mba_applied",
+      "description": "Developing pricing models and strategies based on market dynamics, value proposition, and competitive positioning",
+      "aliases": ["pricing strategy", "pricing", "pricing models", "revenue optimization", "monetization strategy", "pricing analysis", "value-based pricing", "dynamic pricing"]
+    },
+    {
+      "skill_id": "mba-applied-015",
+      "skill_name": "Due Diligence",
+      "category": "mba_applied",
+      "description": "Conducting comprehensive investigation and analysis of a business or investment opportunity before a transaction",
+      "aliases": ["due diligence", "DD", "commercial due diligence", "financial due diligence", "operational due diligence", "investment analysis", "deal evaluation"]
+    },
+    {
+      "skill_id": "mba-applied-016",
+      "skill_name": "M&A Analysis",
+      "category": "mba_applied",
+      "description": "Analyzing mergers and acquisitions including target identification, valuation, synergy analysis, and integration planning",
+      "aliases": ["M&A", "mergers and acquisitions", "M&A analysis", "deal analysis", "acquisition analysis", "merger integration", "synergy analysis", "corporate development"]
+    },
+    {
+      "skill_id": "mba-applied-017",
+      "skill_name": "Supply Chain Optimization",
+      "category": "mba_applied",
+      "description": "Improving supply chain efficiency through logistics optimization, inventory management, and demand planning",
+      "aliases": ["supply chain optimization", "supply chain management", "SCM", "logistics optimization", "inventory optimization", "demand planning", "procurement optimization", "supply chain analytics"]
+    },
+    {
+      "skill_id": "mba-applied-018",
+      "skill_name": "Change Management",
+      "category": "mba_applied",
+      "description": "Leading organizational change initiatives through structured approaches to transitioning individuals, teams, and organizations",
+      "aliases": ["change management", "organizational change", "transformation management", "change leadership", "ADKAR", "Kotter", "organizational transformation", "digital transformation"]
+    },
+    {
+      "skill_id": "mba-applied-019",
+      "skill_name": "Cross-Functional Leadership",
+      "category": "mba_applied",
+      "description": "Leading teams and initiatives that span multiple departments or functional areas without direct authority",
+      "aliases": ["cross-functional leadership", "cross-functional collaboration", "cross-functional teams", "matrix leadership", "influencing without authority", "matrixed environment", "interdepartmental collaboration"]
+    },
+    {
+      "skill_id": "mba-applied-020",
+      "skill_name": "Data Analysis",
+      "category": "mba_applied",
+      "description": "Collecting, cleaning, and analyzing data to extract meaningful insights and support decision-making",
+      "aliases": ["data analysis", "data analytics", "analytics", "data-driven", "data insights", "business analytics", "descriptive analytics", "exploratory data analysis"]
+    },
+    {
+      "skill_id": "mba-applied-021",
+      "skill_name": "Presentation Skills",
+      "category": "mba_applied",
+      "description": "Creating and delivering compelling presentations to diverse audiences including executives, clients, and teams",
+      "aliases": ["presentation skills", "presentations", "slide decks", "PowerPoint", "keynote", "executive presentations", "pitch decks", "storytelling", "data storytelling"]
+    },
+    {
+      "skill_id": "mba-applied-022",
+      "skill_name": "Excel Advanced",
+      "category": "mba_applied",
+      "description": "Advanced spreadsheet skills including pivot tables, VLOOKUP/INDEX-MATCH, macros, and complex financial models",
+      "aliases": ["Excel", "advanced Excel", "spreadsheets", "Google Sheets", "pivot tables", "VLOOKUP", "INDEX MATCH", "macros", "VBA", "spreadsheet modeling"]
+    },
+    {
+      "skill_id": "mba-applied-023",
+      "skill_name": "Tableau or Power BI",
+      "category": "mba_applied",
+      "description": "Using business intelligence visualization tools to create interactive dashboards and reports",
+      "aliases": ["Tableau", "Power BI", "Looker", "Qlik", "Sisense", "BI tools", "business intelligence tools", "dashboard tools", "Metabase", "Domo"]
+    },
+    {
+      "skill_id": "mba-applied-024",
+      "skill_name": "Machine Learning",
+      "category": "mba_applied",
+      "description": "Applying machine learning algorithms and techniques to solve business problems including prediction, classification, and clustering",
+      "aliases": ["machine learning", "ML", "deep learning", "AI", "artificial intelligence", "predictive modeling", "neural networks", "NLP", "natural language processing", "computer vision"]
+    },
+    {
+      "skill_id": "mba-applied-025",
+      "skill_name": "Process Improvement",
+      "category": "mba_applied",
+      "description": "Identifying and implementing improvements to business processes to increase efficiency, reduce costs, or improve quality",
+      "aliases": ["process improvement", "process optimization", "continuous improvement", "kaizen", "lean", "Six Sigma", "Lean Six Sigma", "BPR", "business process reengineering", "operational efficiency"]
+    },
+    {
+      "skill_id": "mba-applied-026",
+      "skill_name": "Communication",
+      "category": "mba_applied",
+      "description": "Effectively conveying information, ideas, and perspectives through verbal, written, and visual channels",
+      "aliases": ["communication", "communication skills", "interpersonal skills", "verbal communication", "written communication", "executive communication", "stakeholder communication"]
+    },
+    {
+      "skill_id": "mba-applied-027",
+      "skill_name": "Problem Solving",
+      "category": "mba_applied",
+      "description": "Identifying, analyzing, and resolving business problems using structured approaches and creative thinking",
+      "aliases": ["problem solving", "problem-solving", "analytical problem solving", "structured problem solving", "issue resolution", "root cause analysis"]
+    },
+    {
+      "skill_id": "mba-applied-028",
+      "skill_name": "Networking",
+      "category": "mba_applied",
+      "description": "Building and maintaining professional relationships for career development and business opportunities",
+      "aliases": ["networking", "professional networking", "relationship building", "business development", "biz dev", "BD"]
+    },
+    {
+      "skill_id": "mba-applied-029",
+      "skill_name": "Statistical Analysis",
+      "category": "mba_applied",
+      "description": "Applying statistical methods to analyze data, test hypotheses, and draw conclusions",
+      "aliases": ["statistical analysis", "statistics", "regression analysis", "hypothesis testing", "inferential statistics", "descriptive statistics", "R", "SPSS", "SAS", "Stata"]
+    },
+    {
+      "skill_id": "mba-applied-030",
+      "skill_name": "Reporting",
+      "category": "mba_applied",
+      "description": "Creating structured reports that communicate findings, metrics, and recommendations to stakeholders",
+      "aliases": ["reporting", "business reporting", "management reporting", "KPI reporting", "executive reporting", "status reporting"]
+    },
+    {
+      "skill_id": "mba-applied-031",
+      "skill_name": "Creative Thinking",
+      "category": "mba_applied",
+      "description": "Generating novel ideas and innovative approaches to solve problems or create new value",
+      "aliases": ["creative thinking", "creativity", "innovation", "ideation", "design thinking", "brainstorming", "lateral thinking"]
+    },
+    {
+      "skill_id": "mba-applied-032",
+      "skill_name": "Financial Analysis",
+      "category": "mba_applied",
+      "description": "Evaluating financial data including financial statements, ratios, trends, and forecasts to assess business performance",
+      "aliases": ["financial analysis", "financial statement analysis", "ratio analysis", "FP&A", "financial planning and analysis", "variance analysis", "profitability analysis"]
+    },
+    {
+      "skill_id": "mba-applied-033",
+      "skill_name": "Accounting",
+      "category": "mba_applied",
+      "description": "Understanding and applying accounting principles including GAAP, financial reporting, and bookkeeping",
+      "aliases": ["accounting", "GAAP", "financial accounting", "managerial accounting", "bookkeeping", "audit", "CPA", "IFRS"]
+    },
+    {
+      "skill_id": "mba-applied-034",
+      "skill_name": "Risk Management",
+      "category": "mba_applied",
+      "description": "Identifying, assessing, and mitigating risks across business operations, projects, and investments",
+      "aliases": ["risk management", "risk assessment", "risk mitigation", "enterprise risk management", "ERM", "risk analysis", "risk modeling"]
+    },
+    {
+      "skill_id": "mba-applied-035",
+      "skill_name": "Accessibility Standards",
+      "category": "mba_applied",
+      "description": "Understanding and applying digital accessibility standards (WCAG, ADA, Section 508) to ensure inclusive product design",
+      "aliases": ["accessibility", "WCAG", "ADA compliance", "Section 508", "inclusive design", "a11y", "accessible design"]
+    },
+    {
+      "skill_id": "mba-applied-036",
+      "skill_name": "Business Acumen",
+      "category": "mba_applied",
+      "description": "Understanding how businesses operate, generate revenue, and create value across functions and industries",
+      "aliases": ["business acumen", "business sense", "commercial awareness", "business understanding", "commercial acumen"]
+    },
+    {
+      "skill_id": "mba-applied-037",
+      "skill_name": "Business Case Development",
+      "category": "mba_applied",
+      "description": "Building structured business cases with financial projections, risk analysis, and strategic rationale to justify investments or initiatives",
+      "aliases": ["business case", "business case development", "investment case", "business justification", "ROI analysis", "cost-benefit analysis"]
+    },
+    {
+      "skill_id": "mba-applied-038",
+      "skill_name": "Cap Table Modeling",
+      "category": "mba_applied",
+      "description": "Building and analyzing capitalization tables to model equity ownership, dilution, and funding round impacts",
+      "aliases": ["cap table", "cap table modeling", "capitalization table", "equity modeling", "dilution analysis", "ownership modeling"]
+    },
+    {
+      "skill_id": "mba-applied-039",
+      "skill_name": "Clinical Workflow Understanding",
+      "category": "mba_applied",
+      "description": "Understanding healthcare clinical workflows, care delivery processes, and how technology integrates into clinical settings",
+      "aliases": ["clinical workflow", "clinical workflows", "care delivery", "clinical processes", "healthcare operations", "clinical informatics"]
+    },
+    {
+      "skill_id": "mba-applied-040",
+      "skill_name": "Customer Segmentation",
+      "category": "mba_applied",
+      "description": "Dividing a market into distinct groups based on demographics, behavior, needs, or value for targeted strategy",
+      "aliases": ["customer segmentation", "market segmentation", "audience segmentation", "user segmentation", "cohort analysis", "persona development"]
+    },
+    {
+      "skill_id": "mba-applied-041",
+      "skill_name": "Data Modeling",
+      "category": "mba_applied",
+      "description": "Designing data structures, schemas, and relationships to support analytics and application needs",
+      "aliases": ["data modeling", "data modelling", "database design", "schema design", "ERD", "entity relationship", "dimensional modeling"]
+    },
+    {
+      "skill_id": "mba-applied-042",
+      "skill_name": "Data Pipeline Architecture",
+      "category": "mba_applied",
+      "description": "Designing and building data pipelines for ETL/ELT, data integration, and analytics infrastructure",
+      "aliases": ["data pipeline", "data pipelines", "ETL", "ELT", "data engineering", "data integration", "data orchestration", "Airflow", "dbt"]
+    },
+    {
+      "skill_id": "mba-applied-043",
+      "skill_name": "Demand Forecasting",
+      "category": "mba_applied",
+      "description": "Predicting future demand for products or services using statistical methods and market analysis",
+      "aliases": ["demand forecasting", "demand planning", "sales forecasting", "forecast modeling", "demand prediction"]
+    },
+    {
+      "skill_id": "mba-applied-044",
+      "skill_name": "Digital Marketing",
+      "category": "mba_applied",
+      "description": "Planning and executing marketing campaigns across digital channels including SEO, SEM, social media, and email",
+      "aliases": ["digital marketing", "online marketing", "SEO", "SEM", "social media marketing", "content marketing", "growth marketing", "performance marketing", "paid media"]
+    },
+    {
+      "skill_id": "mba-applied-045",
+      "skill_name": "Education Domain Knowledge",
+      "category": "mba_applied",
+      "description": "Understanding educational systems, pedagogy, learning outcomes, and the EdTech landscape",
+      "aliases": ["education domain", "EdTech", "educational technology", "pedagogy", "learning outcomes", "curriculum design", "K-12", "higher education"]
+    },
+    {
+      "skill_id": "mba-applied-046",
+      "skill_name": "ERP Systems",
+      "category": "mba_applied",
+      "description": "Working with enterprise resource planning systems for integrated business process management",
+      "aliases": ["ERP", "ERP systems", "SAP", "Oracle ERP", "NetSuite", "enterprise resource planning", "Workday"]
+    },
+    {
+      "skill_id": "mba-applied-047",
+      "skill_name": "Forecasting",
+      "category": "mba_applied",
+      "description": "Projecting future business metrics using quantitative and qualitative methods",
+      "aliases": ["forecasting", "business forecasting", "revenue forecasting", "financial forecasting", "projection", "trend analysis"]
+    },
+    {
+      "skill_id": "mba-applied-048",
+      "skill_name": "Fundraising",
+      "category": "mba_applied",
+      "description": "Raising capital through venture capital, private equity, debt, or alternative funding mechanisms",
+      "aliases": ["fundraising", "capital raising", "venture capital", "VC", "fundraise", "Series A", "seed funding", "investor relations"]
+    },
+    {
+      "skill_id": "mba-applied-049",
+      "skill_name": "Growth Strategy",
+      "category": "mba_applied",
+      "description": "Developing strategies to accelerate business growth through new markets, products, partnerships, or operational scaling",
+      "aliases": ["growth strategy", "growth planning", "market expansion", "go-to-market", "GTM", "scaling strategy", "business growth"]
+    },
+    {
+      "skill_id": "mba-applied-050",
+      "skill_name": "Healthcare Domain Knowledge",
+      "category": "mba_applied",
+      "description": "Understanding healthcare industry dynamics including payer-provider relationships, reimbursement models, and care delivery systems",
+      "aliases": ["healthcare domain", "healthcare knowledge", "health systems", "payer-provider", "healthcare industry", "health policy", "care delivery"]
+    },
+    {
+      "skill_id": "mba-applied-051",
+      "skill_name": "HIPAA Compliance",
+      "category": "mba_applied",
+      "description": "Understanding and applying HIPAA regulations for protecting health information in technology and business contexts",
+      "aliases": ["HIPAA", "HIPAA compliance", "health data privacy", "PHI protection", "healthcare compliance", "health information security"]
+    },
+    {
+      "skill_id": "mba-applied-052",
+      "skill_name": "Hiring and Recruiting",
+      "category": "mba_applied",
+      "description": "Sourcing, evaluating, and hiring talent including interview design, candidate assessment, and employer branding",
+      "aliases": ["hiring", "recruiting", "talent acquisition", "recruitment", "headhunting", "sourcing", "interview design", "employer branding"]
+    },
+    {
+      "skill_id": "mba-applied-053",
+      "skill_name": "Industry Expertise",
+      "category": "mba_applied",
+      "description": "Deep knowledge of a specific industry's dynamics, players, trends, and competitive forces",
+      "aliases": ["industry expertise", "domain expertise", "sector expertise", "industry knowledge", "vertical expertise", "sector knowledge"]
+    },
+    {
+      "skill_id": "mba-applied-054",
+      "skill_name": "Industry Mapping",
+      "category": "mba_applied",
+      "description": "Systematically mapping industry ecosystems including players, value chains, competitive dynamics, and emerging trends",
+      "aliases": ["industry mapping", "ecosystem mapping", "value chain analysis", "market mapping", "landscape analysis", "industry landscape"]
+    },
+    {
+      "skill_id": "mba-applied-055",
+      "skill_name": "LBO Modeling",
+      "category": "mba_applied",
+      "description": "Building leveraged buyout models to evaluate private equity investment opportunities including debt structures and returns",
+      "aliases": ["LBO", "LBO modeling", "leveraged buyout", "PE modeling", "private equity modeling", "buyout analysis"]
+    },
+    {
+      "skill_id": "mba-applied-056",
+      "skill_name": "Lean Six Sigma",
+      "category": "mba_applied",
+      "description": "Applying Lean and Six Sigma methodologies to reduce waste, minimize variation, and improve operational efficiency",
+      "aliases": ["Lean Six Sigma", "LSS", "Six Sigma", "DMAIC", "lean manufacturing", "lean operations", "green belt", "black belt"]
+    },
+    {
+      "skill_id": "mba-applied-057",
+      "skill_name": "Operational Improvement",
+      "category": "mba_applied",
+      "description": "Identifying and implementing improvements to business operations for efficiency, cost reduction, and quality gains",
+      "aliases": ["operational improvement", "operations improvement", "operational excellence", "ops improvement", "operational efficiency", "business optimization"]
+    },
+    {
+      "skill_id": "mba-applied-058",
+      "skill_name": "Policy Analysis",
+      "category": "mba_applied",
+      "description": "Analyzing public or organizational policies to assess impact, feasibility, and alignment with strategic objectives",
+      "aliases": ["policy analysis", "policy evaluation", "regulatory analysis", "government affairs", "public policy", "policy research"]
+    },
+    {
+      "skill_id": "mba-applied-059",
+      "skill_name": "Policy Knowledge",
+      "category": "mba_applied",
+      "description": "Understanding relevant policy frameworks, regulations, and government processes that affect business operations",
+      "aliases": ["policy knowledge", "regulatory knowledge", "government relations", "public affairs", "policy landscape", "regulatory environment"]
+    },
+    {
+      "skill_id": "mba-applied-060",
+      "skill_name": "Product Sense",
+      "category": "mba_applied",
+      "description": "Intuitive understanding of what makes products successful including user needs, market fit, and design quality",
+      "aliases": ["product sense", "product intuition", "product judgment", "product thinking", "product instinct", "product taste"]
+    },
+    {
+      "skill_id": "mba-applied-061",
+      "skill_name": "Prototyping",
+      "category": "mba_applied",
+      "description": "Creating quick prototypes and mockups to test ideas, validate assumptions, and communicate product concepts",
+      "aliases": ["prototyping", "rapid prototyping", "wireframing", "mockups", "Figma", "Sketch", "low-fidelity prototypes", "MVP development"]
+    },
+    {
+      "skill_id": "mba-applied-062",
+      "skill_name": "R",
+      "category": "mba_applied",
+      "description": "Using the R programming language for statistical computing, data analysis, and visualization",
+      "aliases": ["R", "R programming", "R language", "ggplot2", "tidyverse", "RStudio", "R statistical computing"]
+    },
+    {
+      "skill_id": "mba-applied-063",
+      "skill_name": "Regulatory Awareness",
+      "category": "mba_applied",
+      "description": "Understanding regulatory frameworks and compliance requirements relevant to business operations and product development",
+      "aliases": ["regulatory awareness", "regulatory compliance", "compliance", "regulation", "regulatory environment", "regulatory framework"]
+    },
+    {
+      "skill_id": "mba-applied-064",
+      "skill_name": "Scenario Planning",
+      "category": "mba_applied",
+      "description": "Developing and analyzing multiple future scenarios to inform strategic decision-making under uncertainty",
+      "aliases": ["scenario planning", "scenario analysis", "contingency planning", "what-if analysis", "strategic scenarios", "future planning"]
+    },
+    {
+      "skill_id": "mba-applied-065",
+      "skill_name": "Service Design",
+      "category": "mba_applied",
+      "description": "Designing end-to-end service experiences by mapping touchpoints, processes, and stakeholder interactions",
+      "aliases": ["service design", "service blueprint", "service mapping", "experience design", "journey mapping", "touchpoint design"]
+    },
+    {
+      "skill_id": "mba-applied-066",
+      "skill_name": "Specification Development",
+      "category": "mba_applied",
+      "description": "Writing detailed product or project specifications including requirements documents, PRDs, and technical specs",
+      "aliases": ["specification development", "spec writing", "PRD", "product requirements", "technical specification", "requirements documentation", "BRD writing"]
+    },
+    {
+      "skill_id": "mba-applied-067",
+      "skill_name": "Startup Ecosystem Knowledge",
+      "category": "mba_applied",
+      "description": "Understanding the startup ecosystem including venture capital, accelerators, founder dynamics, and early-stage company operations",
+      "aliases": ["startup ecosystem", "startup knowledge", "venture ecosystem", "entrepreneurial ecosystem", "startup landscape", "VC ecosystem"]
+    },
+    {
+      "skill_id": "mba-applied-068",
+      "skill_name": "Technical Fluency",
+      "category": "mba_applied",
+      "description": "Ability to understand and communicate technical concepts without being a practitioner, bridging business and engineering teams",
+      "aliases": ["technical fluency", "technical literacy", "tech fluency", "technical understanding", "tech savvy", "technical communication"]
+    },
+    {
+      "skill_id": "mba-applied-069",
+      "skill_name": "Learning Science Familiarity",
+      "category": "mba_applied",
+      "description": "Understanding learning science principles including cognitive load theory, spaced repetition, and evidence-based pedagogy",
+      "aliases": ["learning science", "cognitive science", "instructional science", "learning theory", "educational psychology", "evidence-based learning"]
+    },
+    {
+      "skill_id": "mba-applied-070",
+      "skill_name": "Industry Knowledge",
+      "category": "mba_applied",
+      "description": "Broad understanding of an industry's structure, key players, trends, and competitive dynamics",
+      "aliases": ["industry knowledge", "sector understanding", "market knowledge", "industry awareness", "vertical knowledge"]
+    }
+  ]
+}
