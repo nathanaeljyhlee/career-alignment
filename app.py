@@ -280,13 +280,35 @@ if "output" in st.session_state:
         log_data = json.dumps(export, indent=2, default=str)
         log_filename = f"run_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 
-    st.download_button(
-        "Download Full Run Log (JSON)",
-        data=log_data,
-        file_name=log_filename,
-        mime="application/json",
-        use_container_width=True,
-    )
+    col_json, col_pdf = st.columns(2)
+
+    with col_json:
+        st.download_button(
+            "Download Full Run Log (JSON)",
+            data=log_data,
+            file_name=log_filename,
+            mime="application/json",
+            use_container_width=True,
+        )
+
+    with col_pdf:
+        try:
+            from pdf_export import generate_pdf
+            pdf_bytes = generate_pdf(output)
+            pdf_filename = f"cmf_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+            st.download_button(
+                "Download PDF Report",
+                data=pdf_bytes,
+                file_name=pdf_filename,
+                mime="application/pdf",
+                use_container_width=True,
+                type="primary",
+            )
+        except ImportError:
+            st.info("Install reportlab to enable PDF export: `pip install reportlab`")
+        except Exception as _pdf_err:
+            st.warning(f"PDF generation failed: {_pdf_err}")
+
     if run_log_path and Path(run_log_path).exists():
         st.caption(f"Auto-saved: {run_log_path}")
     elif run_log_path is None:
