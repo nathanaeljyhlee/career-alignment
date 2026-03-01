@@ -15,7 +15,7 @@ from typing import Any
 import ollama
 from pydantic import BaseModel, Field
 
-from config import OLLAMA_TIMEOUT, get_tuning, extraction_model
+from config import OLLAMA_TIMEOUT, get_tuning, extraction_model, extraction_options
 
 logger = logging.getLogger(__name__)
 
@@ -40,8 +40,8 @@ class IndustrySignal(BaseModel):
 
 class CandidateProfile(BaseModel):
     """The synthesized candidate profile output from Agent 1."""
-    skill_clusters: list[SkillCluster] = Field(default_factory=list)
-    industry_signals: list[IndustrySignal] = Field(default_factory=list)
+    skill_clusters: list[SkillCluster] = Field(description="Grouped skill clusters — must contain at least one entry")
+    industry_signals: list[IndustrySignal] = Field(description="Industry/domain signals from experience — must contain at least one entry")
     narrative_coherence_score: float = Field(
         description="0-1 score: how well the career story holds together", ge=0.0, le=1.0
     )
@@ -159,10 +159,7 @@ def synthesize_profile(
             model=extraction_model(),
             messages=[{"role": "user", "content": prompt}],
             format=CandidateProfile.model_json_schema(),
-            options={
-                "temperature": get_tuning("models", "extraction_temperature") or 0.1,
-                "num_predict": 4096,
-            },
+            options=extraction_options({"num_predict": 4096}),
         )
         content = response["message"]["content"]
         profile = CandidateProfile.model_validate_json(content)

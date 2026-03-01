@@ -19,7 +19,7 @@ from pydantic import BaseModel, Field
 
 from config import (
     APP_DIR, DATA_DIR, OLLAMA_ENDPOINT, OLLAMA_TIMEOUT,
-    get_tuning, extraction_model,
+    get_tuning, extraction_model, extraction_options,
 )
 
 logger = logging.getLogger(__name__)
@@ -195,10 +195,7 @@ def extract_by_llm(text: str, max_skills: int | None = None) -> list[ExtractedSk
             model=extraction_model(),
             messages=[{"role": "user", "content": prompt}],
             format=LLMExtractionResult.model_json_schema(),
-            options={
-                "temperature": get_tuning("models", "extraction_temperature") or 0.1,
-                "num_predict": get_tuning("skill_extraction", "extraction_num_predict") or 2048,
-            },
+            options=extraction_options({"num_predict": get_tuning("skill_extraction", "extraction_num_predict") or 2048}),
         )
         content = response["message"]["content"]
         result = LLMExtractionResult.model_validate_json(content)
@@ -436,10 +433,7 @@ def infer_skills_against_taxonomy(
             model=extraction_model(),
             messages=[{"role": "user", "content": prompt}],
             format="json",
-            options={
-                "temperature": 0.1,
-                "num_predict": get_tuning("skill_extraction", "inference_num_predict") or 2048,
-            },
+            options=extraction_options({"num_predict": get_tuning("skill_extraction", "inference_num_predict") or 2048}),
         )
         content = response["message"]["content"]
         data = json.loads(content)

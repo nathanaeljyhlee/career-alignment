@@ -63,3 +63,25 @@ def reasoning_model() -> str:
 
 def embedding_model() -> str:
     return get_tuning("models", "embedding_model")
+
+
+def extraction_options(extra: dict | None = None) -> dict:
+    """Standard Ollama options for extraction-tier calls (includes num_ctx)."""
+    opts = {
+        "temperature": get_tuning("models", "extraction_temperature") or 0.1,
+        "num_ctx": get_tuning("models", "extraction_context_window") or 16384,
+    }
+    if extra:
+        opts.update(extra)
+    return opts
+
+
+def reasoning_options(extra: dict | None = None) -> dict:
+    """Standard Ollama options for reasoning-tier calls (includes num_ctx)."""
+    opts = {
+        "temperature": get_tuning("models", "reasoning_temperature") or 0.3,
+        "num_ctx": get_tuning("models", "reasoning_context_window") or 16384,
+    }
+    if extra:
+        opts.update(extra)
+    return opts

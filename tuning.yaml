@@ -38,6 +38,18 @@ skill_extraction:
   inference_enabled: true
   inference_num_predict: 2048
 
+  # Graph-based skill inference: if a candidate has >= this fraction of a
+  # skill's TOP-K co-occurring neighbors, that skill is inferred as likely present.
+  # Using top-K (not all neighbors) prevents hub skills (e.g. Critical Thinking,
+  # which co-occurs with 25+ skills) from being penalized by a large denominator.
+  # Default 0.60 is too strict for candidates with ~40 extracted skills (returns 0).
+  # 0.35 gives meaningful inference without excessive noise.
+  graph_min_neighbor_coverage: 0.35
+  # Cap denominator to this many strongest co-occurring neighbors.
+  # Hub skills co-occur with nearly every skill — capping at 10 focuses the
+  # coverage ratio on the strongest signal neighbors instead of the entire graph.
+  graph_top_k_neighbors: 10
+
   # Surface-form alias matching threshold. When a skill mention
   # matches a known alias (e.g., "ML" -> "Machine Learning"),
   # it bypasses embedding matching entirely. This threshold

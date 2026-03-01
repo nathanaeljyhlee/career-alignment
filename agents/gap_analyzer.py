@@ -15,7 +15,7 @@ from typing import Any
 import ollama
 from pydantic import BaseModel, Field
 
-from config import get_tuning, reasoning_model
+from config import get_tuning, reasoning_model, reasoning_options
 
 logger = logging.getLogger(__name__)
 
@@ -198,10 +198,7 @@ def analyze_gaps(
             model=reasoning_model(),
             messages=[{"role": "user", "content": prompt}],
             format=RoleGapAnalysis.model_json_schema(),
-            options={
-                "temperature": get_tuning("models", "reasoning_temperature") or 0.3,
-                "num_predict": 3072,
-            },
+            options=reasoning_options({"num_predict": 3072}),
         )
         content = response["message"]["content"]
         analysis = RoleGapAnalysis.model_validate_json(content)

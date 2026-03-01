@@ -248,7 +248,9 @@ def stage_1_input_processing(state: PipelineState) -> PipelineState:
             with _timed_substep(state, "skill_graph_inference"):
                 try:
                     already_found = {s.get("canonical_name", "").lower() for s in state.skills_flat}
-                    graph_inferred = infer_from_graph(already_found, state.skill_graph)
+                    graph_min_coverage = get_tuning("skill_extraction", "graph_min_neighbor_coverage") or 0.35
+                    graph_top_k = get_tuning("skill_extraction", "graph_top_k_neighbors") or 10
+                    graph_inferred = infer_from_graph(already_found, state.skill_graph, min_neighbor_coverage=graph_min_coverage, top_k_neighbors=graph_top_k)
 
                     # Convert to NormalizedSkill-compatible dicts
                     graph_inferred_dicts = [
@@ -583,6 +585,7 @@ def _save_run_log(state: PipelineState) -> Path:
                 "embedding": sum(1 for s in (state.skills_flat or []) if s.get("match_method") == "embedding"),
                 "llm_direct": sum(1 for s in (state.skills_flat or []) if s.get("match_method") == "llm_direct"),
                 "inferred": sum(1 for s in (state.skills_flat or []) if s.get("match_method") == "inferred"),
+                "graph_inferred": sum(1 for s in (state.skills_flat or []) if s.get("match_method") == "graph_inferred"),
             },
             "top_skills": [
                 {"name": s.get("canonical_name"), "type": s.get("skill_type"),

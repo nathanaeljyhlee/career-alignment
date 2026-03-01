@@ -299,7 +299,7 @@ def prioritize_gaps_by_graph(
             best_coverage = 0.0
             for skill_name, skill_data in adjacency.items():
                 if skill_name.lower() in desc_lower or desc_lower in skill_name.lower():
-                    neighbors = set(skill_data.get("neighbors", {}).keys())
+                    neighbors = {n.lower() for n in skill_data.get("neighbors", {}).keys()}
                     if neighbors:
                         candidate_coverage = len(
                             neighbors & {s.lower() for s in candidate_skills}

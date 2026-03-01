@@ -10,7 +10,7 @@ from typing import Any
 import ollama
 from pydantic import BaseModel, Field
 
-from config import get_tuning, extraction_model
+from config import get_tuning, extraction_model, extraction_options
 
 logger = logging.getLogger(__name__)
 
@@ -102,10 +102,7 @@ def extract_motivation(why_text: str) -> MotivationProfile:
             model=extraction_model(),
             messages=[{"role": "user", "content": prompt}],
             format=MotivationProfile.model_json_schema(),
-            options={
-                "temperature": get_tuning("models", "extraction_temperature") or 0.1,
-                "num_predict": 2048,
-            },
+            options=extraction_options({"num_predict": 2048}),
         )
         content = response["message"]["content"]
         profile = MotivationProfile.model_validate_json(content)

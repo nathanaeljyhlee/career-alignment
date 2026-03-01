@@ -175,17 +175,23 @@ def infer_from_graph(
     candidate_skills: set[str],
     skill_graph: dict,
     min_neighbor_coverage: float = 0.60,
+    top_k_neighbors: int = 10,
 ) -> list[dict]:
     """
     Infer skills the candidate likely has based on graph adjacency.
 
-    If a candidate has >= min_neighbor_coverage of a skill's neighbors,
-    they probably have that skill implicitly even if not explicitly extracted.
+    If a candidate has >= min_neighbor_coverage of a skill's top-K neighbors
+    (by co-occurrence weight), they probably have that skill implicitly.
+
+    Using top-K instead of all neighbors prevents hub skills (which co-occur
+    with nearly every skill in the taxonomy) from being impossible to infer
+    due to a large denominator.
 
     Args:
         candidate_skills: Lowercase canonical skill names the candidate has
         skill_graph: From build_skill_graph()
-        min_neighbor_coverage: Threshold (default 0.60 = 60% of neighbors required)
+        min_neighbor_coverage: Threshold (default 0.60 = 60% of top-K required)
+        top_k_neighbors: Cap denominator to this many strongest neighbors (default 10)
 
     Returns:
         List of {"skill": str, "confidence": float, "reason": str}
@@ -207,7 +213,10 @@ def infer_from_graph(
         if len(neighbors) < 2:
             continue  # Not enough neighbors to infer from
 
-        neighbor_names = {n.lower() for n in neighbors.keys()}
+        # Cap to top-K strongest co-occurring neighbors (by edge weight)
+        sorted_neighbors = sorted(neighbors.items(), key=lambda x: x[1], reverse=True)
+        top_neighbors = sorted_neighbors[:top_k_neighbors]
+        neighbor_names = {n.lower() for n, _ in top_neighbors}
         matched_neighbors = neighbor_names & candidate_lower
         coverage = len(matched_neighbors) / len(neighbor_names)
 

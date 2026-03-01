@@ -14,7 +14,7 @@ from typing import Any
 import ollama
 from pydantic import BaseModel, Field
 
-from config import get_tuning, reasoning_model
+from config import get_tuning, reasoning_model, reasoning_options
 
 logger = logging.getLogger(__name__)
 
@@ -193,10 +193,7 @@ def _single_comparison(
             model=reasoning_model(),
             messages=[{"role": "user", "content": prompt}],
             format=RoleFitResult.model_json_schema(),
-            options={
-                "temperature": temperature,
-                "num_predict": 2048,
-            },
+            options=reasoning_options({"temperature": temperature, "num_predict": 2048}),
         )
         content = response["message"]["content"]
         result = RoleFitResult.model_validate_json(content)
