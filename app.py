@@ -387,6 +387,7 @@ if "output" in st.session_state:
             "embedding":    ("blue",   "Embedding match — LLM skill normalized to O*NET via semantic similarity"),
             "inferred":     ("orange", "Inferred — skill demonstrated through actions but not explicitly stated"),
             "graph_inferred": ("red",  "Graph inferred — skill implied by proximity to other extracted skills in the skill graph"),
+            "transfer_label": ("violet", "Transfer label — generalized capability mapped from transferable experience phrasing"),
         }
         counts: dict[str, int] = {}
         for sk in _skills_flat:
@@ -396,7 +397,7 @@ if "output" in st.session_state:
         summary_parts = [f"{v} {k}" for k, v in counts.items()]
         summary_line = f"{len(_skills_flat)} skills extracted from your resume. Methods: {', '.join(summary_parts)}"
 
-        with st.expander("How your skills were extracted", expanded=False):
+        with st.expander("Skill Extraction Details", expanded=False):
             st.caption(summary_line)
 
             # Group skills by method
@@ -406,7 +407,7 @@ if "output" in st.session_state:
                 by_method[sk.get("match_method", "unknown")].append(sk)
 
             # Display in a consistent order
-            method_order = ["alias", "llm_direct", "llm", "embedding", "inferred", "graph_inferred"]
+            method_order = ["alias", "llm_direct", "llm", "embedding", "inferred", "graph_inferred", "transfer_label"]
             import pandas as pd
             displayed = set()
             for method in method_order + [m for m in by_method if m not in method_order]:

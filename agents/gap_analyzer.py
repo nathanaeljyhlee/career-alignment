@@ -205,13 +205,15 @@ def analyze_gaps(
 
         # Deterministic dedup: remove any gap the LLM listed that is actually matched
         if skill_overlap:
-            matched = {s.lower() for s in (
+            matched_lower = {s.lower() for s in (
                 skill_overlap.get("matched_required", []) +
                 skill_overlap.get("matched_preferred", [])
             )}
             analysis.gaps = [
                 g for g in analysis.gaps
-                if g.description.lower() not in matched
+                if g.description.lower() not in matched_lower and not any(
+                    m in g.description.lower() for m in matched_lower if len(m) >= 8
+                )
             ]
 
         # Recompute composite severity using tuning weights

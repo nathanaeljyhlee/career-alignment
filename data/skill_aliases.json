@@ -1808,6 +1808,25 @@
     "measure data": "process data",
     "analyse data": "process data",
     "processing data": "process data",
-    "processing of data": "process data"
+    "processing of data": "process data",
+    "clinical reasoning": "Critical Thinking",
+    "clinical decision making": "Critical Thinking",
+    "differential diagnosis": "Critical Thinking",
+    "clinical judgment": "Critical Thinking",
+    "evidence-based medicine": "Critical Thinking",
+    "diagnostic reasoning": "Critical Thinking",
+    "medical problem solving": "Critical Thinking",
+    "clinical analysis": "Critical Thinking",
+    "patient care": "Healthcare Domain Knowledge",
+    "clinical practice": "Healthcare Domain Knowledge",
+    "medical practice": "Healthcare Domain Knowledge",
+    "physician experience": "Healthcare Domain Knowledge",
+    "clinical experience": "Healthcare Domain Knowledge",
+    "ward management": "Clinical Workflow Understanding",
+    "discharge planning": "Clinical Workflow Understanding",
+    "clinical operations": "Clinical Workflow Understanding",
+    "hospital operations": "Clinical Workflow Understanding",
+    "patient flow": "Clinical Workflow Understanding",
+    "inpatient management": "Clinical Workflow Understanding"
   }
 }
