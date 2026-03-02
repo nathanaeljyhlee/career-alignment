@@ -21,17 +21,6 @@ how_to_use: |
 
 ## Next Up (priority order — Codex works top to bottom)
 
-### CMF-005 — Tally intake end-to-end run test
-**Type:** Verification / minor bug fixes expected
-**Files:** `tally_intake.py`, `runs/processed_submissions.json`
-**Problem:** `tally_intake.py` is fully implemented (Session 11) but has never been run end-to-end. The PR's Codex notes flagged a `FileNotFoundError` when running `--list` without a Tally API key available in their environment.
-**Fix approach:**
-- This item requires running the actual script. If Codex cannot run it (no API key access), create a PR that adds a `--dry-run` flag that exercises the full intake code path against a fixture JSON response (no live API call). This verifies the parsing and routing logic without needing credentials.
-- If Codex can run it: run `python tally_intake.py` against one of the 3 existing submissions, confirm run saves to `runs/` with submission ID in filename, confirm `processed_submissions.json` updates. Fix any crashes.
-**Verify:** Either a clean end-to-end run log OR a working `--dry-run` path with fixture data.
-
----
-
 ### CMF-037 — Expand role taxonomy from 20 to 80 roles with track and MBA flags
 **Type:** Data addition (two data files — no code changes)
 **Files:** `data/role_taxonomy.json`, `data/onet_skills.json`
@@ -232,6 +221,57 @@ All skill names MUST exactly match a `skill_name` in `onet_skills.json` (469 exi
 - `python -c "import json; d=json.load(open('data/onet_skills.json')); print(len(d['skills']), 'skills')"` → should print 483 (469 + 14)
 - `python -c "from engine import run_pipeline; print('imports OK')"` → should not raise ImportError
 - Update `feature-roadmap.csv`: set CMF-037 status to Done with a completion note
+
+---
+
+### CMF-041 — Profile and optimize Agent 3 (role comparator) bottleneck
+
+**Type:** Performance optimization (code change)
+**Files:** `engine.py`, `agents/role_comparator.py` (Agent 3 implementation)
+**Problem:** Agent 3 (role comparator) consumes 172-254s per pipeline run (46-82% of total). This is the critical blocker for hitting Speed KPI <5 min. With CMF-037 (80 roles), Agent 3 time will worsen further. Need to profile where time is spent and optimize.
+
+**Fix approach — Two-phase:**
+
+**Phase 1: Profiling (required, no code changes)**
+- Add detailed timing instrumentation to Agent 3 in engine.py. Capture:
+  - Time per role (how long does Agent 3 spend on each of 6 roles?)
+  - Breakdown: LLM inference vs Python logic
+  - Token count per role (input + output)
+- Run on Nathanael + Amos profiles. Collect:
+  - `profile_name`, `num_roles`, `total_agent3_time`, `time_per_role[]`, `tokens_in[]`, `tokens_out[]`, `inference_time_est`
+  - Log to: `runs/<run_id>_agent3_profile.json`
+- Goal: Identify where the time is spent. Is it:
+  - (A) LLM inference is inherently slow (unavoidable without model swap)
+  - (B) Prompt is doing unnecessary work (fixable by simplification)
+  - (C) Role descriptions are too verbose (fixable by truncation)
+  - (D) No caching of static data (fixable by caching)
+
+**Phase 2: Optimization (code change, post-profiling)**
+- Codex will NOT write code in this phase. Claude will review profiling results and decide which of 4 options to pursue:
+  1. **Simplify Agent 3 prompt** — remove reasoning steps, lower max_tokens — Low effort, Medium risk (may hurt accuracy)
+  2. **Pre-filter roles to top 4-5** before Agent 3 — pass only ranked roles from Stage 1 — Low effort, Medium risk (reduces comprehensiveness)
+  3. **Truncate role descriptions** — reduce context window by cutting verbose fields — Medium effort, Low risk
+  4. **Test faster model (Qwen 7B)** for Agent 3 — Medium effort, High risk (must validate accuracy doesn't drop)
+
+  Decision will be made by Claude post-profiling based on root cause from Phase 1.
+
+**Verify Phase 1:**
+- `runs/<run_id>_agent3_profile.json` exists and is readable
+- Profile shows time breakdown (LLM vs Python)
+- Token counts logged for both test profiles
+
+**Next step after Phase 1:** Claude reviews profiling results, makes decision on Phase 2 optimization, updates this item with chosen approach.
+
+---
+
+### CMF-005 — Tally intake end-to-end run test
+**Type:** Verification / minor bug fixes expected
+**Files:** `tally_intake.py`, `runs/processed_submissions.json`
+**Problem:** `tally_intake.py` is fully implemented (Session 11) but has never been run end-to-end. The PR's Codex notes flagged a `FileNotFoundError` when running `--list` without a Tally API key available in their environment.
+**Fix approach:**
+- This item requires running the actual script. If Codex cannot run it (no API key access), create a PR that adds a `--dry-run` flag that exercises the full intake code path against a fixture JSON response (no live API call). This verifies the parsing and routing logic without needing credentials.
+- If Codex can run it: run `python tally_intake.py` against one of the 3 existing submissions, confirm run saves to `runs/` with submission ID in filename, confirm `processed_submissions.json` updates. Fix any crashes.
+**Verify:** Either a clean end-to-end run log OR a working `--dry-run` path with fixture data.
 
 ---
 
