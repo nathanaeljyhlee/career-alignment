@@ -132,32 +132,9 @@ Current Must-priority open items:
 
 ## 10x Exploration You Can Ship Today
 
-### Exploration: **"Decision Sprint" output card (single-click next action)**
+We documented a full implementation write-up for a shippable **Decision Sprint** feature (an action-oriented output card that converts analysis into a 90-day plan).
 
-Ship one additional output block under the current 7 sections that answers:
-
-1. **Best immediate role bet (next 90 days)**
-2. **Two highest-leverage skills to close first**
-3. **One concrete weekly plan** (e.g., project + networking + application cadence)
-4. **Go / Pivot checkpoint date**
-
-Why this is 10x: users currently receive rich analysis, but many still ask "what should I do next?" This feature converts diagnostic insight into an executable plan, improving actionability without changing core pipeline architecture.
-
-### Scope (today)
-
-- Reuse existing outputs from Sections 4-7 (win-now roles, pivot roles, gap severity, leverage skills, effort ranking).
-- Add a lightweight formatter in `output.py` to synthesize one "Decision Sprint" recommendation.
-- Render in Streamlit directly after existing recommendations.
-- Keep deterministic scaffolding + short LLM polish pass optional.
-
-### Success metric (same day)
-
-- In user testing, at least 80% of users can restate their **next 7-day plan** unprompted after reading output.
-- Time-to-decision feedback drops ("I know what to do next") compared with baseline runs.
-
-### Why now
-
-This is high-impact and low-risk: no new data dependencies, no taxonomy changes, and minimal architecture churn. It can be delivered as a thin layer on top of outputs you already compute.
+Read the spec: [`DECISION-SPRINT.md`](DECISION-SPRINT.md)
 
 ---
 
