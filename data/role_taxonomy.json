@@ -1111,6 +1111,3387 @@
         "bls_typical_education": "Bachelor's degree",
         "bls_employment_growth_pct_2024_34": 6.6
       }
+    },
+    {
+      "role_id": "investment-banking-associate",
+      "role_name": "Investment Banking Associate",
+      "onet_code": "13-2051.00",
+      "category": "finance",
+      "functional_category": "finance",
+      "track": "internship",
+      "mba_track": true,
+      "babson_fit": false,
+      "description": "Investment Banking Associate role focused on delivering results across finance priorities.",
+      "required_skills": [
+        "Financial Modeling",
+        "Accounting",
+        "Due Diligence",
+        "Communication",
+        "Presentation Skills",
+        "Critical Thinking",
+        "Excel Advanced"
+      ],
+      "preferred_skills": [
+        "M&A Analysis",
+        "LBO Modeling",
+        "Valuation",
+        "Industry Expertise",
+        "Competitive Analysis"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Financial Modeling in professional settings.",
+        "Limited evidence of delivering outcomes that combine Accounting and Due Diligence.",
+        "No track record applying finance capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in finance environments with measurable outcomes.",
+        "Track record demonstrating Financial Modeling through projects, internships, or coursework.",
+        "Evidence of M&A Analysis proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "high",
+        "innovation": "low",
+        "leadership_scale": "moderate",
+        "autonomy": "low",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "high"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Financial Modeling",
+          "Accounting",
+          "Due Diligence",
+          "Communication",
+          "Presentation Skills"
+        ],
+        "bls_median_wage_2024": 175000.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 5.7
+      }
+    },
+    {
+      "role_id": "corporate-finance-fpa",
+      "role_name": "Corporate Finance / FP&A",
+      "onet_code": "13-2051.00",
+      "category": "finance",
+      "functional_category": "finance",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
+      "description": "Corporate Finance / FP&A role focused on delivering results across finance priorities.",
+      "required_skills": [
+        "Financial Modeling",
+        "Forecasting",
+        "Data Analysis",
+        "Communication",
+        "Excel Advanced",
+        "Reporting",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "Budgeting",
+        "SQL",
+        "ERP Systems",
+        "Accounting",
+        "Tableau or Power BI"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Financial Modeling in professional settings.",
+        "Limited evidence of delivering outcomes that combine Forecasting and Data Analysis.",
+        "No track record applying finance capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in finance environments with measurable outcomes.",
+        "Track record demonstrating Financial Modeling through projects, internships, or coursework.",
+        "Evidence of Budgeting proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "moderate",
+        "innovation": "low",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Financial Modeling",
+          "Forecasting",
+          "Data Analysis",
+          "Communication",
+          "Excel Advanced"
+        ],
+        "bls_median_wage_2024": 101350.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 5.7
+      }
+    },
+    {
+      "role_id": "strategic-finance",
+      "role_name": "Strategic Finance",
+      "onet_code": "13-2051.00",
+      "category": "finance",
+      "functional_category": "finance",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
+      "description": "Strategic Finance role focused on delivering results across finance priorities.",
+      "required_skills": [
+        "Financial Modeling",
+        "Strategic Planning",
+        "Communication",
+        "Data Analysis",
+        "Presentation Skills",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "Scenario Planning",
+        "Excel Advanced",
+        "Business Case Development",
+        "SQL",
+        "Forecasting"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Financial Modeling in professional settings.",
+        "Limited evidence of delivering outcomes that combine Strategic Planning and Communication.",
+        "No track record applying finance capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in finance environments with measurable outcomes.",
+        "Track record demonstrating Financial Modeling through projects, internships, or coursework.",
+        "Evidence of Scenario Planning proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "moderate",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Financial Modeling",
+          "Strategic Planning",
+          "Communication",
+          "Data Analysis",
+          "Presentation Skills"
+        ],
+        "bls_median_wage_2024": 120000.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 6.0
+      }
+    },
+    {
+      "role_id": "corporate-development",
+      "role_name": "Corporate Development / M&A",
+      "onet_code": "11-1011.00",
+      "category": "finance",
+      "functional_category": "finance",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
+      "description": "Corporate Development / M&A role focused on delivering results across finance priorities.",
+      "required_skills": [
+        "Financial Modeling",
+        "Due Diligence",
+        "M&A Analysis",
+        "Communication",
+        "Competitive Analysis",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "LBO Modeling",
+        "Valuation",
+        "Strategic Planning",
+        "Excel Advanced",
+        "Industry Expertise"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Financial Modeling in professional settings.",
+        "Limited evidence of delivering outcomes that combine Due Diligence and M&A Analysis.",
+        "No track record applying finance capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in finance environments with measurable outcomes.",
+        "Track record demonstrating Financial Modeling through projects, internships, or coursework.",
+        "Evidence of LBO Modeling proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "high",
+        "innovation": "low",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "high"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Financial Modeling",
+          "Due Diligence",
+          "M&A Analysis",
+          "Communication",
+          "Competitive Analysis"
+        ],
+        "bls_median_wage_2024": 135000.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 5.7
+      }
+    },
+    {
+      "role_id": "growth-equity-associate",
+      "role_name": "Growth Equity Associate",
+      "onet_code": "13-2051.00",
+      "category": "finance",
+      "functional_category": "finance",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "Growth Equity Associate role focused on delivering results across finance priorities.",
+      "required_skills": [
+        "Financial Modeling",
+        "Market Research",
+        "Due Diligence",
+        "Communication",
+        "Critical Thinking",
+        "Competitive Analysis"
+      ],
+      "preferred_skills": [
+        "Startup Ecosystem Knowledge",
+        "Cap Table Modeling",
+        "Data Analysis",
+        "Networking",
+        "Strategic Planning"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Financial Modeling in professional settings.",
+        "Limited evidence of delivering outcomes that combine Market Research and Due Diligence.",
+        "No track record applying finance capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in finance environments with measurable outcomes.",
+        "Track record demonstrating Financial Modeling through projects, internships, or coursework.",
+        "Evidence of Startup Ecosystem Knowledge proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "high",
+        "innovation": "moderate",
+        "leadership_scale": "low",
+        "autonomy": "high",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "high"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Financial Modeling",
+          "Market Research",
+          "Due Diligence",
+          "Communication",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 125000.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 5.7
+      }
+    },
+    {
+      "role_id": "credit-risk-analyst",
+      "role_name": "Credit Risk Analyst",
+      "onet_code": "13-2041.00",
+      "category": "finance",
+      "functional_category": "finance",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "Credit Risk Analyst role focused on delivering results across finance priorities.",
+      "required_skills": [
+        "Financial Modeling",
+        "Accounting",
+        "Data Analysis",
+        "Critical Thinking",
+        "Communication",
+        "Reporting"
+      ],
+      "preferred_skills": [
+        "Credit Analysis",
+        "Risk Management",
+        "Excel Advanced",
+        "ERP Systems",
+        "Statistical Analysis"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Financial Modeling in professional settings.",
+        "Limited evidence of delivering outcomes that combine Accounting and Data Analysis.",
+        "No track record applying finance capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in finance environments with measurable outcomes.",
+        "Track record demonstrating Financial Modeling through projects, internships, or coursework.",
+        "Evidence of Credit Analysis proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "moderate",
+        "innovation": "low",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Financial Modeling",
+          "Accounting",
+          "Data Analysis",
+          "Critical Thinking",
+          "Communication"
+        ],
+        "bls_median_wage_2024": 95000.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 8.0
+      }
+    },
+    {
+      "role_id": "wealth-management-associate",
+      "role_name": "Wealth Management Associate",
+      "onet_code": "13-2052.00",
+      "category": "finance",
+      "functional_category": "finance",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
+      "description": "Wealth Management Associate role focused on delivering results across finance priorities.",
+      "required_skills": [
+        "Financial Modeling",
+        "Communication",
+        "Presentation Skills",
+        "Networking",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "Financial Analysis",
+        "Market Research",
+        "Data Analysis",
+        "Industry Knowledge",
+        "Accounting"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Financial Modeling in professional settings.",
+        "Limited evidence of delivering outcomes that combine Communication and Presentation Skills.",
+        "No track record applying finance capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in finance environments with measurable outcomes.",
+        "Track record demonstrating Financial Modeling through projects, internships, or coursework.",
+        "Evidence of Financial Analysis proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "high",
+        "innovation": "low",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "high"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Financial Modeling",
+          "Communication",
+          "Presentation Skills",
+          "Networking",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 99580.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 17.0
+      }
+    },
+    {
+      "role_id": "commercial-banking-associate",
+      "role_name": "Commercial Banking Associate",
+      "onet_code": "13-2071.00",
+      "category": "finance",
+      "functional_category": "finance",
+      "track": "internship",
+      "mba_track": true,
+      "babson_fit": false,
+      "description": "Commercial Banking Associate role focused on delivering results across finance priorities.",
+      "required_skills": [
+        "Financial Modeling",
+        "Accounting",
+        "Credit Analysis",
+        "Communication",
+        "Due Diligence",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "Excel Advanced",
+        "Risk Management",
+        "Industry Knowledge",
+        "Data Analysis",
+        "Negotiation"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Financial Modeling in professional settings.",
+        "Limited evidence of delivering outcomes that combine Accounting and Credit Analysis.",
+        "No track record applying finance capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in finance environments with measurable outcomes.",
+        "Track record demonstrating Financial Modeling through projects, internships, or coursework.",
+        "Evidence of Excel Advanced proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "moderate",
+        "innovation": "low",
+        "leadership_scale": "moderate",
+        "autonomy": "low",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Financial Modeling",
+          "Accounting",
+          "Credit Analysis",
+          "Communication",
+          "Due Diligence"
+        ],
+        "bls_median_wage_2024": 110000.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 5.0
+      }
+    },
+    {
+      "role_id": "asset-management-associate",
+      "role_name": "Asset Management Associate",
+      "onet_code": "13-2051.00",
+      "category": "finance",
+      "functional_category": "finance",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
+      "description": "Asset Management Associate role focused on delivering results across finance priorities.",
+      "required_skills": [
+        "Financial Modeling",
+        "Market Research",
+        "Statistical Analysis",
+        "Communication",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "Data Analysis",
+        "Industry Expertise",
+        "Networking",
+        "Presentation Skills",
+        "Risk Management"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Financial Modeling in professional settings.",
+        "Limited evidence of delivering outcomes that combine Market Research and Statistical Analysis.",
+        "No track record applying finance capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in finance environments with measurable outcomes.",
+        "Track record demonstrating Financial Modeling through projects, internships, or coursework.",
+        "Evidence of Data Analysis proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "high",
+        "innovation": "low",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "high"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Financial Modeling",
+          "Market Research",
+          "Statistical Analysis",
+          "Communication",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 108000.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 5.7
+      }
+    },
+    {
+      "role_id": "impact-investing-associate",
+      "role_name": "Impact Investing Associate",
+      "onet_code": "13-2051.00",
+      "category": "finance",
+      "functional_category": "finance",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "Impact Investing Associate role focused on delivering results across finance priorities.",
+      "required_skills": [
+        "Financial Modeling",
+        "Due Diligence",
+        "Market Research",
+        "Communication",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "ESG Analysis",
+        "Startup Ecosystem Knowledge",
+        "Data Analysis",
+        "Strategic Planning",
+        "Impact Measurement"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Financial Modeling in professional settings.",
+        "Limited evidence of delivering outcomes that combine Due Diligence and Market Research.",
+        "No track record applying finance capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in finance environments with measurable outcomes.",
+        "Track record demonstrating Financial Modeling through projects, internships, or coursework.",
+        "Evidence of ESG Analysis proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "high",
+        "innovation": "moderate",
+        "leadership_scale": "low",
+        "autonomy": "high",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Financial Modeling",
+          "Due Diligence",
+          "Market Research",
+          "Communication",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 101350.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 5.7
+      }
+    },
+    {
+      "role_id": "business-development-partnerships",
+      "role_name": "Business Development & Partnerships",
+      "onet_code": "11-2022.00",
+      "category": "strategy",
+      "functional_category": "strategy",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "Business Development & Partnerships role focused on delivering results across strategy priorities.",
+      "required_skills": [
+        "Strategic Planning",
+        "Negotiation",
+        "Market Research",
+        "Communication",
+        "Competitive Analysis",
+        "Stakeholder Management"
+      ],
+      "preferred_skills": [
+        "Financial Modeling",
+        "Due Diligence",
+        "Business Development",
+        "Networking",
+        "CRM"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Strategic Planning in professional settings.",
+        "Limited evidence of delivering outcomes that combine Negotiation and Market Research.",
+        "No track record applying strategy capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in strategy environments with measurable outcomes.",
+        "Track record demonstrating Strategic Planning through projects, internships, or coursework.",
+        "Evidence of Financial Modeling proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "moderate",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Strategic Planning",
+          "Negotiation",
+          "Market Research",
+          "Communication",
+          "Competitive Analysis"
+        ],
+        "bls_median_wage_2024": 130000.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 6.0
+      }
+    },
+    {
+      "role_id": "pricing-revenue-strategy",
+      "role_name": "Pricing & Revenue Strategy",
+      "onet_code": "13-1111.00",
+      "category": "strategy",
+      "functional_category": "strategy",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
+      "description": "Pricing & Revenue Strategy role focused on delivering results across strategy priorities.",
+      "required_skills": [
+        "Data Analysis",
+        "Financial Modeling",
+        "Strategic Planning",
+        "Communication",
+        "Critical Thinking",
+        "Market Research"
+      ],
+      "preferred_skills": [
+        "SQL",
+        "Pricing Strategy",
+        "A/B Testing",
+        "Excel Advanced",
+        "Competitive Analysis"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Data Analysis in professional settings.",
+        "Limited evidence of delivering outcomes that combine Financial Modeling and Strategic Planning.",
+        "No track record applying strategy capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in strategy environments with measurable outcomes.",
+        "Track record demonstrating Data Analysis through projects, internships, or coursework.",
+        "Evidence of SQL proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "moderate",
+        "innovation": "moderate",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Data Analysis",
+          "Financial Modeling",
+          "Strategic Planning",
+          "Communication",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 101190.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 8.8
+      }
+    },
+    {
+      "role_id": "esg-sustainability-strategy",
+      "role_name": "ESG & Sustainability Strategy",
+      "onet_code": "13-1199.05",
+      "category": "strategy",
+      "functional_category": "strategy",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "ESG & Sustainability Strategy role focused on delivering results across strategy priorities.",
+      "required_skills": [
+        "Strategic Planning",
+        "Stakeholder Management",
+        "Communication",
+        "Data Analysis",
+        "Project Management"
+      ],
+      "preferred_skills": [
+        "ESG Analysis",
+        "Change Management",
+        "Regulatory Awareness",
+        "Presentation Skills",
+        "Impact Measurement"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Strategic Planning in professional settings.",
+        "Limited evidence of delivering outcomes that combine Stakeholder Management and Communication.",
+        "No track record applying strategy capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in strategy environments with measurable outcomes.",
+        "Track record demonstrating Strategic Planning through projects, internships, or coursework.",
+        "Evidence of ESG Analysis proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Strategic Planning",
+          "Stakeholder Management",
+          "Communication",
+          "Data Analysis",
+          "Project Management"
+        ],
+        "bls_median_wage_2024": 90000.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 6.0
+      }
+    },
+    {
+      "role_id": "corporate-communications",
+      "role_name": "Corporate Communications Manager",
+      "onet_code": "11-2011.00",
+      "category": "marketing",
+      "functional_category": "marketing",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "Corporate Communications Manager role focused on delivering results across marketing priorities.",
+      "required_skills": [
+        "Communication",
+        "Presentation Skills",
+        "Strategic Planning",
+        "Stakeholder Management",
+        "Writing"
+      ],
+      "preferred_skills": [
+        "Market Research",
+        "Change Management",
+        "Brand Management",
+        "Competitive Analysis",
+        "Critical Thinking"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Communication in professional settings.",
+        "Limited evidence of delivering outcomes that combine Presentation Skills and Strategic Planning.",
+        "No track record applying marketing capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in marketing environments with measurable outcomes.",
+        "Track record demonstrating Communication through projects, internships, or coursework.",
+        "Evidence of Market Research proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "low",
+        "innovation": "low",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Communication",
+          "Presentation Skills",
+          "Strategic Planning",
+          "Stakeholder Management",
+          "Writing"
+        ],
+        "bls_median_wage_2024": 136000.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 7.0
+      }
+    },
+    {
+      "role_id": "competitive-intelligence-manager",
+      "role_name": "Competitive Intelligence Manager",
+      "onet_code": "13-1161.01",
+      "category": "strategy",
+      "functional_category": "strategy",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "Competitive Intelligence Manager role focused on delivering results across strategy priorities.",
+      "required_skills": [
+        "Market Research",
+        "Competitive Analysis",
+        "Data Analysis",
+        "Communication",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "Strategic Planning",
+        "Industry Expertise",
+        "Presentation Skills",
+        "SQL",
+        "Statistical Analysis"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Market Research in professional settings.",
+        "Limited evidence of delivering outcomes that combine Competitive Analysis and Data Analysis.",
+        "No track record applying strategy capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in strategy environments with measurable outcomes.",
+        "Track record demonstrating Market Research through projects, internships, or coursework.",
+        "Evidence of Strategic Planning proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "low",
+        "innovation": "low",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Market Research",
+          "Competitive Analysis",
+          "Data Analysis",
+          "Communication",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 95000.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 6.0
+      }
+    },
+    {
+      "role_id": "business-transformation-manager",
+      "role_name": "Business Transformation Manager",
+      "onet_code": "13-1111.00",
+      "category": "strategy",
+      "functional_category": "strategy",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
+      "description": "Business Transformation Manager role focused on delivering results across strategy priorities.",
+      "required_skills": [
+        "Change Management",
+        "Stakeholder Management",
+        "Project Management",
+        "Communication",
+        "Strategic Planning",
+        "Cross-Functional Leadership"
+      ],
+      "preferred_skills": [
+        "Process Improvement",
+        "Data Analysis",
+        "Risk Management",
+        "Presentation Skills",
+        "Lean Six Sigma"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Change Management in professional settings.",
+        "Limited evidence of delivering outcomes that combine Stakeholder Management and Project Management.",
+        "No track record applying strategy capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in strategy environments with measurable outcomes.",
+        "Track record demonstrating Change Management through projects, internships, or coursework.",
+        "Evidence of Process Improvement proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "high",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Change Management",
+          "Stakeholder Management",
+          "Project Management",
+          "Communication",
+          "Strategic Planning"
+        ],
+        "bls_median_wage_2024": 101190.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 8.8
+      }
+    },
+    {
+      "role_id": "product-marketing-manager",
+      "role_name": "Product Marketing Manager",
+      "onet_code": "11-2021.00",
+      "category": "product",
+      "functional_category": "product",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
+      "description": "Product Marketing Manager role focused on delivering results across product priorities.",
+      "required_skills": [
+        "Market Research",
+        "Communication",
+        "Competitive Analysis",
+        "Stakeholder Management",
+        "Strategic Planning",
+        "Presentation Skills"
+      ],
+      "preferred_skills": [
+        "Customer Segmentation",
+        "Digital Marketing",
+        "A/B Testing",
+        "Data Analysis",
+        "Product Roadmapping"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Market Research in professional settings.",
+        "Limited evidence of delivering outcomes that combine Communication and Competitive Analysis.",
+        "No track record applying product capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in product environments with measurable outcomes.",
+        "Track record demonstrating Market Research through projects, internships, or coursework.",
+        "Evidence of Customer Segmentation proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Market Research",
+          "Communication",
+          "Competitive Analysis",
+          "Stakeholder Management",
+          "Strategic Planning"
+        ],
+        "bls_median_wage_2024": 161030.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 6.6
+      }
+    },
+    {
+      "role_id": "growth-product-manager",
+      "role_name": "Growth Product Manager",
+      "onet_code": "11-2021.00",
+      "category": "product",
+      "functional_category": "product",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "Growth Product Manager role focused on delivering results across product priorities.",
+      "required_skills": [
+        "Product Roadmapping",
+        "Data Analysis",
+        "A/B Testing",
+        "User Research",
+        "Critical Thinking",
+        "Communication"
+      ],
+      "preferred_skills": [
+        "SQL",
+        "Python",
+        "Growth Strategy",
+        "Machine Learning",
+        "Statistical Analysis"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Product Roadmapping in professional settings.",
+        "Limited evidence of delivering outcomes that combine Data Analysis and A/B Testing.",
+        "No track record applying product capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in product environments with measurable outcomes.",
+        "Track record demonstrating Product Roadmapping through projects, internships, or coursework.",
+        "Evidence of SQL proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "low",
+        "innovation": "high",
+        "leadership_scale": "moderate",
+        "autonomy": "high",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Product Roadmapping",
+          "Data Analysis",
+          "A/B Testing",
+          "User Research",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 161030.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 6.6
+      }
+    },
+    {
+      "role_id": "product-analyst",
+      "role_name": "Product Analyst",
+      "onet_code": "15-2051.00",
+      "category": "data_analytics",
+      "functional_category": "data_analytics",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "Product Analyst role focused on delivering results across data analytics priorities.",
+      "required_skills": [
+        "Data Analysis",
+        "SQL",
+        "Communication",
+        "Critical Thinking",
+        "Statistical Analysis"
+      ],
+      "preferred_skills": [
+        "Python",
+        "A/B Testing",
+        "Tableau or Power BI",
+        "Product Sense",
+        "Data Visualization"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Data Analysis in professional settings.",
+        "Limited evidence of delivering outcomes that combine SQL and Communication.",
+        "No track record applying data analytics capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in data analytics environments with measurable outcomes.",
+        "Track record demonstrating Data Analysis through projects, internships, or coursework.",
+        "Evidence of Python proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "low",
+        "innovation": "low",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Data Analysis",
+          "SQL",
+          "Communication",
+          "Critical Thinking",
+          "Statistical Analysis"
+        ],
+        "bls_median_wage_2024": 112590.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 33.5
+      }
+    },
+    {
+      "role_id": "ai-product-manager",
+      "role_name": "AI Product Manager",
+      "onet_code": "11-2021.00",
+      "category": "product",
+      "functional_category": "product",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "AI Product Manager role focused on delivering results across product priorities.",
+      "required_skills": [
+        "Product Roadmapping",
+        "Data Analysis",
+        "User Research",
+        "Critical Thinking",
+        "Communication",
+        "Stakeholder Management"
+      ],
+      "preferred_skills": [
+        "Machine Learning",
+        "Python",
+        "Technical Fluency",
+        "A/B Testing",
+        "Strategic Planning"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Product Roadmapping in professional settings.",
+        "Limited evidence of delivering outcomes that combine Data Analysis and User Research.",
+        "No track record applying product capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in product environments with measurable outcomes.",
+        "Track record demonstrating Product Roadmapping through projects, internships, or coursework.",
+        "Evidence of Machine Learning proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "low",
+        "innovation": "high",
+        "leadership_scale": "moderate",
+        "autonomy": "high",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "high"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Product Roadmapping",
+          "Data Analysis",
+          "User Research",
+          "Critical Thinking",
+          "Communication"
+        ],
+        "bls_median_wage_2024": 161030.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 6.6
+      }
+    },
+    {
+      "role_id": "data-product-manager",
+      "role_name": "Data Product Manager",
+      "onet_code": "11-2021.00",
+      "category": "product",
+      "functional_category": "product",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
+      "description": "Data Product Manager role focused on delivering results across product priorities.",
+      "required_skills": [
+        "Product Roadmapping",
+        "Data Analysis",
+        "SQL",
+        "Communication",
+        "Stakeholder Management",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "Python",
+        "Data Modeling",
+        "Strategic Planning",
+        "A/B Testing",
+        "Technical Fluency"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Product Roadmapping in professional settings.",
+        "Limited evidence of delivering outcomes that combine Data Analysis and SQL.",
+        "No track record applying product capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in product environments with measurable outcomes.",
+        "Track record demonstrating Product Roadmapping through projects, internships, or coursework.",
+        "Evidence of Python proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Product Roadmapping",
+          "Data Analysis",
+          "SQL",
+          "Communication",
+          "Stakeholder Management"
+        ],
+        "bls_median_wage_2024": 161030.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 6.6
+      }
+    },
+    {
+      "role_id": "strategy-operations-bizops",
+      "role_name": "Strategy & Operations (BizOps)",
+      "onet_code": "11-1021.00",
+      "category": "strategy",
+      "functional_category": "strategy",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "Strategy & Operations (BizOps) role focused on delivering results across strategy priorities.",
+      "required_skills": [
+        "Data Analysis",
+        "Problem Solving",
+        "Strategic Planning",
+        "Communication",
+        "Cross-Functional Leadership",
+        "Project Management"
+      ],
+      "preferred_skills": [
+        "Financial Modeling",
+        "SQL",
+        "Process Improvement",
+        "Change Management",
+        "Stakeholder Management"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Data Analysis in professional settings.",
+        "Limited evidence of delivering outcomes that combine Problem Solving and Strategic Planning.",
+        "No track record applying strategy capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in strategy environments with measurable outcomes.",
+        "Track record demonstrating Data Analysis through projects, internships, or coursework.",
+        "Evidence of Financial Modeling proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Data Analysis",
+          "Problem Solving",
+          "Strategic Planning",
+          "Communication",
+          "Cross-Functional Leadership"
+        ],
+        "bls_median_wage_2024": 102950.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 4.4
+      }
+    },
+    {
+      "role_id": "customer-experience-manager",
+      "role_name": "Customer Experience Manager",
+      "onet_code": "11-2021.00",
+      "category": "product",
+      "functional_category": "product",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "Customer Experience Manager role focused on delivering results across product priorities.",
+      "required_skills": [
+        "User Research",
+        "Data Analysis",
+        "Stakeholder Management",
+        "Communication",
+        "Project Management"
+      ],
+      "preferred_skills": [
+        "Customer Segmentation",
+        "Service Design",
+        "Process Improvement",
+        "SQL",
+        "Change Management"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with User Research in professional settings.",
+        "Limited evidence of delivering outcomes that combine Data Analysis and Stakeholder Management.",
+        "No track record applying product capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in product environments with measurable outcomes.",
+        "Track record demonstrating User Research through projects, internships, or coursework.",
+        "Evidence of Customer Segmentation proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "User Research",
+          "Data Analysis",
+          "Stakeholder Management",
+          "Communication",
+          "Project Management"
+        ],
+        "bls_median_wage_2024": 120000.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 6.0
+      }
+    },
+    {
+      "role_id": "solutions-consultant",
+      "role_name": "Solutions Consultant",
+      "onet_code": "41-3099.01",
+      "category": "consulting",
+      "functional_category": "consulting",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": true,
+      "description": "Solutions Consultant role focused on delivering results across consulting priorities.",
+      "required_skills": [
+        "Communication",
+        "Stakeholder Management",
+        "Problem Solving",
+        "Presentation Skills",
+        "Technical Fluency"
+      ],
+      "preferred_skills": [
+        "Product Roadmapping",
+        "User Research",
+        "Data Analysis",
+        "Strategic Planning",
+        "CRM"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Communication in professional settings.",
+        "Limited evidence of delivering outcomes that combine Stakeholder Management and Problem Solving.",
+        "No track record applying consulting capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in consulting environments with measurable outcomes.",
+        "Track record demonstrating Communication through projects, internships, or coursework.",
+        "Evidence of Product Roadmapping proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Communication",
+          "Stakeholder Management",
+          "Problem Solving",
+          "Presentation Skills",
+          "Technical Fluency"
+        ],
+        "bls_median_wage_2024": 99280.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 10.6
+      }
+    },
+    {
+      "role_id": "brand-manager-cpg",
+      "role_name": "Brand Manager (CPG)",
+      "onet_code": "11-2021.00",
+      "category": "marketing",
+      "functional_category": "marketing",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
+      "description": "Brand Manager (CPG) role focused on delivering results across marketing priorities.",
+      "required_skills": [
+        "Market Research",
+        "Strategic Planning",
+        "Communication",
+        "Competitive Analysis",
+        "Data Analysis",
+        "Creative Thinking"
+      ],
+      "preferred_skills": [
+        "Brand Management",
+        "Customer Segmentation",
+        "Pricing Strategy",
+        "Digital Marketing",
+        "A/B Testing"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Market Research in professional settings.",
+        "Limited evidence of delivering outcomes that combine Strategic Planning and Communication.",
+        "No track record applying marketing capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in marketing environments with measurable outcomes.",
+        "Track record demonstrating Market Research through projects, internships, or coursework.",
+        "Evidence of Brand Management proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Market Research",
+          "Strategic Planning",
+          "Communication",
+          "Competitive Analysis",
+          "Data Analysis"
+        ],
+        "bls_median_wage_2024": 161030.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 6.6
+      }
+    },
+    {
+      "role_id": "digital-marketing-manager",
+      "role_name": "Digital Marketing Manager",
+      "onet_code": "11-2021.00",
+      "category": "marketing",
+      "functional_category": "marketing",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "Digital Marketing Manager role focused on delivering results across marketing priorities.",
+      "required_skills": [
+        "Digital Marketing",
+        "Data Analysis",
+        "Communication",
+        "Market Research",
+        "Competitive Analysis"
+      ],
+      "preferred_skills": [
+        "SQL",
+        "A/B Testing",
+        "Marketing Analytics",
+        "Customer Segmentation",
+        "Tableau or Power BI"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Digital Marketing in professional settings.",
+        "Limited evidence of delivering outcomes that combine Data Analysis and Communication.",
+        "No track record applying marketing capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in marketing environments with measurable outcomes.",
+        "Track record demonstrating Digital Marketing through projects, internships, or coursework.",
+        "Evidence of SQL proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Digital Marketing",
+          "Data Analysis",
+          "Communication",
+          "Market Research",
+          "Competitive Analysis"
+        ],
+        "bls_median_wage_2024": 161030.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 6.6
+      }
+    },
+    {
+      "role_id": "performance-marketer",
+      "role_name": "Performance Marketer",
+      "onet_code": "11-2021.00",
+      "category": "marketing",
+      "functional_category": "marketing",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "Performance Marketer role focused on delivering results across marketing priorities.",
+      "required_skills": [
+        "Digital Marketing",
+        "Data Analysis",
+        "A/B Testing",
+        "Critical Thinking",
+        "Communication"
+      ],
+      "preferred_skills": [
+        "SQL",
+        "Marketing Analytics",
+        "Python",
+        "Statistical Analysis",
+        "Customer Segmentation"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Digital Marketing in professional settings.",
+        "Limited evidence of delivering outcomes that combine Data Analysis and A/B Testing.",
+        "No track record applying marketing capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in marketing environments with measurable outcomes.",
+        "Track record demonstrating Digital Marketing through projects, internships, or coursework.",
+        "Evidence of SQL proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "low",
+        "autonomy": "high",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Digital Marketing",
+          "Data Analysis",
+          "A/B Testing",
+          "Critical Thinking",
+          "Communication"
+        ],
+        "bls_median_wage_2024": 161030.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 6.6
+      }
+    },
+    {
+      "role_id": "consumer-insights-manager",
+      "role_name": "Consumer Insights Manager",
+      "onet_code": "19-3022.00",
+      "category": "marketing",
+      "functional_category": "marketing",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
+      "description": "Consumer Insights Manager role focused on delivering results across marketing priorities.",
+      "required_skills": [
+        "Market Research",
+        "Data Analysis",
+        "User Research",
+        "Communication",
+        "Statistical Analysis"
+      ],
+      "preferred_skills": [
+        "Customer Segmentation",
+        "SQL",
+        "Presentation Skills",
+        "A/B Testing",
+        "Critical Thinking"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Market Research in professional settings.",
+        "Limited evidence of delivering outcomes that combine Data Analysis and User Research.",
+        "No track record applying marketing capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in marketing environments with measurable outcomes.",
+        "Track record demonstrating Market Research through projects, internships, or coursework.",
+        "Evidence of Customer Segmentation proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "low",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Market Research",
+          "Data Analysis",
+          "User Research",
+          "Communication",
+          "Statistical Analysis"
+        ],
+        "bls_median_wage_2024": 76140.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 8.0
+      }
+    },
+    {
+      "role_id": "sales-strategy-operations",
+      "role_name": "Sales Strategy & Operations",
+      "onet_code": "11-2022.00",
+      "category": "marketing",
+      "functional_category": "marketing",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "Sales Strategy & Operations role focused on delivering results across marketing priorities.",
+      "required_skills": [
+        "Data Analysis",
+        "Strategic Planning",
+        "Communication",
+        "Stakeholder Management",
+        "Project Management"
+      ],
+      "preferred_skills": [
+        "SQL",
+        "CRM",
+        "Financial Modeling",
+        "Process Improvement",
+        "Excel Advanced"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Data Analysis in professional settings.",
+        "Limited evidence of delivering outcomes that combine Strategic Planning and Communication.",
+        "No track record applying marketing capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in marketing environments with measurable outcomes.",
+        "Track record demonstrating Data Analysis through projects, internships, or coursework.",
+        "Evidence of SQL proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "moderate",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Data Analysis",
+          "Strategic Planning",
+          "Communication",
+          "Stakeholder Management",
+          "Project Management"
+        ],
+        "bls_median_wage_2024": 130000.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 6.0
+      }
+    },
+    {
+      "role_id": "revenue-operations-manager",
+      "role_name": "Revenue Operations Manager",
+      "onet_code": "11-1021.00",
+      "category": "marketing",
+      "functional_category": "marketing",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": true,
+      "description": "Revenue Operations Manager role focused on delivering results across marketing priorities.",
+      "required_skills": [
+        "Data Analysis",
+        "Process Improvement",
+        "Communication",
+        "Stakeholder Management",
+        "Project Management"
+      ],
+      "preferred_skills": [
+        "SQL",
+        "CRM",
+        "Financial Modeling",
+        "Excel Advanced",
+        "Business Development"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Data Analysis in professional settings.",
+        "Limited evidence of delivering outcomes that combine Process Improvement and Communication.",
+        "No track record applying marketing capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in marketing environments with measurable outcomes.",
+        "Track record demonstrating Data Analysis through projects, internships, or coursework.",
+        "Evidence of SQL proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "moderate",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Data Analysis",
+          "Process Improvement",
+          "Communication",
+          "Stakeholder Management",
+          "Project Management"
+        ],
+        "bls_median_wage_2024": 102950.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 4.4
+      }
+    },
+    {
+      "role_id": "account-executive",
+      "role_name": "Account Executive / Enterprise Sales",
+      "onet_code": "41-3099.00",
+      "category": "marketing",
+      "functional_category": "marketing",
+      "track": "ft",
+      "mba_track": false,
+      "babson_fit": true,
+      "description": "Account Executive / Enterprise Sales role focused on delivering results across marketing priorities.",
+      "required_skills": [
+        "Communication",
+        "Negotiation",
+        "Stakeholder Management",
+        "Strategic Planning",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "CRM",
+        "Data Analysis",
+        "Presentation Skills",
+        "Customer Segmentation",
+        "Market Research"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Communication in professional settings.",
+        "Limited evidence of delivering outcomes that combine Negotiation and Stakeholder Management.",
+        "No track record applying marketing capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in marketing environments with measurable outcomes.",
+        "Track record demonstrating Communication through projects, internships, or coursework.",
+        "Evidence of CRM proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "high",
+        "innovation": "low",
+        "leadership_scale": "low",
+        "autonomy": "high",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Communication",
+          "Negotiation",
+          "Stakeholder Management",
+          "Strategic Planning",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 85000.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 4.0
+      }
+    },
+    {
+      "role_id": "supply-chain-strategy",
+      "role_name": "Supply Chain Strategy",
+      "onet_code": "13-1081.00",
+      "category": "operations",
+      "functional_category": "operations",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
+      "description": "Supply Chain Strategy role focused on delivering results across operations priorities.",
+      "required_skills": [
+        "Supply Chain Optimization",
+        "Data Analysis",
+        "Strategic Planning",
+        "Communication",
+        "Project Management"
+      ],
+      "preferred_skills": [
+        "ERP Systems",
+        "Excel Advanced",
+        "Process Improvement",
+        "Financial Modeling",
+        "Demand Forecasting"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Supply Chain Optimization in professional settings.",
+        "Limited evidence of delivering outcomes that combine Data Analysis and Strategic Planning.",
+        "No track record applying operations capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in operations environments with measurable outcomes.",
+        "Track record demonstrating Supply Chain Optimization through projects, internships, or coursework.",
+        "Evidence of ERP Systems proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Supply Chain Optimization",
+          "Data Analysis",
+          "Strategic Planning",
+          "Communication",
+          "Project Management"
+        ],
+        "bls_median_wage_2024": 80880.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 16.7
+      }
+    },
+    {
+      "role_id": "procurement-sourcing",
+      "role_name": "Procurement & Strategic Sourcing",
+      "onet_code": "13-1023.00",
+      "category": "operations",
+      "functional_category": "operations",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
+      "description": "Procurement & Strategic Sourcing role focused on delivering results across operations priorities.",
+      "required_skills": [
+        "Negotiation",
+        "Data Analysis",
+        "Communication",
+        "Stakeholder Management",
+        "Project Management"
+      ],
+      "preferred_skills": [
+        "Supply Chain Optimization",
+        "Excel Advanced",
+        "ERP Systems",
+        "Process Improvement",
+        "Risk Management"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Negotiation in professional settings.",
+        "Limited evidence of delivering outcomes that combine Data Analysis and Communication.",
+        "No track record applying operations capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in operations environments with measurable outcomes.",
+        "Track record demonstrating Negotiation through projects, internships, or coursework.",
+        "Evidence of Supply Chain Optimization proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "moderate",
+        "innovation": "low",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Negotiation",
+          "Data Analysis",
+          "Communication",
+          "Stakeholder Management",
+          "Project Management"
+        ],
+        "bls_median_wage_2024": 87500.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 4.0
+      }
+    },
+    {
+      "role_id": "logistics-manager",
+      "role_name": "Logistics Manager",
+      "onet_code": "11-3071.00",
+      "category": "operations",
+      "functional_category": "operations",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "Logistics Manager role focused on delivering results across operations priorities.",
+      "required_skills": [
+        "Supply Chain Optimization",
+        "Data Analysis",
+        "Communication",
+        "Project Management",
+        "Problem Solving"
+      ],
+      "preferred_skills": [
+        "ERP Systems",
+        "Excel Advanced",
+        "Process Improvement",
+        "Demand Forecasting",
+        "Negotiation"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Supply Chain Optimization in professional settings.",
+        "Limited evidence of delivering outcomes that combine Data Analysis and Communication.",
+        "No track record applying operations capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in operations environments with measurable outcomes.",
+        "Track record demonstrating Supply Chain Optimization through projects, internships, or coursework.",
+        "Evidence of ERP Systems proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "low",
+        "innovation": "low",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Supply Chain Optimization",
+          "Data Analysis",
+          "Communication",
+          "Project Management",
+          "Problem Solving"
+        ],
+        "bls_median_wage_2024": 80700.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 4.0
+      }
+    },
+    {
+      "role_id": "general-management-ldp",
+      "role_name": "General Management LDP",
+      "onet_code": "11-1021.00",
+      "category": "operations",
+      "functional_category": "operations",
+      "track": "internship",
+      "mba_track": true,
+      "babson_fit": false,
+      "description": "General Management LDP role focused on delivering results across operations priorities.",
+      "required_skills": [
+        "Strategic Planning",
+        "Cross-Functional Leadership",
+        "Communication",
+        "Problem Solving",
+        "Data Analysis"
+      ],
+      "preferred_skills": [
+        "Process Improvement",
+        "Change Management",
+        "Financial Modeling",
+        "Project Management",
+        "Stakeholder Management"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Strategic Planning in professional settings.",
+        "Limited evidence of delivering outcomes that combine Cross-Functional Leadership and Communication.",
+        "No track record applying operations capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in operations environments with measurable outcomes.",
+        "Track record demonstrating Strategic Planning through projects, internships, or coursework.",
+        "Evidence of Process Improvement proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "high",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "high"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Strategic Planning",
+          "Cross-Functional Leadership",
+          "Communication",
+          "Problem Solving",
+          "Data Analysis"
+        ],
+        "bls_median_wage_2024": 102950.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 4.4
+      }
+    },
+    {
+      "role_id": "operations-excellence-manager",
+      "role_name": "Operations Excellence Manager",
+      "onet_code": "11-1021.00",
+      "category": "operations",
+      "functional_category": "operations",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "Operations Excellence Manager role focused on delivering results across operations priorities.",
+      "required_skills": [
+        "Process Improvement",
+        "Lean Six Sigma",
+        "Data Analysis",
+        "Communication",
+        "Change Management"
+      ],
+      "preferred_skills": [
+        "Project Management",
+        "Stakeholder Management",
+        "Statistical Analysis",
+        "ERP Systems",
+        "Problem Solving"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Process Improvement in professional settings.",
+        "Limited evidence of delivering outcomes that combine Lean Six Sigma and Data Analysis.",
+        "No track record applying operations capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in operations environments with measurable outcomes.",
+        "Track record demonstrating Process Improvement through projects, internships, or coursework.",
+        "Evidence of Project Management proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Process Improvement",
+          "Lean Six Sigma",
+          "Data Analysis",
+          "Communication",
+          "Change Management"
+        ],
+        "bls_median_wage_2024": 102950.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 4.4
+      }
+    },
+    {
+      "role_id": "vc-associate",
+      "role_name": "Venture Capital Associate",
+      "onet_code": "13-2051.00",
+      "category": "finance",
+      "functional_category": "entrepreneurial",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "Venture Capital Associate role focused on delivering results across entrepreneurial priorities.",
+      "required_skills": [
+        "Financial Modeling",
+        "Due Diligence",
+        "Market Research",
+        "Communication",
+        "Critical Thinking",
+        "Networking"
+      ],
+      "preferred_skills": [
+        "Startup Ecosystem Knowledge",
+        "Cap Table Modeling",
+        "Strategic Planning",
+        "Competitive Analysis",
+        "Data Analysis"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Financial Modeling in professional settings.",
+        "Limited evidence of delivering outcomes that combine Due Diligence and Market Research.",
+        "No track record applying entrepreneurial capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in finance environments with measurable outcomes.",
+        "Track record demonstrating Financial Modeling through projects, internships, or coursework.",
+        "Evidence of Startup Ecosystem Knowledge proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "high",
+        "innovation": "high",
+        "leadership_scale": "low",
+        "autonomy": "high",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "high"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Financial Modeling",
+          "Due Diligence",
+          "Market Research",
+          "Communication",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 101350.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 5.7
+      }
+    },
+    {
+      "role_id": "corporate-innovation-manager",
+      "role_name": "Corporate Innovation Manager",
+      "onet_code": "11-1021.00",
+      "category": "strategy",
+      "functional_category": "entrepreneurial",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "Corporate Innovation Manager role focused on delivering results across entrepreneurial priorities.",
+      "required_skills": [
+        "Strategic Planning",
+        "Innovation Management",
+        "Stakeholder Management",
+        "Communication",
+        "Project Management"
+      ],
+      "preferred_skills": [
+        "Design Thinking",
+        "Market Research",
+        "Data Analysis",
+        "Change Management",
+        "Product Sense"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Strategic Planning in professional settings.",
+        "Limited evidence of delivering outcomes that combine Innovation Management and Stakeholder Management.",
+        "No track record applying entrepreneurial capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in strategy environments with measurable outcomes.",
+        "Track record demonstrating Strategic Planning through projects, internships, or coursework.",
+        "Evidence of Design Thinking proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "low",
+        "innovation": "high",
+        "leadership_scale": "moderate",
+        "autonomy": "high",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Strategic Planning",
+          "Innovation Management",
+          "Stakeholder Management",
+          "Communication",
+          "Project Management"
+        ],
+        "bls_median_wage_2024": 102950.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 4.4
+      }
+    },
+    {
+      "role_id": "growth-strategy",
+      "role_name": "Growth Strategy Manager",
+      "onet_code": "11-2022.00",
+      "category": "strategy",
+      "functional_category": "entrepreneurial",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "Growth Strategy Manager role focused on delivering results across entrepreneurial priorities.",
+      "required_skills": [
+        "Strategic Planning",
+        "Data Analysis",
+        "Market Research",
+        "Communication",
+        "Critical Thinking",
+        "Growth Strategy"
+      ],
+      "preferred_skills": [
+        "A/B Testing",
+        "SQL",
+        "Financial Modeling",
+        "Competitive Analysis",
+        "Product Sense"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Strategic Planning in professional settings.",
+        "Limited evidence of delivering outcomes that combine Data Analysis and Market Research.",
+        "No track record applying entrepreneurial capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in strategy environments with measurable outcomes.",
+        "Track record demonstrating Strategic Planning through projects, internships, or coursework.",
+        "Evidence of A/B Testing proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "moderate",
+        "innovation": "high",
+        "leadership_scale": "moderate",
+        "autonomy": "high",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Strategic Planning",
+          "Data Analysis",
+          "Market Research",
+          "Communication",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 130000.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 6.0
+      }
+    },
+    {
+      "role_id": "gtm-strategy-lead",
+      "role_name": "GTM Strategy Lead",
+      "onet_code": "11-2022.00",
+      "category": "strategy",
+      "functional_category": "entrepreneurial",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "GTM Strategy Lead role focused on delivering results across entrepreneurial priorities.",
+      "required_skills": [
+        "Strategic Planning",
+        "Market Research",
+        "Communication",
+        "Stakeholder Management",
+        "Data Analysis"
+      ],
+      "preferred_skills": [
+        "Financial Modeling",
+        "Business Development",
+        "Customer Segmentation",
+        "Growth Strategy",
+        "A/B Testing"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Strategic Planning in professional settings.",
+        "Limited evidence of delivering outcomes that combine Market Research and Communication.",
+        "No track record applying entrepreneurial capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in strategy environments with measurable outcomes.",
+        "Track record demonstrating Strategic Planning through projects, internships, or coursework.",
+        "Evidence of Financial Modeling proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "moderate",
+        "innovation": "high",
+        "leadership_scale": "moderate",
+        "autonomy": "high",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Strategic Planning",
+          "Market Research",
+          "Communication",
+          "Stakeholder Management",
+          "Data Analysis"
+        ],
+        "bls_median_wage_2024": 130000.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 6.0
+      }
+    },
+    {
+      "role_id": "founder-associate",
+      "role_name": "Founder's Associate / Special Projects",
+      "onet_code": "11-1021.00",
+      "category": "strategy",
+      "functional_category": "entrepreneurial",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "Founder's Associate / Special Projects role focused on delivering results across entrepreneurial priorities.",
+      "required_skills": [
+        "Problem Solving",
+        "Communication",
+        "Cross-Functional Leadership",
+        "Strategic Planning",
+        "Project Management"
+      ],
+      "preferred_skills": [
+        "Financial Modeling",
+        "Product Sense",
+        "Market Research",
+        "Data Analysis",
+        "Growth Strategy"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Problem Solving in professional settings.",
+        "Limited evidence of delivering outcomes that combine Communication and Cross-Functional Leadership.",
+        "No track record applying entrepreneurial capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in strategy environments with measurable outcomes.",
+        "Track record demonstrating Problem Solving through projects, internships, or coursework.",
+        "Evidence of Financial Modeling proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "moderate",
+        "innovation": "high",
+        "leadership_scale": "low",
+        "autonomy": "high",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Problem Solving",
+          "Communication",
+          "Cross-Functional Leadership",
+          "Strategic Planning",
+          "Project Management"
+        ],
+        "bls_median_wage_2024": 102950.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 4.4
+      }
+    },
+    {
+      "role_id": "search-fund-associate",
+      "role_name": "Search Fund Associate",
+      "onet_code": "13-2051.00",
+      "category": "finance",
+      "functional_category": "entrepreneurial",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "Search Fund Associate role focused on delivering results across entrepreneurial priorities.",
+      "required_skills": [
+        "Financial Modeling",
+        "Due Diligence",
+        "Strategic Planning",
+        "Communication",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "M&A Analysis",
+        "Valuation",
+        "Market Research",
+        "Networking",
+        "LBO Modeling"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Financial Modeling in professional settings.",
+        "Limited evidence of delivering outcomes that combine Due Diligence and Strategic Planning.",
+        "No track record applying entrepreneurial capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in finance environments with measurable outcomes.",
+        "Track record demonstrating Financial Modeling through projects, internships, or coursework.",
+        "Evidence of M&A Analysis proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "high",
+        "innovation": "moderate",
+        "leadership_scale": "high",
+        "autonomy": "high",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Financial Modeling",
+          "Due Diligence",
+          "Strategic Planning",
+          "Communication",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 101350.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 5.7
+      }
+    },
+    {
+      "role_id": "family-office-analyst",
+      "role_name": "Family Office Analyst",
+      "onet_code": "13-2051.00",
+      "category": "finance",
+      "functional_category": "finance",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "Family Office Analyst role focused on delivering results across finance priorities.",
+      "required_skills": [
+        "Financial Modeling",
+        "Due Diligence",
+        "Market Research",
+        "Communication",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "M&A Analysis",
+        "Risk Management",
+        "Networking",
+        "Data Analysis",
+        "Valuation"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Financial Modeling in professional settings.",
+        "Limited evidence of delivering outcomes that combine Due Diligence and Market Research.",
+        "No track record applying finance capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in finance environments with measurable outcomes.",
+        "Track record demonstrating Financial Modeling through projects, internships, or coursework.",
+        "Evidence of M&A Analysis proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "low",
+        "capital_allocation": "high",
+        "innovation": "low",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "high"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Financial Modeling",
+          "Due Diligence",
+          "Market Research",
+          "Communication",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 101350.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 5.7
+      }
+    },
+    {
+      "role_id": "corporate-venture-capital",
+      "role_name": "Corporate Venture Capital Associate",
+      "onet_code": "13-2051.00",
+      "category": "finance",
+      "functional_category": "entrepreneurial",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "Corporate Venture Capital Associate role focused on delivering results across entrepreneurial priorities.",
+      "required_skills": [
+        "Financial Modeling",
+        "Due Diligence",
+        "Market Research",
+        "Strategic Planning",
+        "Communication",
+        "Networking"
+      ],
+      "preferred_skills": [
+        "Startup Ecosystem Knowledge",
+        "Cap Table Modeling",
+        "Competitive Analysis",
+        "Industry Expertise",
+        "Data Analysis"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Financial Modeling in professional settings.",
+        "Limited evidence of delivering outcomes that combine Due Diligence and Market Research.",
+        "No track record applying entrepreneurial capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in finance environments with measurable outcomes.",
+        "Track record demonstrating Financial Modeling through projects, internships, or coursework.",
+        "Evidence of Startup Ecosystem Knowledge proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "high",
+        "innovation": "high",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "high"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Financial Modeling",
+          "Due Diligence",
+          "Market Research",
+          "Strategic Planning",
+          "Communication"
+        ],
+        "bls_median_wage_2024": 101350.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 5.7
+      }
+    },
+    {
+      "role_id": "social-enterprise-strategy",
+      "role_name": "Social Enterprise Strategy",
+      "onet_code": "11-1021.00",
+      "category": "strategy",
+      "functional_category": "entrepreneurial",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "Social Enterprise Strategy role focused on delivering results across entrepreneurial priorities.",
+      "required_skills": [
+        "Strategic Planning",
+        "Stakeholder Management",
+        "Communication",
+        "Data Analysis",
+        "Project Management"
+      ],
+      "preferred_skills": [
+        "Impact Measurement",
+        "Financial Modeling",
+        "Market Research",
+        "Community Engagement",
+        "Change Management"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Strategic Planning in professional settings.",
+        "Limited evidence of delivering outcomes that combine Stakeholder Management and Communication.",
+        "No track record applying entrepreneurial capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in strategy environments with measurable outcomes.",
+        "Track record demonstrating Strategic Planning through projects, internships, or coursework.",
+        "Evidence of Impact Measurement proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Strategic Planning",
+          "Stakeholder Management",
+          "Communication",
+          "Data Analysis",
+          "Project Management"
+        ],
+        "bls_median_wage_2024": 102950.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 4.4
+      }
+    },
+    {
+      "role_id": "bizops-startup",
+      "role_name": "BizOps Manager (Startup)",
+      "onet_code": "11-1021.00",
+      "category": "operations",
+      "functional_category": "entrepreneurial",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": true,
+      "description": "BizOps Manager (Startup) role focused on delivering results across entrepreneurial priorities.",
+      "required_skills": [
+        "Problem Solving",
+        "Data Analysis",
+        "Communication",
+        "Project Management",
+        "Cross-Functional Leadership"
+      ],
+      "preferred_skills": [
+        "Financial Modeling",
+        "Process Improvement",
+        "Growth Strategy",
+        "Hiring and Recruiting",
+        "Stakeholder Management"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Problem Solving in professional settings.",
+        "Limited evidence of delivering outcomes that combine Data Analysis and Communication.",
+        "No track record applying entrepreneurial capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in operations environments with measurable outcomes.",
+        "Track record demonstrating Problem Solving through projects, internships, or coursework.",
+        "Evidence of Financial Modeling proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "moderate",
+        "innovation": "high",
+        "leadership_scale": "moderate",
+        "autonomy": "high",
+        "stability_vs_volatility": "low",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Problem Solving",
+          "Data Analysis",
+          "Communication",
+          "Project Management",
+          "Cross-Functional Leadership"
+        ],
+        "bls_median_wage_2024": 102950.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 4.4
+      }
+    },
+    {
+      "role_id": "hr-business-partner",
+      "role_name": "HR Business Partner",
+      "onet_code": "13-1071.00",
+      "category": "people_hr",
+      "functional_category": "people_hr",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "HR Business Partner role focused on delivering results across people hr priorities.",
+      "required_skills": [
+        "Communication",
+        "Stakeholder Management",
+        "Problem Solving",
+        "Data Analysis",
+        "Change Management"
+      ],
+      "preferred_skills": [
+        "HR Strategy",
+        "Talent Management",
+        "Organizational Development",
+        "Process Improvement",
+        "Presentation Skills"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Communication in professional settings.",
+        "Limited evidence of delivering outcomes that combine Stakeholder Management and Problem Solving.",
+        "No track record applying people hr capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in people hr environments with measurable outcomes.",
+        "Track record demonstrating Communication through projects, internships, or coursework.",
+        "Evidence of HR Strategy proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "low",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Communication",
+          "Stakeholder Management",
+          "Problem Solving",
+          "Data Analysis",
+          "Change Management"
+        ],
+        "bls_median_wage_2024": 86800.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 5.0
+      }
+    },
+    {
+      "role_id": "people-analytics",
+      "role_name": "People Analytics Manager",
+      "onet_code": "15-2051.00",
+      "category": "people_hr",
+      "functional_category": "people_hr",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "People Analytics Manager role focused on delivering results across people hr priorities.",
+      "required_skills": [
+        "Data Analysis",
+        "SQL",
+        "Statistical Analysis",
+        "Communication",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "Python",
+        "Tableau or Power BI",
+        "HR Strategy",
+        "R",
+        "Data Visualization"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Data Analysis in professional settings.",
+        "Limited evidence of delivering outcomes that combine SQL and Statistical Analysis.",
+        "No track record applying people hr capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in people hr environments with measurable outcomes.",
+        "Track record demonstrating Data Analysis through projects, internships, or coursework.",
+        "Evidence of Python proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Data Analysis",
+          "SQL",
+          "Statistical Analysis",
+          "Communication",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 112590.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 33.5
+      }
+    },
+    {
+      "role_id": "talent-acquisition-manager",
+      "role_name": "Talent Acquisition Manager",
+      "onet_code": "13-1071.00",
+      "category": "people_hr",
+      "functional_category": "people_hr",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "Talent Acquisition Manager role focused on delivering results across people hr priorities.",
+      "required_skills": [
+        "Communication",
+        "Stakeholder Management",
+        "Project Management",
+        "Negotiation",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "Hiring and Recruiting",
+        "Data Analysis",
+        "HR Strategy",
+        "Networking",
+        "Problem Solving"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Communication in professional settings.",
+        "Limited evidence of delivering outcomes that combine Stakeholder Management and Project Management.",
+        "No track record applying people hr capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in people hr environments with measurable outcomes.",
+        "Track record demonstrating Communication through projects, internships, or coursework.",
+        "Evidence of Hiring and Recruiting proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "low",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Communication",
+          "Stakeholder Management",
+          "Project Management",
+          "Negotiation",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 86800.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 5.0
+      }
+    },
+    {
+      "role_id": "organizational-development",
+      "role_name": "Organizational Development Specialist",
+      "onet_code": "13-1071.00",
+      "category": "people_hr",
+      "functional_category": "people_hr",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "Organizational Development Specialist role focused on delivering results across people hr priorities.",
+      "required_skills": [
+        "Change Management",
+        "Stakeholder Management",
+        "Communication",
+        "Project Management",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "Organizational Development",
+        "HR Strategy",
+        "Data Analysis",
+        "Presentation Skills",
+        "Process Improvement"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Change Management in professional settings.",
+        "Limited evidence of delivering outcomes that combine Stakeholder Management and Communication.",
+        "No track record applying people hr capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in people hr environments with measurable outcomes.",
+        "Track record demonstrating Change Management through projects, internships, or coursework.",
+        "Evidence of Organizational Development proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Change Management",
+          "Stakeholder Management",
+          "Communication",
+          "Project Management",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 86800.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 5.0
+      }
+    },
+    {
+      "role_id": "dei-program-manager",
+      "role_name": "DEI Program Manager",
+      "onet_code": "13-1071.00",
+      "category": "people_hr",
+      "functional_category": "people_hr",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "DEI Program Manager role focused on delivering results across people hr priorities.",
+      "required_skills": [
+        "Stakeholder Management",
+        "Communication",
+        "Project Management",
+        "Data Analysis",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "HR Strategy",
+        "Organizational Development",
+        "Change Management",
+        "Community Engagement",
+        "Presentation Skills"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Stakeholder Management in professional settings.",
+        "Limited evidence of delivering outcomes that combine Communication and Project Management.",
+        "No track record applying people hr capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in people hr environments with measurable outcomes.",
+        "Track record demonstrating Stakeholder Management through projects, internships, or coursework.",
+        "Evidence of HR Strategy proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Stakeholder Management",
+          "Communication",
+          "Project Management",
+          "Data Analysis",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 86800.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 5.0
+      }
+    },
+    {
+      "role_id": "policy-analyst",
+      "role_name": "Policy Analyst",
+      "onet_code": "19-3094.00",
+      "category": "government",
+      "functional_category": "government",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "Policy Analyst role focused on delivering results across government priorities.",
+      "required_skills": [
+        "Data Analysis",
+        "Policy Analysis",
+        "Communication",
+        "Critical Thinking",
+        "Writing"
+      ],
+      "preferred_skills": [
+        "Statistical Analysis",
+        "Program Evaluation",
+        "Policy Knowledge",
+        "Presentation Skills",
+        "Market Research"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Data Analysis in professional settings.",
+        "Limited evidence of delivering outcomes that combine Policy Analysis and Communication.",
+        "No track record applying government capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in government environments with measurable outcomes.",
+        "Track record demonstrating Data Analysis through projects, internships, or coursework.",
+        "Evidence of Statistical Analysis proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Data Analysis",
+          "Policy Analysis",
+          "Communication",
+          "Critical Thinking",
+          "Writing"
+        ],
+        "bls_median_wage_2024": 69200.0,
+        "bls_typical_education": "Master's degree",
+        "bls_employment_growth_pct_2024_34": 7.0
+      }
+    },
+    {
+      "role_id": "nonprofit-program-manager",
+      "role_name": "Nonprofit Program Manager",
+      "onet_code": "11-9151.00",
+      "category": "nonprofit",
+      "functional_category": "nonprofit",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": true,
+      "description": "Nonprofit Program Manager role focused on delivering results across nonprofit priorities.",
+      "required_skills": [
+        "Project Management",
+        "Stakeholder Management",
+        "Communication",
+        "Data Analysis",
+        "Strategic Planning"
+      ],
+      "preferred_skills": [
+        "Grant Writing",
+        "Impact Measurement",
+        "Program Evaluation",
+        "Community Engagement",
+        "Change Management"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Project Management in professional settings.",
+        "Limited evidence of delivering outcomes that combine Stakeholder Management and Communication.",
+        "No track record applying nonprofit capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in nonprofit environments with measurable outcomes.",
+        "Track record demonstrating Project Management through projects, internships, or coursework.",
+        "Evidence of Grant Writing proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Project Management",
+          "Stakeholder Management",
+          "Communication",
+          "Data Analysis",
+          "Strategic Planning"
+        ],
+        "bls_median_wage_2024": 74240.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 9.0
+      }
+    },
+    {
+      "role_id": "healthcare-administrator",
+      "role_name": "Healthcare Administrator",
+      "onet_code": "11-9111.00",
+      "category": "healthcare",
+      "functional_category": "healthcare",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "Healthcare Administrator role focused on delivering results across healthcare priorities.",
+      "required_skills": [
+        "Healthcare Domain Knowledge",
+        "Stakeholder Management",
+        "Project Management",
+        "Communication",
+        "Data Analysis"
+      ],
+      "preferred_skills": [
+        "Process Improvement",
+        "Regulatory Awareness",
+        "Financial Analysis",
+        "Change Management",
+        "ERP Systems"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Healthcare Domain Knowledge in professional settings.",
+        "Limited evidence of delivering outcomes that combine Stakeholder Management and Project Management.",
+        "No track record applying healthcare capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in healthcare environments with measurable outcomes.",
+        "Track record demonstrating Healthcare Domain Knowledge through projects, internships, or coursework.",
+        "Evidence of Process Improvement proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "low",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Healthcare Domain Knowledge",
+          "Stakeholder Management",
+          "Project Management",
+          "Communication",
+          "Data Analysis"
+        ],
+        "bls_median_wage_2024": 110680.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 28.0
+      }
+    },
+    {
+      "role_id": "hospital-operations-manager",
+      "role_name": "Hospital Operations Manager",
+      "onet_code": "11-9111.00",
+      "category": "healthcare",
+      "functional_category": "healthcare",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "Hospital Operations Manager role focused on delivering results across healthcare priorities.",
+      "required_skills": [
+        "Healthcare Domain Knowledge",
+        "Process Improvement",
+        "Cross-Functional Leadership",
+        "Data Analysis",
+        "Communication"
+      ],
+      "preferred_skills": [
+        "Clinical Workflow Understanding",
+        "Change Management",
+        "Stakeholder Management",
+        "ERP Systems",
+        "Lean Six Sigma"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Healthcare Domain Knowledge in professional settings.",
+        "Limited evidence of delivering outcomes that combine Process Improvement and Cross-Functional Leadership.",
+        "No track record applying healthcare capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in healthcare environments with measurable outcomes.",
+        "Track record demonstrating Healthcare Domain Knowledge through projects, internships, or coursework.",
+        "Evidence of Clinical Workflow Understanding proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "high",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Healthcare Domain Knowledge",
+          "Process Improvement",
+          "Cross-Functional Leadership",
+          "Data Analysis",
+          "Communication"
+        ],
+        "bls_median_wage_2024": 110680.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 28.0
+      }
+    },
+    {
+      "role_id": "clinical-program-manager",
+      "role_name": "Clinical Program Manager",
+      "onet_code": "11-9111.00",
+      "category": "healthcare",
+      "functional_category": "healthcare",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "Clinical Program Manager role focused on delivering results across healthcare priorities.",
+      "required_skills": [
+        "Healthcare Domain Knowledge",
+        "Project Management",
+        "Stakeholder Management",
+        "Communication",
+        "Data Analysis"
+      ],
+      "preferred_skills": [
+        "Clinical Workflow Understanding",
+        "Regulatory Awareness",
+        "Change Management",
+        "Process Improvement",
+        "Program Evaluation"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Healthcare Domain Knowledge in professional settings.",
+        "Limited evidence of delivering outcomes that combine Project Management and Stakeholder Management.",
+        "No track record applying healthcare capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in healthcare environments with measurable outcomes.",
+        "Track record demonstrating Healthcare Domain Knowledge through projects, internships, or coursework.",
+        "Evidence of Clinical Workflow Understanding proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Healthcare Domain Knowledge",
+          "Project Management",
+          "Stakeholder Management",
+          "Communication",
+          "Data Analysis"
+        ],
+        "bls_median_wage_2024": 110680.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 28.0
+      }
+    },
+    {
+      "role_id": "health-informatics-analyst",
+      "role_name": "Health Informatics Analyst",
+      "onet_code": "15-1211.01",
+      "category": "healthcare",
+      "functional_category": "healthcare",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "Health Informatics Analyst role focused on delivering results across healthcare priorities.",
+      "required_skills": [
+        "Data Analysis",
+        "SQL",
+        "Healthcare Domain Knowledge",
+        "Communication",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "Python",
+        "Statistical Analysis",
+        "Tableau or Power BI",
+        "Regulatory Awareness",
+        "ERP Systems"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Data Analysis in professional settings.",
+        "Limited evidence of delivering outcomes that combine SQL and Healthcare Domain Knowledge.",
+        "No track record applying healthcare capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in healthcare environments with measurable outcomes.",
+        "Track record demonstrating Data Analysis through projects, internships, or coursework.",
+        "Evidence of Python proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "moderate",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Data Analysis",
+          "SQL",
+          "Healthcare Domain Knowledge",
+          "Communication",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 112590.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 33.5
+      }
+    },
+    {
+      "role_id": "grants-manager",
+      "role_name": "Grants Manager",
+      "onet_code": "13-1131.00",
+      "category": "nonprofit",
+      "functional_category": "nonprofit",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
+      "description": "Grants Manager role focused on delivering results across nonprofit priorities.",
+      "required_skills": [
+        "Communication",
+        "Project Management",
+        "Financial Analysis",
+        "Stakeholder Management",
+        "Writing"
+      ],
+      "preferred_skills": [
+        "Grant Writing",
+        "Program Evaluation",
+        "Data Analysis",
+        "Impact Measurement",
+        "Regulatory Awareness"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Communication in professional settings.",
+        "Limited evidence of delivering outcomes that combine Project Management and Financial Analysis.",
+        "No track record applying nonprofit capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in nonprofit environments with measurable outcomes.",
+        "Track record demonstrating Communication through projects, internships, or coursework.",
+        "Evidence of Grant Writing proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "low",
+        "innovation": "low",
+        "leadership_scale": "low",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Communication",
+          "Project Management",
+          "Financial Analysis",
+          "Stakeholder Management",
+          "Writing"
+        ],
+        "bls_median_wage_2024": 74240.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 9.0
+      }
+    },
+    {
+      "role_id": "development-fundraising-manager",
+      "role_name": "Development & Fundraising Manager",
+      "onet_code": "11-2033.00",
+      "category": "nonprofit",
+      "functional_category": "nonprofit",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": true,
+      "description": "Development & Fundraising Manager role focused on delivering results across nonprofit priorities.",
+      "required_skills": [
+        "Communication",
+        "Stakeholder Management",
+        "Strategic Planning",
+        "Networking",
+        "Presentation Skills"
+      ],
+      "preferred_skills": [
+        "Market Research",
+        "Data Analysis",
+        "Impact Measurement",
+        "Project Management",
+        "CRM"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Communication in professional settings.",
+        "Limited evidence of delivering outcomes that combine Stakeholder Management and Strategic Planning.",
+        "No track record applying nonprofit capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in nonprofit environments with measurable outcomes.",
+        "Track record demonstrating Communication through projects, internships, or coursework.",
+        "Evidence of Market Research proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "low",
+        "innovation": "low",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "high",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Communication",
+          "Stakeholder Management",
+          "Strategic Planning",
+          "Networking",
+          "Presentation Skills"
+        ],
+        "bls_median_wage_2024": 74240.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 9.0
+      }
+    },
+    {
+      "role_id": "customer-success-manager",
+      "role_name": "Customer Success Manager",
+      "onet_code": "11-2021.00",
+      "category": "product",
+      "functional_category": "product",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": true,
+      "description": "Customer Success Manager role focused on delivering results across product priorities.",
+      "required_skills": [
+        "Communication",
+        "Stakeholder Management",
+        "Data Analysis",
+        "Problem Solving",
+        "Critical Thinking"
+      ],
+      "preferred_skills": [
+        "CRM",
+        "Product Sense",
+        "Strategic Planning",
+        "SQL",
+        "Process Improvement"
+      ],
+      "barrier_conditions": [
+        "No demonstrated experience with Communication in professional settings.",
+        "Limited evidence of delivering outcomes that combine Stakeholder Management and Data Analysis.",
+        "No track record applying product capabilities to business decisions."
+      ],
+      "expected_signals": [
+        "Prior experience in product environments with measurable outcomes.",
+        "Track record demonstrating Communication through projects, internships, or coursework.",
+        "Evidence of CRM proficiency via portfolio, certification, or quantified wins."
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "moderate",
+        "capital_allocation": "low",
+        "innovation": "low",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Communication",
+          "Stakeholder Management",
+          "Data Analysis",
+          "Problem Solving",
+          "Critical Thinking"
+        ],
+        "bls_median_wage_2024": 120000.0,
+        "bls_typical_education": "Bachelor's",
+        "bls_employment_growth_pct_2024_34": 6.0
+      }
     }
   ]
 }
