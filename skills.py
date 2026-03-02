@@ -17,6 +17,8 @@ import numpy as np
 import ollama
 from pydantic import BaseModel, Field
 
+from matching.skill_graph import get_skill_graph as _get_skill_graph
+
 from config import (
     APP_DIR, DATA_DIR, OLLAMA_ENDPOINT, OLLAMA_TIMEOUT,
     get_tuning, extraction_model, extraction_options,
@@ -645,3 +647,8 @@ def get_flat_skills(
                 flat.append(skill)
     flat.sort(key=lambda s: s.confidence, reverse=True)
     return flat
+
+
+def get_skill_graph() -> dict:
+    """Expose cached skill graph accessor for compatibility."""
+    return _get_skill_graph()

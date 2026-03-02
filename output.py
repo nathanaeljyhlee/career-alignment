@@ -9,6 +9,7 @@ Formats pipeline results into the 6 PRD sections + strategic decision module:
   Section 5: Gap Analysis (per-role gaps + leverage moves)
   Section 6: Strategic Decision (Win Now vs Invest to Pivot recommendation)
 """
+from datetime import date, timedelta
 from typing import Any
 
 from config import get_tuning
@@ -45,6 +46,7 @@ def build_output(
         "section_5_gaps": [],
         "section_6_strategic": {},
         "section_7_cross_role": cross_role or {},
+        "section_8_decision_sprint": {},
         "metadata": {
             "errors": errors or [],
             "warnings": warnings or [],
@@ -86,6 +88,9 @@ def build_output(
 
     # Section 6: Strategic recommendation
     result["section_6_strategic"] = _build_strategic_decision(win_now, pivot)
+
+    # Section 8: Decision Sprint card
+    result["section_8_decision_sprint"] = build_decision_sprint(result)
 
     return result
 
@@ -230,3 +235,151 @@ def _build_strategic_decision(
         "win_now_count": len(win_now),
         "pivot_count": len(pivot),
     }
+
+
+def build_decision_sprint(result_bundle: dict[str, Any]) -> dict[str, Any]:
+    """Build deterministic Decision Sprint card from computed pipeline outputs only."""
+    roles = (result_bundle.get("section_3_win_now", []) or []) + (result_bundle.get("section_4_pivot", []) or [])
+    if not roles:
+        return {}
+
+    cfg = get_tuning("decision_sprint") or {}
+    fit_w = cfg.get("fit_weight", 0.45)
+    conf_w = cfg.get("confidence_weight", 0.30)
+    effort_w = cfg.get("effort_weight", 0.25)
+    checkpoint_days = cfg.get("checkpoint_days", 28)
+
+    effort_values = [
+        (r.get("role") or {}).get("effort_to_fit")
+        for r in roles if isinstance((r.get("role") or {}).get("effort_to_fit"), (int, float))
+    ]
+    effort_min = min(effort_values) if effort_values else 0.0
+    effort_max = max(effort_values) if effort_values else 1.0
+
+    scored = []
+    for idx, entry in enumerate(roles):
+        fit = entry.get("fit") or {}
+        conf = entry.get("confidence") or {}
+        role = entry.get("role") or {}
+
+        fit_score = float(fit.get("composite_score", 0.0))
+        conf_score = float(conf.get("composite_score", 0.0))
+        effort = role.get("effort_to_fit")
+        if isinstance(effort, (int, float)) and effort_max > effort_min:
+            effort_norm = (float(effort) - effort_min) / (effort_max - effort_min)
+        else:
+            effort_norm = 0.5
+
+        decision_score = fit_w * fit_score + conf_w * conf_score + effort_w * (1 - effort_norm)
+        scored.append((decision_score, idx, entry))
+
+    scored.sort(key=lambda x: x[0], reverse=True)
+
+    top_idx = 0
+    for i, (_, _, entry) in enumerate(scored):
+        fit = entry.get("fit") or {}
+        role = entry.get("role") or {}
+        motivation = role.get("motivation_fit") or {}
+        role_constraints = {c for c in motivation.get("constraints", []) if isinstance(c, str) and c}
+        top_constraints = {c for c in (result_bundle.get("section_1_snapshot", {}).get("optimization_priorities", []) or []) if isinstance(c, str)}
+        if top_constraints and role_constraints and role_constraints.isdisjoint(top_constraints):
+            if i + 1 < len(scored):
+                top_idx = i + 1
+            break
+        top_idx = i
+        break
+
+    _, _, target = scored[top_idx]
+    target_fit = target.get("fit") or {}
+    target_role = target.get("role") or {}
+    conf_band = (target.get("confidence") or {}).get("confidence_band", "moderate").title()
+
+    low_conf = conf_band.lower() == "low"
+    action_verb = "Explore" if low_conf else "Commit"
+
+    role_name = target_fit.get("role_name", "Target Role")
+    role_cat = (target_role.get("category") or "general").lower()
+
+    shared_gaps = result_bundle.get("section_7_cross_role", {}).get("shared_gaps", []) or []
+    gap_candidates = []
+    for gap in shared_gaps:
+        skill = gap.get("skill", "")
+        if not skill:
+            continue
+        gap_candidates.append({
+            "skill": skill,
+            "gap_severity": float(gap.get("avg_severity", 0.0)),
+            "cross_role_frequency": float(gap.get("leverage_multiplier", 1.0)),
+            "leverage_weight": 1.0 + 0.2 * float(gap.get("leverage_multiplier", 1.0) - 1),
+            "roles_unlocked": gap.get("roles_affected", []),
+        })
+
+    gap_candidates.sort(
+        key=lambda g: g["gap_severity"] * g["cross_role_frequency"] * g["leverage_weight"],
+        reverse=True,
+    )
+    top2 = gap_candidates[:2]
+
+    loop_templates = {
+        "product": ("Build one product teardown or feature spec tied to user pain.", "Reach out to 2 PM/CS contacts for role-calibrated feedback.", "Submit 3 targeted applications and complete 1 interview prep drill."),
+        "finance": ("Create one investment memo or model artifact each week.", "Do 2 informational calls with operators/investors in target vertical.", "Apply to 3 roles and rehearse 1 technical case/interview block."),
+        "healthcare": ("Publish one process-improvement or digital-health analysis artifact.", "Connect with 2 healthcare operators/product leaders per week.", "Apply to 2-3 roles and prep one domain-specific story set."),
+        "technology": ("Ship one mini project/case artifact demonstrating execution.", "Run 2 networking conversations with target-team practitioners.", "Apply to 3 roles and rehearse 1 behavioral + 1 case set."),
+        "general": ("Produce one tangible artifact that proves role-relevant capability.", "Have 2 focused conversations with people in your target role.", "Apply to 3 curated roles and run 1 structured prep session."),
+    }
+    project_block, market_block, pipeline_block = loop_templates.get(role_cat, loop_templates["general"])
+
+    go_criteria = [
+        "At least 2 positive market signals (referrals, recruiter screens, or strong networking pulls).",
+        "Completion of 4 weekly artifacts aligned to target-role skill gaps.",
+    ]
+    pivot_criteria = [
+        "No interview progression after 4 weeks despite consistent execution.",
+        "Repeated feedback indicates a single high-severity gap not closing fast enough.",
+    ]
+
+    return {
+        "role_bet": {
+            "target_role": role_name,
+            "decision_mode": "explore" if low_conf else "commit",
+            "rationale": f"{action_verb} {role_name} for the next 90 days because it balances current fit, confidence, and effort-to-fit better than alternatives.",
+            "confidence_band": conf_band,
+        },
+        "skill_closures": top2,
+        "weekly_execution_loop": {
+            "project_block": project_block,
+            "market_block": market_block,
+            "pipeline_block": pipeline_block,
+        },
+        "go_pivot_checkpoint": {
+            "checkpoint_date": (date.today() + timedelta(days=checkpoint_days)).isoformat(),
+            "go_criteria": go_criteria,
+            "pivot_criteria": pivot_criteria,
+        },
+        "copy_text": _render_decision_sprint_text(role_name, conf_band, low_conf, top2, project_block, market_block, pipeline_block, checkpoint_days),
+    }
+
+
+def _render_decision_sprint_text(role_name: str, conf_band: str, low_conf: bool, top2: list[dict[str, Any]],
+                                 project_block: str, market_block: str, pipeline_block: str, checkpoint_days: int) -> str:
+    mode = "Explore" if low_conf else "Commit"
+    lines = [
+        "Decision Sprint (28-Day Checkpoint)",
+        f"1) 90-day role bet: {mode} on {role_name} ({conf_band} confidence).",
+        "2) Top-2 skill closures:",
+    ]
+    if top2:
+        for i, skill in enumerate(top2, 1):
+            unlocked = ", ".join(skill.get("roles_unlocked", [])[:3]) or "adjacent target roles"
+            lines.append(f"   {i}. {skill.get('skill', 'N/A')} -> unlocks {unlocked}")
+    else:
+        lines.append("   1. No high-severity shared gaps detected; continue depth-building in target-role skills.")
+
+    lines.extend([
+        "3) Weekly execution loop:",
+        f"   - Project: {project_block}",
+        f"   - Market: {market_block}",
+        f"   - Pipeline: {pipeline_block}",
+        f"4) Go/Pivot checkpoint: Reassess at day {checkpoint_days} based on interview traction + gap closure velocity.",
+    ])
+    return "\n".join(lines)

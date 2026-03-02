@@ -28,7 +28,10 @@ logger = logging.getLogger(__name__)
 _DEFAULT_TAXONOMY_PATH = Path(__file__).parent.parent / "data" / "role_taxonomy.json"
 
 
-def build_skill_graph(taxonomy_path: str | None = None) -> dict:
+_SKILL_GRAPH: dict | None = None
+
+
+def _build_skill_graph(taxonomy_path: str | None = None) -> dict:
     """
     Build adjacency data from role_taxonomy.json.
 
@@ -112,6 +115,16 @@ def build_skill_graph(taxonomy_path: str | None = None) -> dict:
         "clusters": clusters,
         "hub_skills": hub_skills,
     }
+
+
+
+
+def get_skill_graph() -> dict:
+    """Return cached skill graph built from static taxonomy data."""
+    global _SKILL_GRAPH
+    if _SKILL_GRAPH is None:
+        _SKILL_GRAPH = _build_skill_graph()
+    return _SKILL_GRAPH
 
 
 def _find_clusters(adjacency: dict, roles: list[dict]) -> list[dict]:
@@ -241,3 +254,10 @@ def infer_from_graph(
     # Sort by confidence descending, cap at 5 to avoid noise
     inferred.sort(key=lambda x: x["confidence"], reverse=True)
     return inferred[:5]
+
+
+def build_skill_graph(taxonomy_path: str | None = None) -> dict:
+    """Backward-compatible wrapper around cached/default graph builder."""
+    if taxonomy_path:
+        return _build_skill_graph(taxonomy_path)
+    return get_skill_graph()
