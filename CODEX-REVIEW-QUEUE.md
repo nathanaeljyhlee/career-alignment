@@ -339,7 +339,7 @@ Preserve existing error handling — if either future raises, let the exception 
 |------|--------|--------------|
 | CMF-030 | Resolved | Straggler alias (`"clinical experience"` → `"Healthcare Domain Knowledge"`) added via patch commit on main (2026-03-02). |
 | CMF-031 | Merged (PR #6) | Verify: `HIPAA Compliance` absent from role_taxonomy.json; `Healthcare Regulatory Compliance` exists in onet_skills.json; all 8 aliases present in skill_aliases.json. |
-| CMF-005 | Merged | `--dry-run` path merged. Verify: `python tally_intake.py --dry-run` processes fixture submission end-to-end without crashing. Live API path still needs real Tally key test. |
+| CMF-005 | Verified 2026-03-02 | `--dry-run` processes fixture end-to-end clean. Live API confirmed: `--list` returns 3 real submissions (Abhi Pradhan, Delzaan Sutaria, Amos Ng). Ollama must be running for full pipeline execution. |
 | CMF-007 | Merged | Verify: `skills_flat` contains entries with `match_method: "transfer_label"` when run on a domain-specific resume (clinical, military, nonprofit). |
 | CMF-033 | Merged | Verify: second run on Amos profile should not flag "no multi-workstream" as a gap. |
 | CMF-035 | Merged | Verify: GovTech candidate with 0/4 expected signals sees overlap_score reduced by ~15%. |
