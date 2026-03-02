@@ -86,6 +86,7 @@ class PipelineState:
 
     # Stage 3 outputs
     matched_roles: list[dict] | None = None
+    retrieval_diagnostics: dict[str, Any] | None = None
     skill_overlaps: dict[str, dict] | None = None
     fit_results: list[dict] | None = None
     gap_results: list[dict] | None = None
@@ -377,18 +378,38 @@ def stage_3_role_matching(state: PipelineState) -> PipelineState:
         # Embedding pre-match
         with _timed_substep(state, "embedding_prematch"):
             try:
-                matched = match_roles(
-                    state.profile, state.skills_flat, state.motivation
+                matched, retrieval_diag = match_roles(
+                    state.profile, state.skills_flat, state.motivation,
+                    return_diagnostics=True,
                 )
                 state.matched_roles = matched
+                state.retrieval_diagnostics = retrieval_diag
+
+                ranked_roles = retrieval_diag.get("considered_roles", [])
+                top_n = max(int(retrieval_diag.get("top_k", 0) or 0), 10)
+                top_n_roles = []
+                if ranked_roles:
+                    best_score = ranked_roles[0].get("similarity_score", 0)
+                    prev_score = None
+                    for role in ranked_roles[:top_n]:
+                        score = role.get("similarity_score", 0)
+                        top_n_roles.append({
+                            "id": role.get("role_id"),
+                            "name": role.get("role_name"),
+                            "rank": role.get("rank"),
+                            "similarity": score,
+                            "delta_from_best": round(best_score - score, 4),
+                            "delta_from_prev": round((prev_score - score), 4) if prev_score is not None else 0.0,
+                        })
+                        prev_score = score
 
                 _log_event(state, "embedding_prematch_complete", {
                     "roles_matched": len(matched),
-                    "roles": [
-                        {"id": r.get("role_id"), "name": r.get("role_name"),
-                         "similarity": r.get("similarity_score")}
-                        for r in matched
-                    ],
+                    "total_roles_in_taxonomy": retrieval_diag.get("total_roles", 0),
+                    "top_k_configured": retrieval_diag.get("top_k"),
+                    "threshold_used": retrieval_diag.get("threshold"),
+                    "top_n_ranked_with_deltas": top_n_roles,
+                    "selected_roles": [r.get("role_id") for r in matched],
                 })
 
                 if not matched:
@@ -607,6 +628,7 @@ def _save_run_log(state: PipelineState) -> Path:
                               "expected_signals", "motivation_attributes")}
                 for r in (state.matched_roles or [])
             ],
+            "retrieval_diagnostics": state.retrieval_diagnostics,
             "fit_results": state.fit_results,
             "gap_results": state.gap_results,
             "confidence_results": state.confidence_results,
@@ -662,6 +684,7 @@ def _save_run_log(state: PipelineState) -> Path:
              "similarity": r.get("similarity_score")}
             for r in (state.matched_roles or [])
         ],
+        "retrieval_diagnostics": state.retrieval_diagnostics,
         "skill_overlaps": state.skill_overlaps,
         "fit_results": state.fit_results,
         "gap_results": state.gap_results,

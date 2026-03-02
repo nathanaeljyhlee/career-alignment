@@ -430,6 +430,53 @@ if "output" in st.session_state:
     # Dynamic section numbering — tracks next number so sections don't skip
     _section_num = 3
 
+    retrieval_diag = getattr(st.session_state.get("state"), "retrieval_diagnostics", None)
+    if retrieval_diag and retrieval_diag.get("considered_roles"):
+        with st.expander("Role universe considered", expanded=False):
+            st.caption(
+                f"Taxonomy roles: {retrieval_diag.get('total_roles', 0)} | "
+                f"top_k: {retrieval_diag.get('top_k')} | "
+                f"threshold: {retrieval_diag.get('threshold')}"
+            )
+
+            selected = [r for r in retrieval_diag.get("considered_roles", []) if r.get("reason") == "selected"]
+            excluded = retrieval_diag.get("excluded_roles", [])
+
+            import pandas as pd
+            if selected:
+                st.markdown("**Selected roles**")
+                st.dataframe(
+                    pd.DataFrame([
+                        {
+                            "Role": r.get("role_name"),
+                            "Role ID": r.get("role_id"),
+                            "Rank": r.get("rank"),
+                            "Similarity": r.get("similarity_score"),
+                            "Rationale": "Within top_k and above threshold",
+                        }
+                        for r in selected
+                    ]),
+                    use_container_width=True,
+                    hide_index=True,
+                )
+
+            if excluded:
+                st.markdown("**Excluded roles**")
+                st.dataframe(
+                    pd.DataFrame([
+                        {
+                            "Role": r.get("role_name"),
+                            "Role ID": r.get("role_id"),
+                            "Rank": r.get("rank"),
+                            "Similarity": r.get("similarity_score"),
+                            "Rationale": "Below threshold" if r.get("reason") == "below_threshold" else "Outside top_k",
+                        }
+                        for r in excluded
+                    ]),
+                    use_container_width=True,
+                    hide_index=True,
+                )
+
     # Section: Win Now Roles
     win_now = output["section_3_win_now"]
     if win_now:
