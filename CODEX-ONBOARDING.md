@@ -43,9 +43,9 @@ analysis/
   cross_role.py             # Cross-role ranking, shared gaps, leverage skills
 
 data/
-  onet_skills.json          # 468 canonical skills (O*NET + ESCO enriched)
-  skill_aliases.json        # 1,806 alias entries → canonical skill name
-  role_taxonomy.json        # 18 target roles with required/preferred skills + metadata
+  onet_skills.json          # 469 canonical skills (O*NET + ESCO enriched)
+  skill_aliases.json        # 1,825 alias entries → canonical skill name
+  role_taxonomy.json        # 20 target roles with required/preferred skills + metadata
 ```
 
 **Pipeline stages (engine.py):**
@@ -106,9 +106,9 @@ Run output saved to `runs/` as `run_HHMMSS.json`. `latest_run.json` is always ov
 1. **All LLM calls use `format=PydanticModel.model_json_schema()`** — never `format="json"`. This enforces schema at the grammar level via Ollama's structured output.
 2. **All tunable parameters come from `tuning.yaml` via `get_tuning()`** — never hardcode thresholds, weights, or model names in agent files.
 3. **Use `config.py` helpers:** `extraction_options()` and `reasoning_options()` return the correct `num_ctx` + temperature dicts for `ollama.chat()` calls.
-4. **`skill_aliases.json` format:** `{"alias string": "Canonical Skill Name"}` — all keys lowercase, values match canonical name in `onet_skills.json` exactly.
-5. **`role_taxonomy.json` format:** Array of role objects. Each role has `role_id`, `title`, `required_skills` (list), `preferred_skills` (list), `motivation_attributes` (dict), `expected_signals` (list), `barrier_conditions` (list).
-6. **`onet_skills.json` format:** `{"Canonical Skill Name": {"category": "...", "source": "...", ...}}` — all canonical names title-cased.
+4. **`skill_aliases.json` format:** Top-level object with `"aliases"` key containing a flat dict: `{"version": "...", "aliases": {"alias string": "Canonical Skill Name", ...}}`. All alias keys lowercase; values must exactly match a `skill_name` in `onet_skills.json` (title-cased). Skills.py loads via `data.get("aliases", data)` — the wrapper is required.
+5. **`role_taxonomy.json` format:** Top-level object with `"roles"` key containing an array: `{"version": "...", "roles": [{...}, ...]}`. Each role object has `role_id` (kebab-case), `title`, `required_skills` (list), `preferred_skills` (list), `motivation_attributes` (dict), `expected_signals` (list), `barrier_conditions` (list).
+6. **`onet_skills.json` format:** Top-level object with `"skills"` key containing an array: `{"version": "...", "skills": [{"skill_id": "...", "skill_name": "...", "category": "...", "description": "...", "aliases": [...]}, ...]}`. All `skill_name` values title-cased. Skills.py loads via `data.get("skills", [])` — the wrapper is required.
 7. **No external API calls at runtime** — all enrichment data is baked into `data/` files at build time.
 8. **Commit style:** `Session N: [one-line description]` — see git log for examples.
 9. **Never commit:** `runs/`, `latest_run.json`, `PROJECT_LOG.md`, `ROADMAP.md`, `=*` files — covered by `.gitignore`.
@@ -136,141 +136,30 @@ Run output saved to `runs/` as `run_HHMMSS.json`. `latest_run.json` is always ov
 
 ## Open Must Items — Current Priority Queue
 
-Ordered by recommended implementation sequence. All are independent unless noted.
+Only one Must item remains open. All others (CMF-029, 030, 032, 034, 036, 006) were resolved in Sessions 11-13 or merged via PR #1.
 
 ---
 
-### CMF-029 — Add clinical/medical aliases for Critical Thinking
-**Type:** Data-only (no code changes)
-**File:** `data/skill_aliases.json`
-**Problem:** A physician with 6+ years clinical practice shows Critical Thinking as `missing_required` for every role. No clinical-context aliases exist for this skill.
-**Fix:** Add ~8 entries mapping clinical terminology to `"Critical Thinking"`:
-```
-"clinical reasoning" → "Critical Thinking"
-"clinical decision making" → "Critical Thinking"
-"differential diagnosis" → "Critical Thinking"
-"clinical judgment" → "Critical Thinking"
-"evidence-based medicine" → "Critical Thinking"
-"diagnostic reasoning" → "Critical Thinking"
-"medical problem solving" → "Critical Thinking"
-"clinical analysis" → "Critical Thinking"
-```
-**Verify:** After adding, `skill_aliases.json` keys for the above should map to `"Critical Thinking"` (exact match, title-cased value).
+### CMF-005 — End-to-end Tally intake run test
+**Type:** Verification / minor bug fixes expected
+**File:** `tally_intake.py`, `runs/processed_submissions.json`
+**Problem:** `tally_intake.py` is fully implemented (Session 11) but has never been run end-to-end on a real Tally submission. Known issue: `--list` fails with `FileNotFoundError` if no Tally API key is available in the environment.
+**Task:**
+- If Codex can run it: `python tally_intake.py` against one of the 3 existing Tally submissions. Confirm run saves to `runs/` with submission ID in filename and `processed_submissions.json` updates. Fix any crashes.
+- If no API key: add a `--dry-run` flag that exercises the full intake code path against a fixture JSON response (no live API call). This verifies parsing and routing logic without credentials.
+**Verify:** Either a clean end-to-end run log OR a working `--dry-run` path with fixture data that exercises all code branches.
 
 ---
 
-### CMF-030 — Add medical experience aliases for Healthcare Domain Knowledge and Clinical Workflow Understanding
-**Type:** Data-only (no code changes)
-**File:** `data/skill_aliases.json`
-**Problem:** PM HealthTech role lists a practicing physician as missing PREFERRED skills for healthcare domain knowledge and clinical workflow. Most damaging inaccuracy in the engine.
-**Fix (Healthcare Domain Knowledge):**
-```
-"patient care" → "Healthcare Domain Knowledge"
-"clinical practice" → "Healthcare Domain Knowledge"
-"medical practice" → "Healthcare Domain Knowledge"
-"physician experience" → "Healthcare Domain Knowledge"
-"clinical experience" → "Healthcare Domain Knowledge"
-```
-**Fix (Clinical Workflow Understanding):**
-```
-"ward management" → "Clinical Workflow Understanding"
-"discharge planning" → "Clinical Workflow Understanding"
-"clinical operations" → "Clinical Workflow Understanding"
-"hospital operations" → "Clinical Workflow Understanding"
-"patient flow" → "Clinical Workflow Understanding"
-"inpatient management" → "Clinical Workflow Understanding"
-```
-**Note:** Verify `"Healthcare Domain Knowledge"` and `"Clinical Workflow Understanding"` exist as canonical names in `onet_skills.json` before adding aliases. Add to onet_skills.json first if missing.
+## Should Items (Next Priority After Must Clears)
 
----
+For awareness — Codex should not start these until CMF-005 is Done. Ordered by recommended implementation sequence.
 
-### CMF-032 — Fix gap dedup logic (substring match on skill names)
-**Type:** Bug fix
-**File:** `agents/gap_analyzer.py`
-**Problem:** Lines ~207-215 deduplicate gaps by checking `g.description.lower() in matched_set`. Gap descriptions are full sentences (e.g. "Lacks Technical Fluency in advanced data tools"), not skill names, so this check never fires. LLM can output gaps that directly contradict the deterministic overlap data.
-**Fix:** Also strip gaps where any matched skill name (len >= 8) appears as a substring in the gap description:
-```python
-# Current (broken):
-if g.description.lower() not in matched_set
-
-# Fixed:
-if g.description.lower() not in matched_set and not any(
-    m in g.description.lower() for m in matched_lower if len(m) >= 8
-)
-```
-Where `matched_lower` is the set of matched skill names lowercased (already computed nearby — check the surrounding context to wire it correctly).
-**Verify:** Two confirmed false gaps from Amos run: "Lacks Technical Fluency" (matched_preferred for Tech PM) and "Missing Agile Methodology" (matched_preferred for PM EdTech) should not appear in gap output after fix.
-
----
-
-### CMF-034 — Add Digital Transformation to GovTech required_skills
-**Type:** Data-only (no code changes)
-**File:** `data/role_taxonomy.json`
-**Problem:** Government Digital Services ranks #1 for a physician (0.7 composite / strong) despite zero public sector experience. Root cause: all required_skills are generic leadership skills (Stakeholder Management, Project Management, Communication, Cross-Functional Leadership, Change Management) that graph inference fills for any experienced professional. No domain filter exists.
-**Fix:** Add `"Digital Transformation"` to `required_skills` for the `government-digital-services` role entry in `role_taxonomy.json`.
-**Expected impact:** Drops physician's required skill coverage from 62.5% to ~37.5%, moving GovTech out of "Win Now" band.
-**Verify:** `"Digital Transformation"` must exist as a canonical skill in `onet_skills.json`. If not, add it with category `"strategy"` before referencing it in the taxonomy.
-
----
-
-### CMF-036 — Add healthcare-pivot roles to role taxonomy
-**Type:** Data addition
-**File:** `data/role_taxonomy.json`
-**Problem:** The 18-role taxonomy was built for a tech/strategy/product/finance career search. No appropriate transition roles exist for clinical-to-MBA candidates. A physician running the engine gets no relevant role matches.
-**Fix:** Add 2 new roles following the existing role object schema:
-
-**Role 1: Healthcare Technology Consulting**
-- `role_id`: `"healthcare-technology-consulting"`
-- Focus: clinical domain expertise + digital transformation advisory + health system clients
-- Required skills should include: Healthcare Domain Knowledge, Stakeholder Management, Project Management, Strategic Planning, Communication
-- Preferred skills: Clinical Workflow Understanding, Digital Transformation, Data Analysis, Change Management
-- `motivation_attributes`: impact_orientation high, innovation moderate, leadership_scale moderate
-- `expected_signals`: clinical background, health system or hospital experience, digital health interest
-
-**Role 2: Digital Health Strategy**
-- `role_id`: `"digital-health-strategy"`
-- Focus: health system transformation + product strategy + clinical background as differentiator
-- Required skills: Healthcare Domain Knowledge, Strategic Planning, Stakeholder Management, Communication, Project Management
-- Preferred skills: Clinical Workflow Understanding, Digital Transformation, Product Sense (if in taxonomy), Data Analysis
-- `motivation_attributes`: impact_orientation high, innovation high, leadership_scale moderate
-- `expected_signals`: clinical or healthcare background, interest in health tech/digital tools, MBA pivot signal
-
-**Note:** Review existing role objects in `role_taxonomy.json` for exact schema before adding. Required and preferred skill names must exactly match canonical names in `onet_skills.json`.
-
----
-
-### CMF-005 — End-to-end Tally intake run test (verification only)
-**Type:** Verification / testing — no code changes expected
-**File:** `tally_intake.py` (already built in Session 11)
-**Problem:** `tally_intake.py` is fully implemented but has not been run end-to-end on a real Tally submission. One known issue: Submission 2 uploaded `.docx` not PDF — should produce a clear error message without crashing.
-**Task:** Run `python tally_intake.py` against one of the 3 existing Tally submissions. Confirm:
-- Pipeline runs to completion
-- Output saved to `runs/` with submission ID in filename
-- `processed_submissions.json` updated
-- Non-PDF submission (if used) produces error message, not crash
-**If bugs found:** Fix them and document in PR body. Update `feature-roadmap.csv` status to Done only when a clean run completes.
-
----
-
-### CMF-006 — Skill extraction observability UI
-**Type:** UI feature
-**File:** `app.py`
-**Problem:** The `match_method` field already exists on every skill in `skills_flat` (values: `alias`, `llm`, `inferred`, `graph_inferred`, `transfer_label`). No UI layer exposes this to the user.
-**Fix:** Add an expandable section in `app.py` (after Section 1 / Profile Summary, before role results) that shows which skills were extracted and by what method. Suggested format: grouped by method with skill names, counts per method.
-**Note:** Keep it compact — expandable `st.expander("Skill Extraction Details")` is appropriate. Do not block the main flow.
-
----
-
-## Should Items (Next Priority After Musts Clear)
-
-For awareness — do not start until all Must items above are Done:
-
-- **CMF-031** — Rename HIPAA Compliance to Healthcare Regulatory Compliance + add international aliases
+- **CMF-031** — Rename HIPAA Compliance to Healthcare Regulatory Compliance + add international aliases + one straggler alias from CMF-030 (`"clinical experience"` → `"Healthcare Domain Knowledge"`)
 - **CMF-033** — Validate barrier conditions against candidate profile before flagging as gaps (prompt engineering in gap_analyzer.py)
-- **CMF-035** — Add expected_signal_coverage to skill_overlap computation (new PipelineState field + penalty multiplier)
-- **CMF-007** — Transferable language enrichment layer (new skills.py substep)
-- **CMF-028c** — Lightcast Open Skills snapshot for tool-level aliases (one-time API dump)
-- **CMF-028b** — BLS EP 17-skill score overlay (manual download required from bls.gov)
+- **CMF-035** — Add expected_signal_coverage to skill_overlap computation (new PipelineState field + penalty multiplier in tuning.yaml)
+- **CMF-007** — Transferable language enrichment layer (new skills.py substep + engine.py wiring)
+- **CMF-028c** — Lightcast Open Skills snapshot for tool-level aliases (one-time API dump to local CSV)
 
 Full descriptions in `feature-roadmap.csv`.
 

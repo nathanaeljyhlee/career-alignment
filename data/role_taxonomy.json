@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "created": "2026-02-27",
   "description": "MBA-relevant role taxonomy with O*NET occupation codes, skill requirements, and motivation profiles",
   "roles": [
@@ -8,6 +8,10 @@
       "role_name": "Product Manager (Tech)",
       "onet_code": "11-2021.00",
       "category": "product",
+      "functional_category": "product",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
       "description": "Drives product strategy, roadmap, and execution for technology products. MBA interns typically own a feature or product area, working cross-functionally with engineering, design, and data teams.",
       "required_skills": [
         "Product Roadmapping",
@@ -62,6 +66,10 @@
       "role_name": "Product Manager (HealthTech)",
       "onet_code": "11-2021.00",
       "category": "product",
+      "functional_category": "product",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
       "description": "Manages product strategy for healthcare technology platforms including EHR systems, telehealth, clinical decision support, and patient engagement tools. MBA interns navigate regulated environments while driving user-centered innovation.",
       "required_skills": [
         "Product Roadmapping",
@@ -116,6 +124,10 @@
       "role_name": "Product Manager (EdTech)",
       "onet_code": "11-2021.00",
       "category": "product",
+      "functional_category": "product",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
       "description": "Leads product development for education technology platforms including LMS, adaptive learning, and student engagement tools. MBA interns balance pedagogical outcomes with product metrics and business viability.",
       "required_skills": [
         "Product Roadmapping",
@@ -170,6 +182,10 @@
       "role_name": "Management Consultant",
       "onet_code": "13-1111.00",
       "category": "consulting",
+      "functional_category": "consulting",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
       "description": "Advises organizations on operational efficiency, organizational strategy, and business transformation. MBA interns work on client engagements solving structured business problems with data-driven recommendations.",
       "required_skills": [
         "Problem Solving",
@@ -224,6 +240,10 @@
       "role_name": "Strategy Consultant",
       "onet_code": "13-1111.00",
       "category": "consulting",
+      "functional_category": "consulting",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
       "description": "Focuses on high-level corporate strategy including market entry, growth strategy, M&A diligence, and competitive positioning. MBA interns conduct deep market analyses and develop strategic recommendations for C-suite clients.",
       "required_skills": [
         "Strategic Planning",
@@ -278,6 +298,10 @@
       "role_name": "Corporate Strategy Analyst",
       "onet_code": "13-1111.00",
       "category": "strategy",
+      "functional_category": "strategy",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
       "description": "Works within a corporation's strategy team on market assessment, competitive intelligence, growth initiatives, and strategic planning. MBA interns support executive decision-making with research and financial analysis.",
       "required_skills": [
         "Strategic Planning",
@@ -332,6 +356,10 @@
       "role_name": "Data & Analytics Manager",
       "onet_code": "15-2051.00",
       "category": "data_analytics",
+      "functional_category": "data_analytics",
+      "track": "both",
+      "mba_track": true,
+      "babson_fit": false,
       "description": "Leads analytics initiatives that drive business decisions through data infrastructure, dashboards, and statistical analysis. MBA interns bridge technical data work with business stakeholder needs and strategic framing.",
       "required_skills": [
         "Data Analysis",
@@ -386,6 +414,10 @@
       "role_name": "Business Intelligence Analyst",
       "onet_code": "15-1211.01",
       "category": "data_analytics",
+      "functional_category": "data_analytics",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
       "description": "Designs and maintains BI dashboards, reporting systems, and data pipelines that support organizational decision-making. MBA interns typically own a reporting domain and build self-serve analytics capabilities.",
       "required_skills": [
         "SQL",
@@ -440,6 +472,10 @@
       "role_name": "Operations Manager",
       "onet_code": "11-1021.00",
       "category": "operations",
+      "functional_category": "operations",
+      "track": "both",
+      "mba_track": false,
+      "babson_fit": false,
       "description": "Oversees business operations including process optimization, resource allocation, and cross-functional coordination. MBA interns lead operational improvement projects and drive efficiency across teams.",
       "required_skills": [
         "Process Improvement",
@@ -882,10 +918,10 @@
         "Problem Solving",
         "Agile Methodology",
         "Critical Thinking",
-        "Reporting"
+        "Reporting",
+        "Technical Fluency"
       ],
       "preferred_skills": [
-        "Technical Fluency",
         "Change Management",
         "Risk Management",
         "Data Analysis",

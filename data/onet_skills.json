@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "created": "2026-02-27",
   "description": "Curated O*NET skills subset relevant to MBA roles, with aliases for resume text matching",
   "skills": [
@@ -6442,6 +6442,192 @@
         "digital modernization",
         "business transformation",
         "technology transformation"
+      ]
+    },
+    {
+      "skill_id": "valuation",
+      "skill_name": "Valuation",
+      "category": "finance",
+      "description": "Ability to determine the economic value of a business, asset, or investment using DCF, comparables, or other methods.",
+      "aliases": [
+        "business valuation",
+        "company valuation",
+        "dcf modeling",
+        "valuation modeling",
+        "equity valuation"
+      ]
+    },
+    {
+      "skill_id": "credit_analysis",
+      "skill_name": "Credit Analysis",
+      "category": "finance",
+      "description": "Assessment of the creditworthiness of a borrower or issuer by analyzing financial statements, cash flows, and risk factors.",
+      "aliases": [
+        "credit assessment",
+        "credit underwriting",
+        "loan analysis",
+        "debt analysis",
+        "credit evaluation"
+      ]
+    },
+    {
+      "skill_id": "esg_analysis",
+      "skill_name": "ESG Analysis",
+      "category": "strategy",
+      "description": "Evaluation of environmental, social, and governance factors in investment decisions, business strategy, or reporting.",
+      "aliases": [
+        "esg",
+        "environmental social governance",
+        "sustainable investing",
+        "esg scoring",
+        "responsible investing"
+      ]
+    },
+    {
+      "skill_id": "impact_measurement",
+      "skill_name": "Impact Measurement",
+      "category": "strategy",
+      "description": "Designing and tracking metrics to quantify social, environmental, or mission-driven outcomes of programs or investments.",
+      "aliases": [
+        "impact metrics",
+        "social impact measurement",
+        "theory of change",
+        "outcomes measurement",
+        "impact reporting"
+      ]
+    },
+    {
+      "skill_id": "innovation_management",
+      "skill_name": "Innovation Management",
+      "category": "management",
+      "description": "Structuring and driving innovation processes within organizations, including ideation, experimentation, and scaling new ventures.",
+      "aliases": [
+        "corporate innovation",
+        "innovation strategy",
+        "innovation pipeline",
+        "open innovation",
+        "innovation leadership"
+      ]
+    },
+    {
+      "skill_id": "design_thinking",
+      "skill_name": "Design Thinking",
+      "category": "complex_problem_solving",
+      "description": "Human-centered problem-solving methodology emphasizing empathy, ideation, prototyping, and iterative testing.",
+      "aliases": [
+        "human-centered design",
+        "design sprint",
+        "user-centered design",
+        "design process",
+        "empathy mapping"
+      ]
+    },
+    {
+      "skill_id": "crm",
+      "skill_name": "CRM",
+      "category": "technical",
+      "description": "Proficiency with customer relationship management platforms (e.g., Salesforce, HubSpot) to manage pipelines, accounts, and customer data.",
+      "aliases": [
+        "salesforce",
+        "hubspot",
+        "customer relationship management",
+        "crm platform",
+        "crm system",
+        "crm tools"
+      ]
+    },
+    {
+      "skill_id": "business_development",
+      "skill_name": "Business Development",
+      "category": "strategy",
+      "description": "Identifying and pursuing new business opportunities through partnerships, new markets, new products, or strategic relationships.",
+      "aliases": [
+        "biz dev",
+        "BD",
+        "new business",
+        "business growth",
+        "revenue development",
+        "commercial development"
+      ]
+    },
+    {
+      "skill_id": "community_engagement",
+      "skill_name": "Community Engagement",
+      "category": "social",
+      "description": "Building relationships with external communities, stakeholders, or beneficiary groups to advance organizational goals.",
+      "aliases": [
+        "community outreach",
+        "stakeholder engagement",
+        "community relations",
+        "outreach programs",
+        "civic engagement"
+      ]
+    },
+    {
+      "skill_id": "organizational_development",
+      "skill_name": "Organizational Development",
+      "category": "management",
+      "description": "Designing and improving organizational structures, culture, and capabilities to enhance effectiveness.",
+      "aliases": [
+        "OD",
+        "org design",
+        "organizational effectiveness",
+        "talent development",
+        "org effectiveness",
+        "people development"
+      ]
+    },
+    {
+      "skill_id": "hr_strategy",
+      "skill_name": "HR Strategy",
+      "category": "management",
+      "description": "Aligning human resources practices and workforce planning with organizational strategy and business objectives.",
+      "aliases": [
+        "people strategy",
+        "human capital strategy",
+        "strategic HR",
+        "workforce strategy",
+        "talent strategy"
+      ]
+    },
+    {
+      "skill_id": "talent_management",
+      "skill_name": "Talent Management",
+      "category": "management",
+      "description": "Attracting, developing, retaining, and deploying talent to meet organizational needs and individual career goals.",
+      "aliases": [
+        "talent development",
+        "talent pipeline",
+        "performance management",
+        "succession planning",
+        "talent programs"
+      ]
+    },
+    {
+      "skill_id": "grant_writing",
+      "skill_name": "Grant Writing",
+      "category": "communication",
+      "description": "Writing compelling grant proposals and reports to secure funding from foundations, government agencies, or donors.",
+      "aliases": [
+        "grant proposal",
+        "grant applications",
+        "proposal writing",
+        "funding proposals",
+        "grant management"
+      ]
+    },
+    {
+      "skill_id": "budgeting",
+      "skill_name": "Budgeting",
+      "category": "finance",
+      "description": "Planning, allocating, and managing financial resources across departments, projects, or organizations.",
+      "aliases": [
+        "budget management",
+        "budget planning",
+        "annual budget",
+        "budget oversight",
+        "financial budgeting",
+        "budget development"
       ]
     }
   ]
