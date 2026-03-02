@@ -148,6 +148,20 @@ role_matching:
   # Set OLLAMA_NUM_PARALLEL=3 (env var, before Ollama server starts) for true parallel.
   self_consistency_samples: 2
 
+  # Dynamic sampling optimization: for roles with very low deterministic overlap,
+  # run a single reasoning path to avoid spending extra inference budget on weak fits.
+  # Set to false to always use self_consistency_samples for every role.
+  dynamic_self_consistency: true
+
+  # Overlap threshold below which dynamic_self_consistency uses 1 sample.
+  low_overlap_single_sample_threshold: 0.35
+
+  # Optional pruning before Agent 3 (LLM role comparison):
+  # only send roles above this overlap and cap by max_roles_for_llm.
+  # These reduce runtime without adding hardware load.
+  min_overlap_for_llm: 0.30
+  max_roles_for_llm: 4
+
   # Temperature for self-consistency sampling. Higher = more
   # diverse reasoning paths (good for self-consistency).
   # Lower = more deterministic (good for single-pass).

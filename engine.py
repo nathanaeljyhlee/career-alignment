@@ -454,13 +454,52 @@ def stage_3_role_matching(state: PipelineState) -> PipelineState:
                     "error": str(e), "traceback": traceback.format_exc(),
                 })
 
+        # Optional role pruning before expensive LLM comparison.
+        roles_for_comparison = list(state.matched_roles)
+        matching_cfg = get_tuning("role_matching") or {}
+        max_roles_for_llm = matching_cfg.get("max_roles_for_llm")
+        min_overlap_for_llm = matching_cfg.get("min_overlap_for_llm")
+
+        if state.skill_overlaps and (max_roles_for_llm is not None or min_overlap_for_llm is not None):
+            role_with_overlap = [
+                (r, state.skill_overlaps.get(r.get("role_id", ""), {}).get("overlap_score", 0.0))
+                for r in state.matched_roles
+            ]
+
+            if min_overlap_for_llm is not None:
+                role_with_overlap = [
+                    item for item in role_with_overlap if item[1] >= float(min_overlap_for_llm)
+                ]
+
+            role_with_overlap.sort(key=lambda x: x[1], reverse=True)
+            if max_roles_for_llm is not None:
+                role_with_overlap = role_with_overlap[: max(1, int(max_roles_for_llm))]
+
+            if role_with_overlap:
+                roles_for_comparison = [item[0] for item in role_with_overlap]
+
+            _log_event(state, "role_pruning_for_llm", {
+                "original_role_count": len(state.matched_roles),
+                "pruned_role_count": len(roles_for_comparison),
+                "max_roles_for_llm": max_roles_for_llm,
+                "min_overlap_for_llm": min_overlap_for_llm,
+                "selected_roles": [
+                    {
+                        "id": r.get("role_id"),
+                        "name": r.get("role_name"),
+                        "overlap_score": state.skill_overlaps.get(r.get("role_id", ""), {}).get("overlap_score", 0.0),
+                    }
+                    for r in roles_for_comparison
+                ],
+            })
+
         # Agent 3: Role Comparison (with self-consistency)
         with _timed_substep(state, "agent3_role_comparator"):
             try:
                 tc = state.tally_context
                 fit_results = compare_roles(
                     state.profile, state.motivation or {},
-                    state.matched_roles, state.mba_year,
+                    roles_for_comparison, state.mba_year,
                     skill_overlaps=state.skill_overlaps,
                     optimization_priorities=tc.optimization_priorities if tc else None,
                 )
@@ -488,7 +527,7 @@ def stage_3_role_matching(state: PipelineState) -> PipelineState:
             try:
                 gap_results = analyze_gaps_batch(
                     state.profile, state.skills_flat,
-                    state.matched_roles, state.fit_results,
+                    roles_for_comparison, state.fit_results,
                     skill_overlaps=state.skill_overlaps,
                 )
                 state.gap_results = [r.model_dump() for r in gap_results]
