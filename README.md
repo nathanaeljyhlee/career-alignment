@@ -81,6 +81,9 @@ streamlit run app.py
 
 ### Fast iteration / cached stage runs
 
+- In the Streamlit sidebar, enable **Show debug info** to access **Debug Rerun from Previous Run**.
+  You can pick a prior run and re-run the whole engine or start directly from Stage 2/Stage 3 using stored intermediate outputs.
+
 For faster testing, you can run only portions of the pipeline and cache stage outputs:
 
 ```bash

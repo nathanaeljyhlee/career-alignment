@@ -757,6 +757,7 @@ def run_pipeline(
     cache_dir: str | Path | None = None,
     cache_key: str | None = None,
     use_cache: bool = False,
+    seed_state_payload: dict[str, Any] | None = None,
 ) -> PipelineState:
     """Run the full Candidate-Market Fit Engine pipeline.
 
@@ -772,6 +773,7 @@ def run_pipeline(
         cache_dir: Directory for stage cache artifacts
         cache_key: Cache key namespace for this input set
         use_cache: Whether to read/write stage cache
+        seed_state_payload: Optional preloaded intermediate state for debug reruns
 
     Returns:
         PipelineState with all intermediate and final results
@@ -795,7 +797,14 @@ def run_pipeline(
         "end_stage": end_stage,
         "use_cache": use_cache,
         "cache_key": cache_key,
+        "has_seed_state": seed_state_payload is not None,
     })
+
+    if seed_state_payload:
+        _apply_cache_payload(state, seed_state_payload)
+        _log_event(state, "seed_state_applied", {
+            "fields": sorted(seed_state_payload.keys()),
+        })
 
     if start_stage not in STAGE_SEQUENCE:
         raise ValueError(f"Invalid start_stage: {start_stage}. Expected one of {STAGE_SEQUENCE}")
