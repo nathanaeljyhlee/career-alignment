@@ -25,7 +25,7 @@ from pydantic import BaseModel
 
 from config import get_tuning, APP_DIR
 from parsers import parse_pdf
-from skills import extract_and_normalize, get_flat_skills, infer_skills_against_taxonomy
+from skills import extract_and_normalize, get_flat_skills, infer_skills_against_taxonomy, generate_transfer_labels
 
 from agents.profile_synthesizer import synthesize_profile, CandidateProfile
 from agents.motivation_extractor import extract_motivation, MotivationProfile
@@ -218,8 +218,13 @@ def stage_1_input_processing(state: PipelineState) -> PipelineState:
         # Skill extraction + normalization
         with _timed_substep(state, "skill_extraction"):
             try:
+                full_text = "\n\n".join(all_sections.values())
+                transfer_labels = []
+                with _timed_substep(state, "transfer_label_generation"):
+                    transfer_labels = generate_transfer_labels(full_text)
+
                 state.skills_by_section = {}
-                raw = extract_and_normalize(all_sections)
+                raw = extract_and_normalize(all_sections, transfer_labels=transfer_labels)
                 for section, skills in raw.items():
                     state.skills_by_section[section] = [s.model_dump() for s in skills]
 
@@ -230,6 +235,7 @@ def stage_1_input_processing(state: PipelineState) -> PipelineState:
                     "unique_skills": len(state.skills_flat),
                     "by_method": {
                         "alias": sum(1 for s in state.skills_flat if s.get("match_method") == "alias"),
+                        "transfer_label": sum(1 for s in state.skills_flat if s.get("match_method") == "transfer_label"),
                         "embedding": sum(1 for s in state.skills_flat if s.get("match_method") == "embedding"),
                         "llm_direct": sum(1 for s in state.skills_flat if s.get("match_method") == "llm_direct"),
                     },
@@ -245,7 +251,6 @@ def stage_1_input_processing(state: PipelineState) -> PipelineState:
         if state.skills_flat:
             with _timed_substep(state, "skill_inference"):
                 try:
-                    full_text = "\n\n".join(all_sections.values())
                     already_found = {s.get("canonical_name", "").lower() for s in state.skills_flat}
 
                     inferred = infer_skills_against_taxonomy(full_text, already_found)

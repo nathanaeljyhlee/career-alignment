@@ -46,6 +46,29 @@ class LLMExtractionResult(BaseModel):
     skills: list[ExtractedSkill] = Field(default_factory=list)
 
 
+class TransferableLabel(BaseModel):
+    """A transferable skill label grounded in candidate text."""
+    label: str = Field(description="Industry-agnostic transferable skill label")
+    source_phrase: str = Field(description="Quoted phrase copied from source text")
+
+
+class TransferableLabelsResult(BaseModel):
+    """Structured output for transferable language enrichment."""
+    labels: list[TransferableLabel] = Field(default_factory=list)
+
+
+class InferredSkill(BaseModel):
+    """A taxonomy skill inferred from candidate evidence."""
+    skill_name: str
+    confidence: float = Field(ge=0.0, le=1.0)
+    evidence: str
+
+
+class InferenceResult(BaseModel):
+    """Structured output for taxonomy skill inference."""
+    inferred_skills: list[InferredSkill] = Field(default_factory=list)
+
+
 class NormalizedSkill(BaseModel):
     """A skill after normalization to O*NET taxonomy."""
     original_mention: str
@@ -172,6 +195,56 @@ Return ONLY valid JSON matching this schema:
 
 TEXT TO ANALYZE:
 """
+
+
+TRANSFER_LABEL_PROMPT = """You are a career-transition skill translator.
+
+Given candidate text, extract transferable skill labels that a recruiter in a different industry would recognize.
+
+Rules:
+- Return concise labels (2-5 words)
+- For each label, include a source_phrase that is a direct quote from the text
+- If you cannot provide a direct quote, do not include the label
+- Do not invent facts or labels without textual grounding
+
+Return ONLY JSON that matches the provided schema.
+
+TEXT TO ANALYZE:
+"""
+
+
+def _normalize_source_phrase(phrase: str) -> str:
+    return phrase.strip().strip('"').strip("'").strip()
+
+
+def generate_transfer_labels(full_text: str) -> list[TransferableLabel]:
+    """Generate grounded transferable labels from full candidate text."""
+    if not full_text.strip():
+        return []
+
+    prompt = TRANSFER_LABEL_PROMPT + full_text
+    try:
+        response = ollama.chat(
+            model=extraction_model(),
+            messages=[{"role": "user", "content": prompt}],
+            format=TransferableLabelsResult.model_json_schema(),
+            options=extraction_options({"num_predict": get_tuning("skill_extraction", "transfer_num_predict") or 1024}),
+        )
+        result = TransferableLabelsResult.model_validate_json(response["message"]["content"])
+
+        accepted: list[TransferableLabel] = []
+        text_lower = full_text.lower()
+        for item in result.labels:
+            phrase = _normalize_source_phrase(item.source_phrase)
+            if not item.label.strip() or not phrase:
+                continue
+            if phrase.lower() not in text_lower:
+                continue
+            accepted.append(TransferableLabel(label=item.label.strip(), source_phrase=phrase))
+        return accepted
+    except Exception as e:
+        logger.error("Transfer label generation failed: %s", e)
+        return []
 
 
 def extract_by_llm(text: str, max_skills: int | None = None) -> list[ExtractedSkill]:
@@ -432,12 +505,11 @@ def infer_skills_against_taxonomy(
         response = ollama.chat(
             model=extraction_model(),
             messages=[{"role": "user", "content": prompt}],
-            format="json",
+            format=InferenceResult.model_json_schema(),
             options=extraction_options({"num_predict": get_tuning("skill_extraction", "inference_num_predict") or 2048}),
         )
         content = response["message"]["content"]
-        data = json.loads(content)
-        inferred = data.get("inferred_skills", [])
+        inferred = InferenceResult.model_validate_json(content).inferred_skills
 
         # Load O*NET skills for ID lookup
         onet_skills = _load_onet_skills()
@@ -445,9 +517,9 @@ def infer_skills_against_taxonomy(
 
         results: list[NormalizedSkill] = []
         for item in inferred:
-            name = item.get("skill_name", "")
-            confidence = item.get("confidence", 0.0)
-            evidence = item.get("evidence", "")
+            name = item.skill_name
+            confidence = item.confidence
+            evidence = item.evidence
 
             if confidence < 0.6 or not name:
                 continue
@@ -481,6 +553,7 @@ def infer_skills_against_taxonomy(
 
 def extract_and_normalize(
     sections: dict[str, str],
+    transfer_labels: list[TransferableLabel] | None = None,
 ) -> dict[str, list[NormalizedSkill]]:
     """Run the full skill extraction + normalization pipeline.
 
@@ -511,7 +584,7 @@ def extract_and_normalize(
 
     all_results["_alias"] = all_alias_skills
 
-    # Step 2: Concatenate all section text for a single LLM extraction call
+    # Step 2: Concatenate all section text for transferable labels + batched LLM extraction
     combined_parts: list[str] = []
     for section_name, text in sections.items():
         if not text or len(text.strip()) < 20:
@@ -519,6 +592,26 @@ def extract_and_normalize(
         combined_parts.append(f"[{section_name}]\n{text}")
 
     combined_text = "\n\n".join(combined_parts)
+
+    # Transfer-label enrichment pass before main LLM extraction
+    if transfer_labels is None and combined_text.strip():
+        transfer_labels = generate_transfer_labels(combined_text)
+    transfer_labels = transfer_labels or []
+
+    transfer_extracted = [
+        ExtractedSkill(
+            skill_name=item.label,
+            confidence=0.75,
+            evidence=f"Grounded in source phrase: \"{item.source_phrase}\"",
+            skill_type="soft_skill",
+        )
+        for item in transfer_labels
+    ]
+    transfer_normalized = normalize_to_onet(transfer_extracted, already_matched=global_matched)
+    for s in transfer_normalized:
+        s.match_method = "transfer_label"
+        global_matched.add(s.canonical_name.lower())
+    all_results["_transfer"] = transfer_normalized
 
     if combined_text.strip():
         # One LLM call with all text (instead of N calls per section)
