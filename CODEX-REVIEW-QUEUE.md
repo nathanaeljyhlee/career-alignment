@@ -1,6 +1,6 @@
 ---
 purpose: Living PR queue for Codex → Claude review → merge workflow
-updated: 2026-03-02
+updated: 2026-03-02 (post-PR-#2-5 merge; CMF-033/005/007/035 merged)
 how_to_use: |
   Codex: read this file + CODEX-ONBOARDING.md before creating any PR.
   Claude: review open PRs against specs here, merge approved ones, update log below.
@@ -21,18 +21,6 @@ how_to_use: |
 
 ## Next Up (priority order — Codex works top to bottom)
 
-### CMF-004 — Role recommendation bias / unbiased role expansion
-**Type:** Data Quality + possible prompt change
-**Files:** `data/role_taxonomy.json`, possibly `agents/profile_synthesizer.py`
-**Problem:** When run on non-builder profiles, the engine may anchor role recommendations on the builder's background. GovTech false-positive was the clearest symptom (partially fixed by CMF-034 adding Digital Transformation as a required skill). Deeper issue: the 18-role taxonomy was calibrated on one profile. Need visibility into the full role universe considered and a way to expand frame without introducing bias.
-**Fix approach:**
-- Audit `role_taxonomy.json` for any required/preferred skills or motivation_attributes that are specific to the builder's profile (civic tech, fintech, startup experience) rather than the role itself
-- For any role where required_skills are all generic leadership skills (no domain-specific filter), add at least one domain-anchoring required skill
-- Do NOT redesign the full taxonomy — targeted fixes only. Document each change in the PR body with rationale.
-**Verify:** Run a mental check: could a generic MBA student with no relevant domain experience score >60% on this role's required_skills via graph inference alone? If yes, the role needs a domain filter.
-
----
-
 ### CMF-005 — Tally intake end-to-end run test
 **Type:** Verification / minor bug fixes expected
 **Files:** `tally_intake.py`, `runs/processed_submissions.json`
@@ -44,14 +32,218 @@ how_to_use: |
 
 ---
 
-### CMF-031 — Rename HIPAA Compliance + add international aliases
+### CMF-037 — Expand role taxonomy from 20 to 80 roles with track and MBA flags
+**Type:** Data addition (two data files — no code changes)
+**Files:** `data/role_taxonomy.json`, `data/onet_skills.json`
+**Problem:** The 20-role taxonomy was calibrated on one candidate profile (tech/strategy/product builder). It has no internship vs FT distinction, no MBA-specific vs general-professional flag, and no Babson entrepreneurial track. Running it on any non-builder profile produces meaningless results because the right roles don't exist. Need 80 roles covering all major MBA internship tracks and general professional paths.
+
+**Part A — Schema changes to all existing 20 roles:**
+Add 4 new fields to every existing role object (insert after `"category"` field):
+- `"functional_category"`: string (see table below)
+- `"track"`: `"internship"` | `"ft"` | `"both"`
+- `"mba_track"`: `true` | `false`
+- `"babson_fit"`: `true` | `false`
+
+Values for existing 20 roles:
+| role_id | functional_category | track | mba_track | babson_fit |
+|---------|-------------------|-------|-----------|------------|
+| product-manager | product | both | true | false |
+| product-manager-healthcare | product | both | true | false |
+| product-manager-edtech | product | both | true | false |
+| management-consultant | consulting | both | true | false |
+| strategy-consultant | consulting | both | true | false |
+| corporate-strategy-analyst | strategy | both | true | false |
+| data-analytics-manager | data_analytics | both | true | false |
+| business-intelligence-analyst | data_analytics | both | false | false |
+| operations-manager | operations | both | false | false |
+| supply-chain-analyst | operations | both | false | false |
+| government-digital-services | government | both | false | false |
+| government-analytics | government | both | false | false |
+| venture-capital-analyst | finance | both | true | true |
+| private-equity-associate | finance | both | true | false |
+| marketing-manager | marketing | both | false | false |
+| financial-analyst | finance | both | false | false |
+| technology-program-manager | technology | both | true | false |
+| startup-operations | entrepreneurial | both | true | true |
+| healthcare-technology-consulting | consulting | both | true | false |
+| digital-health-strategy | strategy | both | true | false |
+
+**Part B — 14 new canonical skills to add to `onet_skills.json`:**
+Append to the `"skills"` array. Each entry needs: `skill_id`, `skill_name`, `category`, `description`, `aliases`.
+
+| skill_id | skill_name | category | description | aliases |
+|----------|-----------|----------|-------------|---------|
+| valuation | Valuation | finance | Determining economic value of a business or asset using DCF, comparables, or precedent transactions. | ["business valuation","dcf modeling","valuation modeling","equity valuation","company valuation"] |
+| credit_analysis | Credit Analysis | finance | Assessing creditworthiness of a borrower by analyzing financial statements, cash flows, and risk factors. | ["credit assessment","credit underwriting","loan analysis","credit evaluation","debt analysis"] |
+| esg_analysis | ESG Analysis | strategy | Evaluating environmental, social, and governance factors in investment decisions or business strategy. | ["esg","environmental social governance","sustainable investing","esg scoring","responsible investing"] |
+| impact_measurement | Impact Measurement | strategy | Designing and tracking metrics to quantify social, environmental, or mission-driven outcomes. | ["impact metrics","social impact measurement","theory of change","outcomes measurement","impact reporting"] |
+| innovation_management | Innovation Management | management | Structuring and driving innovation processes within organizations including ideation, experimentation, and scaling. | ["corporate innovation","innovation strategy","innovation pipeline","open innovation","innovation leadership"] |
+| design_thinking | Design Thinking | complex_problem_solving | Human-centered problem-solving methodology emphasizing empathy, ideation, prototyping, and iterative testing. | ["human-centered design","design sprint","user-centered design","empathy mapping","design process"] |
+| crm | CRM | technical | Proficiency with customer relationship management platforms (Salesforce, HubSpot) to manage pipelines and customer data. | ["salesforce","hubspot","customer relationship management","crm platform","crm system","crm tools"] |
+| business_development | Business Development | strategy | Identifying and pursuing new business opportunities through partnerships, new markets, or strategic relationships. | ["biz dev","BD","new business","business growth","revenue development","commercial development"] |
+| community_engagement | Community Engagement | social | Building relationships with external communities or stakeholder groups to advance organizational goals. | ["community outreach","stakeholder engagement","community relations","outreach programs","civic engagement"] |
+| organizational_development | Organizational Development | management | Designing and improving organizational structures, culture, and capabilities to enhance effectiveness. | ["OD","org design","organizational effectiveness","org effectiveness","people development"] |
+| hr_strategy | HR Strategy | management | Aligning human resources practices and workforce planning with organizational strategy and business objectives. | ["people strategy","human capital strategy","strategic HR","workforce strategy","talent strategy"] |
+| talent_management | Talent Management | management | Attracting, developing, retaining, and deploying talent to meet organizational and individual goals. | ["talent development","talent pipeline","performance management","succession planning","talent programs"] |
+| grant_writing | Grant Writing | communication | Writing compelling grant proposals and reports to secure funding from foundations, government agencies, or donors. | ["grant proposal","grant applications","proposal writing","funding proposals","grant management"] |
+| budgeting | Budgeting | finance | Planning, allocating, and managing financial resources across departments, projects, or organizations. | ["budget management","budget planning","annual budget","budget oversight","financial budgeting"] |
+
+**Part C — 60 new roles to add to `role_taxonomy.json`:**
+All skill names MUST exactly match a `skill_name` in `onet_skills.json` (469 existing + 14 new above). Use approximate BLS data where exact data unavailable. Write 2-3 sentence descriptions, 3 barrier_conditions, 4 expected_signals per role. Set version to `"1.1.0"`.
+
+**Finance & Investing (10 new roles):**
+
+`investment-banking-associate` — role_name: "Investment Banking Associate" | onet: 13-2051.00 | category: finance | functional_category: finance | track: internship | mba_track: true | babson_fit: false | required: Financial Modeling, Accounting, Due Diligence, Communication, Presentation Skills, Critical Thinking, Excel Advanced | preferred: M&A Analysis, LBO Modeling, Valuation, Industry Expertise, Competitive Analysis | motivation: impact=low, capital=high, innovation=low, leadership=moderate, autonomy=low, volatility=low (high-volatility role), prestige=high | bls: 175000, 5.7%, Bachelor's
+
+`corporate-finance-fpa` — role_name: "Corporate Finance / FP&A" | onet: 13-2051.00 | category: finance | functional_category: finance | track: both | mba_track: true | babson_fit: false | required: Financial Modeling, Forecasting, Data Analysis, Communication, Excel Advanced, Reporting, Critical Thinking | preferred: Budgeting, SQL, ERP Systems, Accounting, Tableau or Power BI | motivation: impact=low, capital=moderate, innovation=low, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=moderate | bls: 101350, 5.7%, Bachelor's
+
+`strategic-finance` — role_name: "Strategic Finance" | onet: 13-2051.00 | category: finance | functional_category: finance | track: both | mba_track: true | babson_fit: false | required: Financial Modeling, Strategic Planning, Communication, Data Analysis, Presentation Skills, Critical Thinking | preferred: Scenario Planning, Excel Advanced, Business Case Development, SQL, Forecasting | motivation: impact=moderate, capital=moderate, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=moderate, prestige=moderate | bls: 120000, 6.0%, Bachelor's
+
+`corporate-development` — role_name: "Corporate Development / M&A" | onet: 11-1011.00 | category: finance | functional_category: finance | track: both | mba_track: true | babson_fit: false | required: Financial Modeling, Due Diligence, M&A Analysis, Communication, Competitive Analysis, Critical Thinking | preferred: LBO Modeling, Valuation, Strategic Planning, Excel Advanced, Industry Expertise | motivation: impact=low, capital=high, innovation=low, leadership=moderate, autonomy=moderate, volatility=moderate, prestige=high | bls: 135000, 5.7%, Bachelor's
+
+`growth-equity-associate` — role_name: "Growth Equity Associate" | onet: 13-2051.00 | category: finance | functional_category: finance | track: both | mba_track: true | babson_fit: true | required: Financial Modeling, Market Research, Due Diligence, Communication, Critical Thinking, Competitive Analysis | preferred: Startup Ecosystem Knowledge, Cap Table Modeling, Data Analysis, Networking, Strategic Planning | motivation: impact=moderate, capital=high, innovation=moderate, leadership=low, autonomy=high, volatility=low (high-volatility), prestige=high | bls: 125000, 5.7%, Bachelor's
+
+`credit-risk-analyst` — role_name: "Credit Risk Analyst" | onet: 13-2041.00 | category: finance | functional_category: finance | track: both | mba_track: false | babson_fit: false | required: Financial Modeling, Accounting, Data Analysis, Critical Thinking, Communication, Reporting | preferred: Credit Analysis, Risk Management, Excel Advanced, ERP Systems, Statistical Analysis | motivation: impact=low, capital=moderate, innovation=low, leadership=low, autonomy=moderate, volatility=high (stable), prestige=low | bls: 95000, 8.0%, Bachelor's
+
+`wealth-management-associate` — role_name: "Wealth Management Associate" | onet: 13-2052.00 | category: finance | functional_category: finance | track: both | mba_track: true | babson_fit: false | required: Financial Modeling, Communication, Presentation Skills, Networking, Critical Thinking | preferred: Financial Analysis, Market Research, Data Analysis, Industry Knowledge, Accounting | motivation: impact=low, capital=high, innovation=low, leadership=low, autonomy=moderate, volatility=moderate, prestige=high | bls: 99580, 17.0%, Bachelor's
+
+`commercial-banking-associate` — role_name: "Commercial Banking Associate" | onet: 13-2071.00 | category: finance | functional_category: finance | track: internship | mba_track: true | babson_fit: false | required: Financial Modeling, Accounting, Credit Analysis, Communication, Due Diligence, Critical Thinking | preferred: Excel Advanced, Risk Management, Industry Knowledge, Data Analysis, Negotiation | motivation: impact=low, capital=moderate, innovation=low, leadership=moderate, autonomy=low, volatility=low (stable), prestige=moderate | bls: 110000, 5.0%, Bachelor's
+
+`asset-management-associate` — role_name: "Asset Management Associate" | onet: 13-2051.00 | category: finance | functional_category: finance | track: both | mba_track: true | babson_fit: false | required: Financial Modeling, Market Research, Statistical Analysis, Communication, Critical Thinking | preferred: Data Analysis, Industry Expertise, Networking, Presentation Skills, Risk Management | motivation: impact=low, capital=high, innovation=low, leadership=low, autonomy=moderate, volatility=low (stable), prestige=high | bls: 108000, 5.7%, Bachelor's
+
+`impact-investing-associate` — role_name: "Impact Investing Associate" | onet: 13-2051.00 | category: finance | functional_category: finance | track: both | mba_track: true | babson_fit: true | required: Financial Modeling, Due Diligence, Market Research, Communication, Critical Thinking | preferred: ESG Analysis, Startup Ecosystem Knowledge, Data Analysis, Strategic Planning, Impact Measurement | motivation: impact=high, capital=high, innovation=moderate, leadership=low, autonomy=high, volatility=low (high-volatility), prestige=moderate | bls: 101350, 5.7%, Bachelor's
+
+**Strategy & Business Development (6 new roles):**
+
+`business-development-partnerships` — role_name: "Business Development & Partnerships" | onet: 11-2022.00 | category: strategy | functional_category: strategy | track: both | mba_track: true | babson_fit: true | required: Strategic Planning, Negotiation, Market Research, Communication, Competitive Analysis, Stakeholder Management | preferred: Financial Modeling, Due Diligence, Business Development, Networking, CRM | motivation: impact=moderate, capital=moderate, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=moderate, prestige=moderate | bls: 130000, 6.0%, Bachelor's
+
+`pricing-revenue-strategy` — role_name: "Pricing & Revenue Strategy" | onet: 13-1111.00 | category: strategy | functional_category: strategy | track: both | mba_track: true | babson_fit: false | required: Data Analysis, Financial Modeling, Strategic Planning, Communication, Critical Thinking, Market Research | preferred: SQL, Pricing Strategy, A/B Testing, Excel Advanced, Competitive Analysis | motivation: impact=moderate, capital=moderate, innovation=moderate, leadership=low, autonomy=moderate, volatility=high (stable), prestige=moderate | bls: 101190, 8.8%, Bachelor's
+
+`esg-sustainability-strategy` — role_name: "ESG & Sustainability Strategy" | onet: 13-1199.05 | category: strategy | functional_category: strategy | track: both | mba_track: true | babson_fit: true | required: Strategic Planning, Stakeholder Management, Communication, Data Analysis, Project Management | preferred: ESG Analysis, Change Management, Regulatory Awareness, Presentation Skills, Impact Measurement | motivation: impact=high, capital=low, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 90000, 6.0%, Bachelor's
+
+`corporate-communications` — role_name: "Corporate Communications Manager" | onet: 11-2011.00 | category: marketing | functional_category: marketing | track: both | mba_track: false | babson_fit: false | required: Communication, Presentation Skills, Strategic Planning, Stakeholder Management, Writing | preferred: Market Research, Change Management, Brand Management, Competitive Analysis, Critical Thinking | motivation: impact=low, capital=low, innovation=low, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=moderate | bls: 136000, 7.0%, Bachelor's
+
+`competitive-intelligence-manager` — role_name: "Competitive Intelligence Manager" | onet: 13-1161.01 | category: strategy | functional_category: strategy | track: both | mba_track: false | babson_fit: false | required: Market Research, Competitive Analysis, Data Analysis, Communication, Critical Thinking | preferred: Strategic Planning, Industry Expertise, Presentation Skills, SQL, Statistical Analysis | motivation: impact=low, capital=low, innovation=low, leadership=low, autonomy=moderate, volatility=high (stable), prestige=low | bls: 95000, 6.0%, Bachelor's
+
+`business-transformation-manager` — role_name: "Business Transformation Manager" | onet: 13-1111.00 | category: strategy | functional_category: strategy | track: both | mba_track: true | babson_fit: false | required: Change Management, Stakeholder Management, Project Management, Communication, Strategic Planning, Cross-Functional Leadership | preferred: Process Improvement, Data Analysis, Risk Management, Presentation Skills, Lean Six Sigma | motivation: impact=moderate, capital=low, innovation=moderate, leadership=high, autonomy=moderate, volatility=moderate, prestige=moderate | bls: 101190, 8.8%, Bachelor's
+
+**Product, Tech & Analytics (8 new roles):**
+
+`product-marketing-manager` — role_name: "Product Marketing Manager" | onet: 11-2021.00 | category: product | functional_category: product | track: both | mba_track: true | babson_fit: false | required: Market Research, Communication, Competitive Analysis, Stakeholder Management, Strategic Planning, Presentation Skills | preferred: Customer Segmentation, Digital Marketing, A/B Testing, Data Analysis, Product Roadmapping | motivation: impact=moderate, capital=low, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=moderate, prestige=moderate | bls: 161030, 6.6%, Bachelor's
+
+`growth-product-manager` — role_name: "Growth Product Manager" | onet: 11-2021.00 | category: product | functional_category: product | track: both | mba_track: true | babson_fit: true | required: Product Roadmapping, Data Analysis, A/B Testing, User Research, Critical Thinking, Communication | preferred: SQL, Python, Growth Strategy, Machine Learning, Statistical Analysis | motivation: impact=high, capital=low, innovation=high, leadership=moderate, autonomy=high, volatility=low (high-volatility), prestige=moderate | bls: 161030, 6.6%, Bachelor's
+
+`product-analyst` — role_name: "Product Analyst" | onet: 15-2051.00 | category: data_analytics | functional_category: data_analytics | track: both | mba_track: false | babson_fit: false | required: Data Analysis, SQL, Communication, Critical Thinking, Statistical Analysis | preferred: Python, A/B Testing, Tableau or Power BI, Product Sense, Data Visualization | motivation: impact=low, capital=low, innovation=low, leadership=low, autonomy=moderate, volatility=high (stable), prestige=low | bls: 112590, 33.5%, Bachelor's
+
+`ai-product-manager` — role_name: "AI Product Manager" | onet: 11-2021.00 | category: product | functional_category: product | track: both | mba_track: true | babson_fit: true | required: Product Roadmapping, Data Analysis, User Research, Critical Thinking, Communication, Stakeholder Management | preferred: Machine Learning, Python, Technical Fluency, A/B Testing, Strategic Planning | motivation: impact=high, capital=low, innovation=high, leadership=moderate, autonomy=high, volatility=low (high-volatility), prestige=high | bls: 161030, 6.6%, Bachelor's
+
+`data-product-manager` — role_name: "Data Product Manager" | onet: 11-2021.00 | category: product | functional_category: product | track: both | mba_track: true | babson_fit: false | required: Product Roadmapping, Data Analysis, SQL, Communication, Stakeholder Management, Critical Thinking | preferred: Python, Data Modeling, Strategic Planning, A/B Testing, Technical Fluency | motivation: impact=moderate, capital=low, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=moderate, prestige=moderate | bls: 161030, 6.6%, Bachelor's
+
+`strategy-operations-bizops` — role_name: "Strategy & Operations (BizOps)" | onet: 11-1021.00 | category: strategy | functional_category: strategy | track: both | mba_track: true | babson_fit: true | required: Data Analysis, Problem Solving, Strategic Planning, Communication, Cross-Functional Leadership, Project Management | preferred: Financial Modeling, SQL, Process Improvement, Change Management, Stakeholder Management | motivation: impact=moderate, capital=low, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=moderate, prestige=moderate | bls: 102950, 4.4%, Bachelor's
+
+`customer-experience-manager` — role_name: "Customer Experience Manager" | onet: 11-2021.00 | category: product | functional_category: product | track: both | mba_track: false | babson_fit: false | required: User Research, Data Analysis, Stakeholder Management, Communication, Project Management | preferred: Customer Segmentation, Service Design, Process Improvement, SQL, Change Management | motivation: impact=moderate, capital=low, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 120000, 6.0%, Bachelor's
+
+`solutions-consultant` — role_name: "Solutions Consultant" | onet: 41-3099.01 | category: consulting | functional_category: consulting | track: both | mba_track: false | babson_fit: true | required: Communication, Stakeholder Management, Problem Solving, Presentation Skills, Technical Fluency | preferred: Product Roadmapping, User Research, Data Analysis, Strategic Planning, CRM | motivation: impact=moderate, capital=low, innovation=moderate, leadership=low, autonomy=moderate, volatility=moderate, prestige=low | bls: 99280, 10.6%, Bachelor's
+
+**Marketing & Commercial (7 new roles):**
+
+`brand-manager-cpg` — role_name: "Brand Manager (CPG)" | onet: 11-2021.00 | category: marketing | functional_category: marketing | track: both | mba_track: true | babson_fit: false | required: Market Research, Strategic Planning, Communication, Competitive Analysis, Data Analysis, Creative Thinking | preferred: Brand Management, Customer Segmentation, Pricing Strategy, Digital Marketing, A/B Testing | motivation: impact=moderate, capital=low, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=moderate, prestige=moderate | bls: 161030, 6.6%, Bachelor's
+
+`digital-marketing-manager` — role_name: "Digital Marketing Manager" | onet: 11-2021.00 | category: marketing | functional_category: marketing | track: both | mba_track: false | babson_fit: false | required: Digital Marketing, Data Analysis, Communication, Market Research, Competitive Analysis | preferred: SQL, A/B Testing, Marketing Analytics, Customer Segmentation, Tableau or Power BI | motivation: impact=low, capital=low, innovation=moderate, leadership=low, autonomy=moderate, volatility=moderate, prestige=low | bls: 161030, 6.6%, Bachelor's
+
+`performance-marketer` — role_name: "Performance Marketer" | onet: 11-2021.00 | category: marketing | functional_category: marketing | track: both | mba_track: false | babson_fit: false | required: Digital Marketing, Data Analysis, A/B Testing, Critical Thinking, Communication | preferred: SQL, Marketing Analytics, Python, Statistical Analysis, Customer Segmentation | motivation: impact=low, capital=low, innovation=moderate, leadership=low, autonomy=high, volatility=moderate, prestige=low | bls: 161030, 6.6%, Bachelor's
+
+`consumer-insights-manager` — role_name: "Consumer Insights Manager" | onet: 19-3022.00 | category: marketing | functional_category: marketing | track: both | mba_track: true | babson_fit: false | required: Market Research, Data Analysis, User Research, Communication, Statistical Analysis | preferred: Customer Segmentation, SQL, Presentation Skills, A/B Testing, Critical Thinking | motivation: impact=moderate, capital=low, innovation=low, leadership=low, autonomy=moderate, volatility=high (stable), prestige=low | bls: 76140, 8.0%, Bachelor's
+
+`sales-strategy-operations` — role_name: "Sales Strategy & Operations" | onet: 11-2022.00 | category: marketing | functional_category: marketing | track: both | mba_track: true | babson_fit: true | required: Data Analysis, Strategic Planning, Communication, Stakeholder Management, Project Management | preferred: SQL, CRM, Financial Modeling, Process Improvement, Excel Advanced | motivation: impact=moderate, capital=moderate, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=moderate, prestige=moderate | bls: 130000, 6.0%, Bachelor's
+
+`revenue-operations-manager` — role_name: "Revenue Operations Manager" | onet: 11-1021.00 | category: marketing | functional_category: marketing | track: both | mba_track: false | babson_fit: true | required: Data Analysis, Process Improvement, Communication, Stakeholder Management, Project Management | preferred: SQL, CRM, Financial Modeling, Excel Advanced, Business Development | motivation: impact=moderate, capital=moderate, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=low (high-volatility), prestige=low | bls: 102950, 4.4%, Bachelor's
+
+`account-executive` — role_name: "Account Executive / Enterprise Sales" | onet: 41-3099.00 | category: marketing | functional_category: marketing | track: ft | mba_track: false | babson_fit: true | required: Communication, Negotiation, Stakeholder Management, Strategic Planning, Critical Thinking | preferred: CRM, Data Analysis, Presentation Skills, Customer Segmentation, Market Research | motivation: impact=low, capital=high, innovation=low, leadership=low, autonomy=high, volatility=low (high-volatility), prestige=low | bls: 85000, 4.0%, Bachelor's
+
+**Operations & Supply Chain (5 new roles):**
+
+`supply-chain-strategy` — role_name: "Supply Chain Strategy" | onet: 13-1081.00 | category: operations | functional_category: operations | track: both | mba_track: true | babson_fit: false | required: Supply Chain Optimization, Data Analysis, Strategic Planning, Communication, Project Management | preferred: ERP Systems, Excel Advanced, Process Improvement, Financial Modeling, Demand Forecasting | motivation: impact=moderate, capital=low, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 80880, 16.7%, Bachelor's
+
+`procurement-sourcing` — role_name: "Procurement & Strategic Sourcing" | onet: 13-1023.00 | category: operations | functional_category: operations | track: both | mba_track: true | babson_fit: false | required: Negotiation, Data Analysis, Communication, Stakeholder Management, Project Management | preferred: Supply Chain Optimization, Excel Advanced, ERP Systems, Process Improvement, Risk Management | motivation: impact=low, capital=moderate, innovation=low, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 87500, 4.0%, Bachelor's
+
+`logistics-manager` — role_name: "Logistics Manager" | onet: 11-3071.00 | category: operations | functional_category: operations | track: both | mba_track: false | babson_fit: false | required: Supply Chain Optimization, Data Analysis, Communication, Project Management, Problem Solving | preferred: ERP Systems, Excel Advanced, Process Improvement, Demand Forecasting, Negotiation | motivation: impact=low, capital=low, innovation=low, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 80700, 4.0%, Bachelor's
+
+`general-management-ldp` — role_name: "General Management LDP" | onet: 11-1021.00 | category: operations | functional_category: operations | track: internship | mba_track: true | babson_fit: false | required: Strategic Planning, Cross-Functional Leadership, Communication, Problem Solving, Data Analysis | preferred: Process Improvement, Change Management, Financial Modeling, Project Management, Stakeholder Management | motivation: impact=moderate, capital=low, innovation=moderate, leadership=high, autonomy=moderate, volatility=moderate, prestige=high | bls: 102950, 4.4%, Bachelor's
+
+`operations-excellence-manager` — role_name: "Operations Excellence Manager" | onet: 11-1021.00 | category: operations | functional_category: operations | track: both | mba_track: false | babson_fit: false | required: Process Improvement, Lean Six Sigma, Data Analysis, Communication, Change Management | preferred: Project Management, Stakeholder Management, Statistical Analysis, ERP Systems, Problem Solving | motivation: impact=moderate, capital=low, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 102950, 4.4%, Bachelor's
+
+**Entrepreneurial / Startup / VC (10 new roles):**
+
+`vc-associate` — role_name: "Venture Capital Associate" | onet: 13-2051.00 | category: finance | functional_category: entrepreneurial | track: both | mba_track: true | babson_fit: true | required: Financial Modeling, Due Diligence, Market Research, Communication, Critical Thinking, Networking | preferred: Startup Ecosystem Knowledge, Cap Table Modeling, Strategic Planning, Competitive Analysis, Data Analysis | motivation: impact=moderate, capital=high, innovation=high, leadership=low, autonomy=high, volatility=low (high-volatility), prestige=high | bls: 101350, 5.7%, Bachelor's
+
+`corporate-innovation-manager` — role_name: "Corporate Innovation Manager" | onet: 11-1021.00 | category: strategy | functional_category: entrepreneurial | track: both | mba_track: true | babson_fit: true | required: Strategic Planning, Innovation Management, Stakeholder Management, Communication, Project Management | preferred: Design Thinking, Market Research, Data Analysis, Change Management, Product Sense | motivation: impact=high, capital=low, innovation=high, leadership=moderate, autonomy=high, volatility=low (high-volatility), prestige=moderate | bls: 102950, 4.4%, Bachelor's
+
+`growth-strategy` — role_name: "Growth Strategy Manager" | onet: 11-2022.00 | category: strategy | functional_category: entrepreneurial | track: both | mba_track: true | babson_fit: true | required: Strategic Planning, Data Analysis, Market Research, Communication, Critical Thinking, Growth Strategy | preferred: A/B Testing, SQL, Financial Modeling, Competitive Analysis, Product Sense | motivation: impact=high, capital=moderate, innovation=high, leadership=moderate, autonomy=high, volatility=low (high-volatility), prestige=moderate | bls: 130000, 6.0%, Bachelor's
+
+`gtm-strategy-lead` — role_name: "GTM Strategy Lead" | onet: 11-2022.00 | category: strategy | functional_category: entrepreneurial | track: both | mba_track: true | babson_fit: true | required: Strategic Planning, Market Research, Communication, Stakeholder Management, Data Analysis | preferred: Financial Modeling, Business Development, Customer Segmentation, Growth Strategy, A/B Testing | motivation: impact=high, capital=moderate, innovation=high, leadership=moderate, autonomy=high, volatility=low (high-volatility), prestige=moderate | bls: 130000, 6.0%, Bachelor's
+
+`founder-associate` — role_name: "Founder's Associate / Special Projects" | onet: 11-1021.00 | category: strategy | functional_category: entrepreneurial | track: both | mba_track: true | babson_fit: true | required: Problem Solving, Communication, Cross-Functional Leadership, Strategic Planning, Project Management | preferred: Financial Modeling, Product Sense, Market Research, Data Analysis, Growth Strategy | motivation: impact=high, capital=moderate, innovation=high, leadership=low, autonomy=high, volatility=low (high-volatility), prestige=low | bls: 102950, 4.4%, Bachelor's
+
+`search-fund-associate` — role_name: "Search Fund Associate" | onet: 13-2051.00 | category: finance | functional_category: entrepreneurial | track: both | mba_track: true | babson_fit: true | required: Financial Modeling, Due Diligence, Strategic Planning, Communication, Critical Thinking | preferred: M&A Analysis, Valuation, Market Research, Networking, LBO Modeling | motivation: impact=high, capital=high, innovation=moderate, leadership=high, autonomy=high, volatility=low (high-volatility), prestige=moderate | bls: 101350, 5.7%, Bachelor's
+
+`family-office-analyst` — role_name: "Family Office Analyst" | onet: 13-2051.00 | category: finance | functional_category: finance | track: both | mba_track: true | babson_fit: true | required: Financial Modeling, Due Diligence, Market Research, Communication, Critical Thinking | preferred: M&A Analysis, Risk Management, Networking, Data Analysis, Valuation | motivation: impact=low, capital=high, innovation=low, leadership=low, autonomy=moderate, volatility=moderate, prestige=high | bls: 101350, 5.7%, Bachelor's
+
+`corporate-venture-capital` — role_name: "Corporate Venture Capital Associate" | onet: 13-2051.00 | category: finance | functional_category: entrepreneurial | track: both | mba_track: true | babson_fit: true | required: Financial Modeling, Due Diligence, Market Research, Strategic Planning, Communication, Networking | preferred: Startup Ecosystem Knowledge, Cap Table Modeling, Competitive Analysis, Industry Expertise, Data Analysis | motivation: impact=moderate, capital=high, innovation=high, leadership=low, autonomy=moderate, volatility=low (high-volatility), prestige=high | bls: 101350, 5.7%, Bachelor's
+
+`social-enterprise-strategy` — role_name: "Social Enterprise Strategy" | onet: 11-1021.00 | category: strategy | functional_category: entrepreneurial | track: both | mba_track: true | babson_fit: true | required: Strategic Planning, Stakeholder Management, Communication, Data Analysis, Project Management | preferred: Impact Measurement, Financial Modeling, Market Research, Community Engagement, Change Management | motivation: impact=high, capital=low, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=moderate, prestige=low | bls: 102950, 4.4%, Bachelor's
+
+`bizops-startup` — role_name: "BizOps Manager (Startup)" | onet: 11-1021.00 | category: operations | functional_category: entrepreneurial | track: both | mba_track: true | babson_fit: true | required: Problem Solving, Data Analysis, Communication, Project Management, Cross-Functional Leadership | preferred: Financial Modeling, Process Improvement, Growth Strategy, Hiring and Recruiting, Stakeholder Management | motivation: impact=high, capital=moderate, innovation=high, leadership=moderate, autonomy=high, volatility=low (high-volatility), prestige=low | bls: 102950, 4.4%, Bachelor's
+
+**People & HR (5 new roles):**
+
+`hr-business-partner` — role_name: "HR Business Partner" | onet: 13-1071.00 | category: people_hr | functional_category: people_hr | track: both | mba_track: false | babson_fit: false | required: Communication, Stakeholder Management, Problem Solving, Data Analysis, Change Management | preferred: HR Strategy, Talent Management, Organizational Development, Process Improvement, Presentation Skills | motivation: impact=moderate, capital=low, innovation=low, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 86800, 5.0%, Bachelor's
+
+`people-analytics` — role_name: "People Analytics Manager" | onet: 15-2051.00 | category: people_hr | functional_category: people_hr | track: both | mba_track: false | babson_fit: false | required: Data Analysis, SQL, Statistical Analysis, Communication, Critical Thinking | preferred: Python, Tableau or Power BI, HR Strategy, R, Data Visualization | motivation: impact=moderate, capital=low, innovation=moderate, leadership=low, autonomy=moderate, volatility=high (stable), prestige=low | bls: 112590, 33.5%, Bachelor's
+
+`talent-acquisition-manager` — role_name: "Talent Acquisition Manager" | onet: 13-1071.00 | category: people_hr | functional_category: people_hr | track: both | mba_track: false | babson_fit: false | required: Communication, Stakeholder Management, Project Management, Negotiation, Critical Thinking | preferred: Hiring and Recruiting, Data Analysis, HR Strategy, Networking, Problem Solving | motivation: impact=moderate, capital=low, innovation=low, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 86800, 5.0%, Bachelor's
+
+`organizational-development` — role_name: "Organizational Development Specialist" | onet: 13-1071.00 | category: people_hr | functional_category: people_hr | track: both | mba_track: false | babson_fit: false | required: Change Management, Stakeholder Management, Communication, Project Management, Critical Thinking | preferred: Organizational Development, HR Strategy, Data Analysis, Presentation Skills, Process Improvement | motivation: impact=moderate, capital=low, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 86800, 5.0%, Bachelor's
+
+`dei-program-manager` — role_name: "DEI Program Manager" | onet: 13-1071.00 | category: people_hr | functional_category: people_hr | track: both | mba_track: false | babson_fit: false | required: Stakeholder Management, Communication, Project Management, Data Analysis, Critical Thinking | preferred: HR Strategy, Organizational Development, Change Management, Community Engagement, Presentation Skills | motivation: impact=high, capital=low, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 86800, 5.0%, Bachelor's
+
+**Healthcare, Public Sector & Nonprofit (9 new roles):**
+
+`policy-analyst` — role_name: "Policy Analyst" | onet: 19-3094.00 | category: government | functional_category: government | track: both | mba_track: false | babson_fit: false | required: Data Analysis, Policy Analysis, Communication, Critical Thinking, Writing | preferred: Statistical Analysis, Program Evaluation, Policy Knowledge, Presentation Skills, Market Research | motivation: impact=high, capital=low, innovation=moderate, leadership=low, autonomy=moderate, volatility=high (stable), prestige=low | bls: 69200, 7.0%, Master's degree
+
+`nonprofit-program-manager` — role_name: "Nonprofit Program Manager" | onet: 11-9151.00 | category: nonprofit | functional_category: nonprofit | track: both | mba_track: false | babson_fit: true | required: Project Management, Stakeholder Management, Communication, Data Analysis, Strategic Planning | preferred: Grant Writing, Impact Measurement, Program Evaluation, Community Engagement, Change Management | motivation: impact=high, capital=low, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 74240, 9.0%, Bachelor's
+
+`healthcare-administrator` — role_name: "Healthcare Administrator" | onet: 11-9111.00 | category: healthcare | functional_category: healthcare | track: both | mba_track: false | babson_fit: false | required: Healthcare Domain Knowledge, Stakeholder Management, Project Management, Communication, Data Analysis | preferred: Process Improvement, Regulatory Awareness, Financial Analysis, Change Management, ERP Systems | motivation: impact=moderate, capital=low, innovation=low, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 110680, 28.0%, Bachelor's
+
+`hospital-operations-manager` — role_name: "Hospital Operations Manager" | onet: 11-9111.00 | category: healthcare | functional_category: healthcare | track: both | mba_track: false | babson_fit: false | required: Healthcare Domain Knowledge, Process Improvement, Cross-Functional Leadership, Data Analysis, Communication | preferred: Clinical Workflow Understanding, Change Management, Stakeholder Management, ERP Systems, Lean Six Sigma | motivation: impact=moderate, capital=low, innovation=moderate, leadership=high, autonomy=moderate, volatility=high (stable), prestige=moderate | bls: 110680, 28.0%, Bachelor's
+
+`clinical-program-manager` — role_name: "Clinical Program Manager" | onet: 11-9111.00 | category: healthcare | functional_category: healthcare | track: both | mba_track: false | babson_fit: false | required: Healthcare Domain Knowledge, Project Management, Stakeholder Management, Communication, Data Analysis | preferred: Clinical Workflow Understanding, Regulatory Awareness, Change Management, Process Improvement, Program Evaluation | motivation: impact=high, capital=low, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 110680, 28.0%, Bachelor's
+
+`health-informatics-analyst` — role_name: "Health Informatics Analyst" | onet: 15-1211.01 | category: healthcare | functional_category: healthcare | track: both | mba_track: false | babson_fit: false | required: Data Analysis, SQL, Healthcare Domain Knowledge, Communication, Critical Thinking | preferred: Python, Statistical Analysis, Tableau or Power BI, Regulatory Awareness, ERP Systems | motivation: impact=moderate, capital=low, innovation=moderate, leadership=low, autonomy=moderate, volatility=high (stable), prestige=low | bls: 112590, 33.5%, Bachelor's
+
+`grants-manager` — role_name: "Grants Manager" | onet: 13-1131.00 | category: nonprofit | functional_category: nonprofit | track: both | mba_track: false | babson_fit: false | required: Communication, Project Management, Financial Analysis, Stakeholder Management, Writing | preferred: Grant Writing, Program Evaluation, Data Analysis, Impact Measurement, Regulatory Awareness | motivation: impact=high, capital=low, innovation=low, leadership=low, autonomy=moderate, volatility=high (stable), prestige=low | bls: 74240, 9.0%, Bachelor's
+
+`development-fundraising-manager` — role_name: "Development & Fundraising Manager" | onet: 11-2033.00 | category: nonprofit | functional_category: nonprofit | track: both | mba_track: false | babson_fit: true | required: Communication, Stakeholder Management, Strategic Planning, Networking, Presentation Skills | preferred: Market Research, Data Analysis, Impact Measurement, Project Management, CRM | motivation: impact=high, capital=low, innovation=low, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 74240, 9.0%, Bachelor's
+
+`customer-success-manager` — role_name: "Customer Success Manager" | onet: 11-2021.00 | category: product | functional_category: product | track: both | mba_track: false | babson_fit: true | required: Communication, Stakeholder Management, Data Analysis, Problem Solving, Critical Thinking | preferred: CRM, Product Sense, Strategic Planning, SQL, Process Improvement | motivation: impact=moderate, capital=low, innovation=low, leadership=moderate, autonomy=moderate, volatility=moderate, prestige=low | bls: 120000, 6.0%, Bachelor's
+
+**Verify after writing both files:**
+- `python -c "import json; d=json.load(open('data/role_taxonomy.json')); print(len(d['roles']), 'roles')"`  → should print 80
+- `python -c "import json; d=json.load(open('data/onet_skills.json')); print(len(d['skills']), 'skills')"` → should print 483 (469 + 14)
+- `python -c "from engine import run_pipeline; print('imports OK')"` → should not raise ImportError
+- Update `feature-roadmap.csv`: set CMF-037 status to Done with a completion note
+
+### CMF-031 — Rename HIPAA Compliance + add international aliases + CMF-030 straggler
 **Type:** Data-only (no code changes)
-**Files:** `data/role_taxonomy.json`, `data/skill_aliases.json`
-**Problem:** HIPAA Compliance is a US-specific skill. Candidates who practiced medicine in non-US healthcare systems (Malaysia, UK, etc.) get a false gap. Current canonical name is only relevant for US candidates.
-**Fix:**
-1. In `role_taxonomy.json`: find all roles that list `HIPAA Compliance` in `required_skills` or `preferred_skills`. Rename to `Healthcare Regulatory Compliance`.
-2. In `onet_skills.json`: add a new skill entry for `Healthcare Regulatory Compliance` (category: `"domain"`) OR rename the existing `HIPAA Compliance` entry if it exists. Keep `hipaa compliance` as an alias so US candidates still match.
-3. In `skill_aliases.json`, add aliases mapping to `"Healthcare Regulatory Compliance"`:
+**Files:** `data/role_taxonomy.json`, `data/onet_skills.json`, `data/skill_aliases.json`
+**Problem:** (1) HIPAA Compliance is US-specific — non-US healthcare candidates (e.g., trained in Malaysia, UK) always get a false gap. (2) CMF-030 Pending Verification: the alias `"clinical experience"` → `"Healthcare Domain Knowledge"` was missing from PR #1 and never merged.
+**Fix — Part A (straggler from CMF-030):**
+- In `skill_aliases.json` (`aliases` dict): add `"clinical experience"` → `"Healthcare Domain Knowledge"`
+
+**Fix — Part B (CMF-031):**
+1. In `role_taxonomy.json` (`roles` array): find all roles listing `HIPAA Compliance` in `required_skills` or `preferred_skills`. Rename to `Healthcare Regulatory Compliance`.
+2. In `onet_skills.json` (`skills` array): add a new skill entry with `skill_name: "Healthcare Regulatory Compliance"`, `category: "domain"`. OR rename the existing `HIPAA Compliance` entry if it exists. Either way, keep `hipaa compliance` as an alias so US candidates still match.
+3. In `skill_aliases.json` (`aliases` dict): add entries mapping to `"Healthcare Regulatory Compliance"`:
    - `"hipaa compliance"` → `"Healthcare Regulatory Compliance"`
    - `"hipaa"` → `"Healthcare Regulatory Compliance"`
    - `"clinical compliance"` → `"Healthcare Regulatory Compliance"`
@@ -60,7 +252,9 @@ how_to_use: |
    - `"healthcare compliance"` → `"Healthcare Regulatory Compliance"`
    - `"data protection in healthcare"` → `"Healthcare Regulatory Compliance"`
    - `"gdpr healthcare"` → `"Healthcare Regulatory Compliance"`
-**Verify:** `HIPAA Compliance` should not appear anywhere in `role_taxonomy.json` after the fix.
+**Verify:** `HIPAA Compliance` should not appear anywhere in `role_taxonomy.json`. `"Healthcare Regulatory Compliance"` must exist as a `skill_name` in `onet_skills.json` before any alias or role reference uses it.
+
+**CHANGES REQUESTED (2026-03-02):** PR `codex/apply-cmf-031-data-migration` submitted. Part B complete. Part A (CMF-030 straggler) missing: `"clinical experience"` → `"Healthcare Domain Knowledge"` not in diff. Add this one alias to `skill_aliases.json` and the PR is mergeable.
 
 ---
 
@@ -106,8 +300,11 @@ how_to_use: |
 
 | Item | Status | What's needed |
 |------|--------|--------------|
-| CMF-030 | Merged (PR #1) | One missing alias: `"clinical experience"` → `"Healthcare Domain Knowledge"`. Add in next data-only PR. |
-| CMF-005 | In Progress | End-to-end Tally run — needs Tally API key |
+| CMF-030 | Merged (PR #1) | Straggler alias (`"clinical experience"` → `"Healthcare Domain Knowledge"`) folded into CMF-031 spec above. |
+| CMF-005 | Merged | `--dry-run` path merged. Verify: `python tally_intake.py --dry-run` processes fixture submission end-to-end without crashing. Live API path still needs real Tally key test. |
+| CMF-007 | Merged | Verify: `skills_flat` contains entries with `match_method: "transfer_label"` when run on a domain-specific resume (clinical, military, nonprofit). |
+| CMF-033 | Merged | Verify: second run on Amos profile should not flag "no multi-workstream" as a gap. |
+| CMF-035 | Merged | Verify: GovTech candidate with 0/4 expected signals sees overlap_score reduced by ~15%. |
 
 ---
 
@@ -115,7 +312,12 @@ how_to_use: |
 
 | PR | Items | Merged | Notes |
 |----|-------|--------|-------|
-| #1 | CMF-029/030/032/034/036/006 | 2026-03-02 | CMF-030 missing one alias (`clinical experience`). CMF-006 expander was pre-existing, PR added `transfer_label` support. Format-correct across all data files. |
+| #1 | CMF-029/030/032/034/036/006 | 2026-03-02 | CMF-030 missing one alias (`clinical experience`) — folded into CMF-031. CMF-006 expander was pre-existing, PR added `transfer_label` support. Format-correct across all data files. |
+| (no PR) | CMF-004 | 2026-03-02 | Resolved in Sessions 12-13 via targeted data edits (CMF-034 GovTech filter, CMF-036 two new roles, Technical Fluency promoted to required in technology-program-manager). No standalone Codex PR — changes shipped as part of PR #1 items. |
+| #2 | CMF-033 | 2026-03-02 | Barrier condition guard instruction added to gap_analyzer CRITICAL RULES as rule #6. feature-roadmap.csv not updated in PR — update manually. |
+| #3 | CMF-005 | 2026-03-02 | `--dry-run` flag + fixture files (tally_submission_sample.json, resume_sample.pdf) added to tally_intake.py. Full code path exercisable without API key. |
+| #4 | CMF-007 | 2026-03-02 | `generate_transfer_labels()` in skills.py with anti-hallucination phrase-grounding guard. Wired into engine.py Stage 1. Bonus: infer_skills_against_taxonomy switched from format="json" to InferenceResult.model_json_schema(). Note: `transfer_num_predict` not added to tuning.yaml — `or 1024` fallback in code. |
+| #5 | CMF-035 | 2026-03-02 | `expected_signal_coverage` added to skill_overlap.py (cosine ≥ 0.50 vs profile text). Penalty applied in engine.py: `overlap_score = raw * (1 - 0.15 * (1 - coverage))`. `expected_signal_penalty_weight: 0.15` added to tuning.yaml with formula comment. |
 
 ---
 
