@@ -269,6 +269,16 @@ output:
   # Useful for debugging/calibration, distracting for end users.
   show_raw_scores: false
 
+  # Decision Sprint (Section 8) synthesis controls.
+  decision_sprint:
+    # Number of days to run before go/pivot re-evaluation.
+    checkpoint_days: 28
+    # Deterministic role decision score weights. Must sum ~1.0.
+    weights:
+      fit_score: 0.45
+      confidence_score: 0.30
+      effort_inverse: 0.25
+
 
 # --- MODEL CONFIGURATION ---
 # Which models to use for each pipeline stage.

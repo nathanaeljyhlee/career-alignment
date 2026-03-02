@@ -546,6 +546,59 @@ if "output" in st.session_state:
         else:
             st.warning(strategic.get("summary", ""))
 
+    # Section: Decision Sprint
+    sprint = output.get("section_8_decision_sprint") or {}
+    if sprint.get("available"):
+        st.header(f"{_section_num}. Decision Sprint (90-Day Action Plan)")
+        _section_num += 1
+
+        if sprint.get("mode") == "commit":
+            st.success(f"Commit Mode: Prioritize **{sprint.get('target_role', 'target role')}** for the next 90 days.")
+        else:
+            st.info(f"Explore Mode: Run a 4-week test for **{sprint.get('target_role', 'target role')}** before committing.")
+
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Target Role", sprint.get("target_role", "N/A"))
+        with col2:
+            st.metric("Decision Score", f"{sprint.get('decision_score', 0):.0%}")
+        with col3:
+            st.metric("Confidence", str(sprint.get("confidence_band", "N/A")).title())
+
+        st.write(sprint.get("rationale", ""))
+
+        skills = sprint.get("top_skill_closures", [])
+        if skills:
+            st.write("**Top Skill Closures**")
+            for idx, skill in enumerate(skills, start=1):
+                st.write(f"{idx}. {skill}")
+
+        plan = sprint.get("weekly_plan", {})
+        if plan:
+            st.write("**Weekly Execution Loop**")
+            st.write(f"- Project block: {plan.get('project_block', '')}")
+            st.write(f"- Market block: {plan.get('market_block', '')}")
+            st.write(f"- Pipeline block: {plan.get('pipeline_block', '')}")
+
+        st.write(f"**Go/Pivot checkpoint date:** {sprint.get('checkpoint_date', 'N/A')}")
+
+        if sprint.get("go_criteria"):
+            with st.expander("Go criteria"):
+                for item in sprint["go_criteria"]:
+                    st.write(f"- {item}")
+
+        if sprint.get("pivot_criteria"):
+            with st.expander("Pivot criteria"):
+                for item in sprint["pivot_criteria"]:
+                    st.write(f"- {item}")
+
+        for note in sprint.get("guardrail_notes", []):
+            st.caption(f"Guardrail: {note}")
+
+        action_plan = sprint.get("action_plan_text", "")
+        if action_plan:
+            st.text_area("Copy-ready action plan", value=action_plan, height=140)
+
     # Section: Cross-Role Analysis
     cross = output.get("section_7_cross_role")
     if cross and cross.get("role_ranking"):
