@@ -43,9 +43,16 @@ analysis/
   cross_role.py             # Cross-role ranking, shared gaps, leverage skills
 
 data/
-  onet_skills.json          # 469 canonical skills (O*NET + ESCO enriched)
-  skill_aliases.json        # 1,825 alias entries → canonical skill name
-  role_taxonomy.json        # 20 target roles with required/preferred skills + metadata
+  onet_skills.json          # 483 canonical skills (O*NET + ESCO enriched)
+  skill_aliases.json        # 1,832 alias entries → canonical skill name
+  role_taxonomy.json        # 20 target roles (expanding to 80 via CMF-037)
+  role_taxonomy.schema.json # JSON schema — used by validate_role_taxonomy.py
+
+scripts/
+  validate_role_taxonomy.py # Schema + governance lint — run before any role_taxonomy.json PR
+
+docs/
+  taxonomy-governance.md    # Governance workflow for adding/modifying roles
 ```
 
 **Pipeline stages (engine.py):**
@@ -107,7 +114,7 @@ Run output saved to `runs/` as `run_HHMMSS.json`. `latest_run.json` is always ov
 2. **All tunable parameters come from `tuning.yaml` via `get_tuning()`** — never hardcode thresholds, weights, or model names in agent files.
 3. **Use `config.py` helpers:** `extraction_options()` and `reasoning_options()` return the correct `num_ctx` + temperature dicts for `ollama.chat()` calls.
 4. **`skill_aliases.json` format:** Top-level object with `"aliases"` key containing a flat dict: `{"version": "...", "aliases": {"alias string": "Canonical Skill Name", ...}}`. All alias keys lowercase; values must exactly match a `skill_name` in `onet_skills.json` (title-cased). Skills.py loads via `data.get("aliases", data)` — the wrapper is required.
-5. **`role_taxonomy.json` format:** Top-level object with `"roles"` key containing an array: `{"version": "...", "roles": [{...}, ...]}`. Each role object has `role_id` (kebab-case), `title`, `required_skills` (list), `preferred_skills` (list), `motivation_attributes` (dict), `expected_signals` (list), `barrier_conditions` (list).
+5. **`role_taxonomy.json` format:** Top-level object with `"roles"` key containing an array: `{"version": "...", "roles": [{...}, ...]}`. Required role fields: `role_id` (kebab-case), `role_name`, `onet_code`, `category`, `description`, `required_skills`, `preferred_skills`, `motivation_attributes`, `expected_signals`, `barrier_conditions`, `bls_data`. Optional CMF-037 fields: `functional_category`, `track` (`"internship"` | `"ft"` | `"both"`), `mba_track` (bool), `babson_fit` (bool). Run `python scripts/validate_role_taxonomy.py` after any edit to this file.
 6. **`onet_skills.json` format:** Top-level object with `"skills"` key containing an array: `{"version": "...", "skills": [{"skill_id": "...", "skill_name": "...", "category": "...", "description": "...", "aliases": [...]}, ...]}`. All `skill_name` values title-cased. Skills.py loads via `data.get("skills", [])` — the wrapper is required.
 7. **No external API calls at runtime** — all enrichment data is baked into `data/` files at build time.
 8. **Commit style:** `Session N: [one-line description]` — see git log for examples.
@@ -135,34 +142,23 @@ Run output saved to `runs/` as `run_HHMMSS.json`. `latest_run.json` is always ov
 
 ---
 
-## Open Must Items — Current Priority Queue
+## Current Priority Queue
 
-Only one Must item remains open. All others (CMF-029, 030, 032, 034, 036, 006) were resolved in Sessions 11-13 or merged via PR #1.
+Full specs in `CODEX-REVIEW-QUEUE.md`. Work top to bottom.
 
----
+### Must (blocking user expansion)
 
-### CMF-005 — End-to-end Tally intake run test
-**Type:** Verification / minor bug fixes expected
-**File:** `tally_intake.py`, `runs/processed_submissions.json`
-**Problem:** `tally_intake.py` is fully implemented (Session 11) but has never been run end-to-end on a real Tally submission. Known issue: `--list` fails with `FileNotFoundError` if no Tally API key is available in the environment.
-**Task:**
-- If Codex can run it: `python tally_intake.py` against one of the 3 existing Tally submissions. Confirm run saves to `runs/` with submission ID in filename and `processed_submissions.json` updates. Fix any crashes.
-- If no API key: add a `--dry-run` flag that exercises the full intake code path against a fixture JSON response (no live API call). This verifies parsing and routing logic without credentials.
-**Verify:** Either a clean end-to-end run log OR a working `--dry-run` path with fixture data that exercises all code branches.
+**CMF-037 — Expand role taxonomy from 20 to 80 roles**
+Fields `functional_category`, `track`, `mba_track`, `babson_fit` already added to existing 20 roles. Need 60 new roles covering internship/FT tracks, MBA-specific vs general, Babson entrepreneurial track. Add 14 new canonical skills to `onet_skills.json`. Full spec + all 60 role stubs in `CODEX-REVIEW-QUEUE.md`. Run `python scripts/validate_role_taxonomy.py` before opening PR.
 
----
+### Should (next after CMF-037)
 
-## Should Items (Next Priority After Must Clears)
+- **CMF-038** — Decision Sprint card: deterministic output section converting fit analysis to a 90-day commitment (role bet + skill closures + weekly loop + go/pivot checkpoint). No new LLM calls — all inputs already in pipeline output.
+- **CMF-039** — Skill graph singleton: cache `build_skill_graph()` across runs (module-level lazy init). No output change.
+- **CMF-040** — Parallelize Stage 2: run `synthesize_profile()` and `extract_motivation()` concurrently via `ThreadPoolExecutor`. No output change.
 
-For awareness — Codex should not start these until CMF-005 is Done. Ordered by recommended implementation sequence.
-
-- **CMF-031** — Rename HIPAA Compliance to Healthcare Regulatory Compliance + add international aliases + one straggler alias from CMF-030 (`"clinical experience"` → `"Healthcare Domain Knowledge"`)
-- **CMF-033** — Validate barrier conditions against candidate profile before flagging as gaps (prompt engineering in gap_analyzer.py)
-- **CMF-035** — Add expected_signal_coverage to skill_overlap computation (new PipelineState field + penalty multiplier in tuning.yaml)
-- **CMF-007** — Transferable language enrichment layer (new skills.py substep + engine.py wiring)
-- **CMF-028c** — Lightcast Open Skills snapshot for tool-level aliases (one-time API dump to local CSV)
-
-Full descriptions in `feature-roadmap.csv`.
+### Already done (do not re-implement)
+CMF-001 through CMF-007, CMF-028 through CMF-036 — all closed. See merge log in `CODEX-REVIEW-QUEUE.md`.
 
 ---
 
