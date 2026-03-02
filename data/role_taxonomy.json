@@ -45,6 +45,16 @@
         "autonomy": "high",
         "stability_vs_volatility": "moderate",
         "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Problem solving and decision making",
+          "Adaptability",
+          "Speaking and listening"
+        ],
+        "bls_median_wage_2024": 161030,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 6.6
       }
     },
     {
@@ -89,6 +99,16 @@
         "autonomy": "moderate",
         "stability_vs_volatility": "moderate",
         "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Problem solving and decision making",
+          "Adaptability",
+          "Speaking and listening"
+        ],
+        "bls_median_wage_2024": 161030,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 6.6
       }
     },
     {
@@ -133,6 +153,16 @@
         "autonomy": "moderate",
         "stability_vs_volatility": "high",
         "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Problem solving and decision making",
+          "Adaptability",
+          "Speaking and listening"
+        ],
+        "bls_median_wage_2024": 161030,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 6.6
       }
     },
     {
@@ -177,6 +207,16 @@
         "autonomy": "low",
         "stability_vs_volatility": "moderate",
         "prestige_sensitivity": "high"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Adaptability",
+          "Writing and reading",
+          "Problem solving and decision making"
+        ],
+        "bls_median_wage_2024": 101190,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 8.8
       }
     },
     {
@@ -221,6 +261,16 @@
         "autonomy": "low",
         "stability_vs_volatility": "moderate",
         "prestige_sensitivity": "high"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Adaptability",
+          "Writing and reading",
+          "Problem solving and decision making"
+        ],
+        "bls_median_wage_2024": 101190,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 8.8
       }
     },
     {
@@ -265,6 +315,16 @@
         "autonomy": "moderate",
         "stability_vs_volatility": "high",
         "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Adaptability",
+          "Writing and reading",
+          "Problem solving and decision making"
+        ],
+        "bls_median_wage_2024": 101190,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 8.8
       }
     },
     {
@@ -309,6 +369,16 @@
         "autonomy": "high",
         "stability_vs_volatility": "high",
         "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Mathematics",
+          "Computers and information technology",
+          "Writing and reading"
+        ],
+        "bls_median_wage_2024": 112590,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 33.5
       }
     },
     {
@@ -353,6 +423,16 @@
         "autonomy": "moderate",
         "stability_vs_volatility": "high",
         "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Computers and information technology",
+          "Critical and analytical thinking",
+          "Problem solving and decision making"
+        ],
+        "bls_median_wage_2024": 103790,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 8.7
       }
     },
     {
@@ -397,6 +477,16 @@
         "autonomy": "moderate",
         "stability_vs_volatility": "high",
         "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Problem solving and decision making",
+          "Adaptability",
+          "Leadership"
+        ],
+        "bls_median_wage_2024": 102950,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 4.4
       }
     },
     {
@@ -441,6 +531,16 @@
         "autonomy": "moderate",
         "stability_vs_volatility": "high",
         "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Adaptability",
+          "Critical and analytical thinking",
+          "Problem solving and decision making"
+        ],
+        "bls_median_wage_2024": 80880,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 16.7
       }
     },
     {
@@ -485,6 +585,16 @@
         "autonomy": "moderate",
         "stability_vs_volatility": "high",
         "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Adaptability",
+          "Leadership",
+          "Problem solving and decision making"
+        ],
+        "bls_median_wage_2024": 136550,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 4.5
       }
     },
     {
@@ -529,6 +639,16 @@
         "autonomy": "moderate",
         "stability_vs_volatility": "high",
         "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Mathematics",
+          "Computers and information technology",
+          "Writing and reading"
+        ],
+        "bls_median_wage_2024": 112590,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 33.5
       }
     },
     {
@@ -573,6 +693,16 @@
         "autonomy": "high",
         "stability_vs_volatility": "low",
         "prestige_sensitivity": "high"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Writing and reading",
+          "Problem solving and decision making",
+          "Adaptability"
+        ],
+        "bls_median_wage_2024": 101350,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 5.7
       }
     },
     {
@@ -617,6 +747,16 @@
         "autonomy": "low",
         "stability_vs_volatility": "low",
         "prestige_sensitivity": "high"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Writing and reading",
+          "Problem solving and decision making",
+          "Adaptability"
+        ],
+        "bls_median_wage_2024": 101350,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 5.7
       }
     },
     {
@@ -661,6 +801,16 @@
         "autonomy": "moderate",
         "stability_vs_volatility": "moderate",
         "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Problem solving and decision making",
+          "Adaptability",
+          "Speaking and listening"
+        ],
+        "bls_median_wage_2024": 161030,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 6.6
       }
     },
     {
@@ -705,6 +855,16 @@
         "autonomy": "moderate",
         "stability_vs_volatility": "high",
         "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Writing and reading",
+          "Problem solving and decision making",
+          "Adaptability"
+        ],
+        "bls_median_wage_2024": 101350,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 5.7
       }
     },
     {
@@ -749,6 +909,16 @@
         "autonomy": "moderate",
         "stability_vs_volatility": "moderate",
         "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Computers and information technology",
+          "Problem solving and decision making",
+          "Adaptability"
+        ],
+        "bls_median_wage_2024": 171200,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 15.2
       }
     },
     {
@@ -793,6 +963,16 @@
         "autonomy": "high",
         "stability_vs_volatility": "low",
         "prestige_sensitivity": "low"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Problem solving and decision making",
+          "Leadership",
+          "Adaptability"
+        ],
+        "bls_median_wage_2024": 206420,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 4.3
       }
     }
   ]

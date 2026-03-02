@@ -376,6 +376,56 @@ if "output" in st.session_state:
                 for s in skills_section["top_skills"]:
                     st.write(f"- **{s['name']}** ({s['type']}) -- {s['confidence']:.0%}")
 
+    # --- CMF-006: Skill Extraction Observability ---
+    _obs_state = st.session_state.get("state")
+    _skills_flat = getattr(_obs_state, "skills_flat", None) if _obs_state else None
+    if _skills_flat:
+        METHOD_META = {
+            "alias":        ("green",  "Exact match — skill surface form found directly in alias dictionary"),
+            "llm":          ("blue",   "AI extracted — LLM identified this skill from context in your text"),
+            "llm_direct":   ("blue",   "AI extracted — LLM identified this skill from context in your text"),
+            "embedding":    ("blue",   "Embedding match — LLM skill normalized to O*NET via semantic similarity"),
+            "inferred":     ("orange", "Inferred — skill demonstrated through actions but not explicitly stated"),
+            "graph_inferred": ("red",  "Graph inferred — skill implied by proximity to other extracted skills in the skill graph"),
+        }
+        counts: dict[str, int] = {}
+        for sk in _skills_flat:
+            m = sk.get("match_method", "unknown")
+            counts[m] = counts.get(m, 0) + 1
+
+        summary_parts = [f"{v} {k}" for k, v in counts.items()]
+        summary_line = f"{len(_skills_flat)} skills extracted from your resume. Methods: {', '.join(summary_parts)}"
+
+        with st.expander("How your skills were extracted", expanded=False):
+            st.caption(summary_line)
+
+            # Group skills by method
+            from collections import defaultdict
+            by_method: dict[str, list[dict]] = defaultdict(list)
+            for sk in _skills_flat:
+                by_method[sk.get("match_method", "unknown")].append(sk)
+
+            # Display in a consistent order
+            method_order = ["alias", "llm_direct", "llm", "embedding", "inferred", "graph_inferred"]
+            import pandas as pd
+            displayed = set()
+            for method in method_order + [m for m in by_method if m not in method_order]:
+                if method not in by_method or method in displayed:
+                    continue
+                displayed.add(method)
+                color, description = METHOD_META.get(method, ("gray", "Unknown extraction method"))
+                skills_in_group = by_method[method]
+                label = method.replace("_", " ").title()
+                st.markdown(f"**:{color}[{label}]** — _{description}_")
+                rows = [
+                    {
+                        "Skill": sk.get("canonical_name", sk.get("original_mention", "")),
+                        "Confidence": f"{sk.get('confidence', 0):.0%}",
+                    }
+                    for sk in sorted(skills_in_group, key=lambda s: s.get("confidence", 0), reverse=True)
+                ]
+                st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+
     # Dynamic section numbering — tracks next number so sections don't skip
     _section_num = 3
 
