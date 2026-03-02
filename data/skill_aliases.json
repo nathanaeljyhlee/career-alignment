@@ -222,7 +222,7 @@
     "presented recommendations": "Presentation Skills",
     "demo": "Presentation Skills",
     "demos": "Presentation Skills",
-    "hipaa": "Regulatory Awareness",
+    "hipaa": "Healthcare Regulatory Compliance",
     "compliance": "Regulatory Awareness",
     "gdpr": "Regulatory Awareness",
     "sox": "Regulatory Awareness",
@@ -1827,6 +1827,13 @@
     "clinical operations": "Clinical Workflow Understanding",
     "hospital operations": "Clinical Workflow Understanding",
     "patient flow": "Clinical Workflow Understanding",
-    "inpatient management": "Clinical Workflow Understanding"
+    "inpatient management": "Clinical Workflow Understanding",
+    "hipaa compliance": "Healthcare Regulatory Compliance",
+    "clinical compliance": "Healthcare Regulatory Compliance",
+    "clinical governance": "Healthcare Regulatory Compliance",
+    "medical regulatory": "Healthcare Regulatory Compliance",
+    "healthcare compliance": "Healthcare Regulatory Compliance",
+    "data protection in healthcare": "Healthcare Regulatory Compliance",
+    "gdpr healthcare": "Healthcare Regulatory Compliance"
   }
 }
