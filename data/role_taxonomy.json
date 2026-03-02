@@ -172,14 +172,14 @@
       "category": "consulting",
       "description": "Advises organizations on operational efficiency, organizational strategy, and business transformation. MBA interns work on client engagements solving structured business problems with data-driven recommendations.",
       "required_skills": [
+        "Business Acumen",
+        "Competitive Analysis",
+        "Market Research",
+        "Financial Modeling",
+        "Due Diligence",
         "Problem Solving",
-        "Data Analysis",
         "Communication",
-        "Presentation Skills",
-        "Stakeholder Management",
-        "Strategic Planning",
-        "Critical Thinking",
-        "Project Management"
+        "Presentation Skills"
       ],
       "preferred_skills": [
         "Financial Modeling",
@@ -442,21 +442,21 @@
       "category": "operations",
       "description": "Oversees business operations including process optimization, resource allocation, and cross-functional coordination. MBA interns lead operational improvement projects and drive efficiency across teams.",
       "required_skills": [
+        "operations management",
         "Process Improvement",
-        "Project Management",
+        "Supply Chain Optimization",
+        "Demand Forecasting",
+        "Risk Management",
         "Data Analysis",
-        "Communication",
-        "Cross-Functional Leadership",
-        "Problem Solving",
-        "Stakeholder Management",
-        "Critical Thinking"
+        "Project Management",
+        "Stakeholder Management"
       ],
       "preferred_skills": [
         "Lean Six Sigma",
-        "Supply Chain Optimization",
         "Change Management",
         "Financial Analysis",
-        "Agile Methodology"
+        "Agile Methodology",
+        "Operational Improvement"
       ],
       "barrier_conditions": [
         "No experience managing or improving operational processes",
@@ -875,14 +875,14 @@
       "category": "technology",
       "description": "Manages complex technology programs spanning multiple teams, workstreams, and delivery milestones. MBA interns coordinate cross-functional execution, manage stakeholder communications, and drive program-level decisions.",
       "required_skills": [
-        "Project Management",
-        "Stakeholder Management",
-        "Communication",
-        "Cross-Functional Leadership",
-        "Problem Solving",
+        "Digital Transformation",
         "Agile Methodology",
-        "Critical Thinking",
-        "Reporting"
+        "Risk Management",
+        "Change Management",
+        "Data Analysis",
+        "SQL",
+        "Project Management",
+        "Stakeholder Management"
       ],
       "preferred_skills": [
         "Technical Fluency",
@@ -929,21 +929,21 @@
       "category": "operations",
       "description": "Operates as a generalist in early-stage startups, handling strategy, operations, fundraising support, and team-building. MBA interns wear multiple hats and drive high-priority initiatives directly with founders.",
       "required_skills": [
-        "Strategic Planning",
-        "Problem Solving",
-        "Communication",
-        "Project Management",
-        "Data Analysis",
-        "Cross-Functional Leadership",
+        "operations management",
+        "Operational Improvement",
+        "Growth Strategy",
         "Financial Modeling",
-        "Critical Thinking"
-      ],
-      "preferred_skills": [
         "Fundraising",
         "Hiring and Recruiting",
+        "Strategic Planning",
+        "Data Analysis"
+      ],
+      "preferred_skills": [
         "Product Sense",
         "Market Research",
-        "Growth Strategy"
+        "Change Management",
+        "Agile Methodology",
+        "Pricing Strategy"
       ],
       "barrier_conditions": [
         "No comfort with ambiguity, rapid context-switching, or undefined roles",
