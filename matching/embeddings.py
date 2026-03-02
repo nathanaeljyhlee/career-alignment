@@ -103,11 +103,15 @@ def match_roles(
     profile: dict[str, Any],
     skills: list[dict[str, Any]],
     motivation: dict[str, Any] | None = None,
-) -> list[dict[str, Any]]:
+    return_diagnostics: bool = False,
+) -> list[dict[str, Any]] | tuple[list[dict[str, Any]], dict[str, Any]]:
     """Find the top-K most similar roles for the candidate profile.
 
     Returns list of role dicts enriched with similarity_score, sorted descending.
-    Only roles above embedding_min_similarity are included.
+    Only roles above embedding_min_similarity and within top-K are included.
+
+    If return_diagnostics=True, also returns retrieval metadata with full role ranking
+    and include/exclude reasons for auditability.
     """
     matching_cfg = get_tuning("role_matching") or {}
     top_k = matching_cfg.get("embedding_top_k", 6)
@@ -124,23 +128,64 @@ def match_roles(
     # Compute cosine similarities (inner product for normalized vectors)
     similarities = (profile_emb @ role_embs.T).flatten()
 
-    # Get top-K indices above threshold
+    # Build full ranking first for diagnostics.
     sorted_indices = np.argsort(similarities)[::-1]
+    ranked_roles = []
+    for rank, idx in enumerate(sorted_indices, start=1):
+        role = dict(roles[idx])
+        role["similarity_score"] = round(float(similarities[idx]), 4)
+        role["rank"] = rank
+        ranked_roles.append(role)
+
+    # Then select top-K that clear threshold.
     results = []
-    for idx in sorted_indices:
-        score = float(similarities[idx])
+    for role in ranked_roles:
+        score = role["similarity_score"]
         if score < min_sim:
             break
         if len(results) >= top_k:
             break
-        role = dict(roles[idx])
-        role["similarity_score"] = round(score, 4)
-        results.append(role)
+        results.append({k: v for k, v in role.items() if k != "rank"})
 
     logger.info(
         "Embedding pre-match: %d roles above threshold %.2f (top-K=%d)",
         len(results), min_sim, top_k,
     )
-    return results
+    if not return_diagnostics:
+        return results
 
+    selected_ids = {r.get("role_id") for r in results}
+    considered = []
+    excluded = []
+    for role in ranked_roles:
+        role_id = role.get("role_id")
+        score = role.get("similarity_score", 0.0)
+        if role_id in selected_ids:
+            reason = "selected"
+        elif score < min_sim:
+            reason = "below_threshold"
+        elif role.get("rank", 0) > top_k:
+            reason = "outside_top_k"
+        else:
+            reason = "not_selected"
+
+        row = {
+            "role_id": role_id,
+            "role_name": role.get("role_name"),
+            "rank": role.get("rank"),
+            "similarity_score": score,
+            "reason": reason,
+        }
+        considered.append(row)
+        if reason != "selected":
+            excluded.append(row)
+
+    diagnostics = {
+        "total_roles": len(roles),
+        "top_k": top_k,
+        "threshold": min_sim,
+        "considered_roles": considered,
+        "excluded_roles": excluded,
+    }
+    return results, diagnostics
 
