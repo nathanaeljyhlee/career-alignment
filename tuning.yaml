@@ -319,6 +319,13 @@ skill_overlap:
   # exact and substring matching fail). Higher = more conservative matches.
   embedding_threshold: 0.80
 
+  # Penalty applied when role expected signals are weakly represented in the
+  # synthesized profile text. overlap_score is multiplied by:
+  #   (1 - expected_signal_penalty_weight * (1 - expected_signal_coverage))
+  # 0.15 means full coverage keeps score unchanged, while zero coverage gets
+  # up to a 15% reduction.
+  expected_signal_penalty_weight: 0.15
+
 
 # --- SKILL GRAPH ---
 # Controls the skill co-occurrence graph used for gap prioritization and inference.

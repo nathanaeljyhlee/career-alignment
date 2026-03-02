@@ -44,6 +44,7 @@ def _substring_match(candidate_names: set[str], role_skill: str) -> bool:
 def compute_skill_overlap(
     candidate_skills: list[dict],
     role: dict,
+    candidate_profile: dict[str, Any] | None = None,
     embedding_threshold: float | None = None,
 ) -> dict:
     """
@@ -58,6 +59,7 @@ def compute_skill_overlap(
         {
             "required_coverage": float,     # 0-1, fraction of required_skills matched
             "preferred_coverage": float,    # 0-1, fraction of preferred_skills matched
+            "expected_signal_coverage": float,  # 0-1, expected_signals coverage vs profile text embeddings
             "overlap_score": float,         # required_weight * required + preferred_weight * preferred (from tuning.yaml)
             "matched_required": list[str],
             "missing_required": list[str],
@@ -70,6 +72,7 @@ def compute_skill_overlap(
         embedding_threshold = overlap_cfg.get("embedding_threshold", 0.80)
     required_weight = overlap_cfg.get("required_weight", 0.70)
     preferred_weight = overlap_cfg.get("preferred_weight", 0.30)
+    expected_signal_threshold = 0.50
 
     # Build candidate skill name set (canonical + original mentions, lowercased)
     candidate_names: set[str] = set()
@@ -81,6 +84,41 @@ def compute_skill_overlap(
 
     required_skills: list[str] = role.get("required_skills", [])
     preferred_skills: list[str] = role.get("preferred_skills", [])
+    expected_signals: list[str] = role.get("expected_signals", [])
+
+    # Build compact profile text snippets for expected signal semantic coverage.
+    profile_text_chunks: list[str] = []
+    if candidate_profile:
+        narrative_summary = candidate_profile.get("narrative_summary")
+        if isinstance(narrative_summary, str) and narrative_summary.strip():
+            profile_text_chunks.append(narrative_summary.strip())
+
+        highest_education = candidate_profile.get("highest_education")
+        if isinstance(highest_education, str) and highest_education.strip():
+            profile_text_chunks.append(highest_education.strip())
+
+        for cluster in candidate_profile.get("skill_clusters", []) or []:
+            if not isinstance(cluster, dict):
+                continue
+            cluster_name = (cluster.get("cluster_name") or "").strip()
+            skills = [str(s).strip() for s in (cluster.get("skills") or []) if str(s).strip()]
+            evidence = (cluster.get("evidence_summary") or "").strip()
+            combined = " | ".join(part for part in [cluster_name, ", ".join(skills), evidence] if part)
+            if combined:
+                profile_text_chunks.append(combined)
+
+        for signal in candidate_profile.get("industry_signals", []) or []:
+            if not isinstance(signal, dict):
+                continue
+            industry = (signal.get("industry") or "").strip()
+            evidence = (signal.get("evidence") or "").strip()
+            recency = (signal.get("recency") or "").strip()
+            combined = " | ".join(part for part in [industry, recency, evidence] if part)
+            if combined:
+                profile_text_chunks.append(combined)
+
+    if not profile_text_chunks:
+        profile_text_chunks = list(candidate_names)
 
     # Phase 1: exact + substring matching
     matched_req: list[str] = []
@@ -137,11 +175,26 @@ def compute_skill_overlap(
     # Compute coverage scores
     required_coverage = len(matched_req) / len(required_skills) if required_skills else 1.0
     preferred_coverage = len(matched_pref) / len(preferred_skills) if preferred_skills else 1.0
+    expected_signal_coverage = 1.0
+    if expected_signals and profile_text_chunks:
+        try:
+            expected_signal_embeddings = _embed_texts(expected_signals)
+            profile_text_embeddings = _embed_texts(profile_text_chunks)
+            signal_sim_matrix = expected_signal_embeddings @ profile_text_embeddings.T
+            signal_matches = sum(
+                1 for i in range(len(expected_signals))
+                if float(signal_sim_matrix[i].max()) >= expected_signal_threshold
+            )
+            expected_signal_coverage = signal_matches / len(expected_signals)
+        except Exception as e:
+            logger.warning("Expected signal coverage embedding step failed (non-fatal): %s", e)
+
     overlap_score = required_weight * required_coverage + preferred_weight * preferred_coverage
 
     return {
         "required_coverage": round(required_coverage, 3),
         "preferred_coverage": round(preferred_coverage, 3),
+        "expected_signal_coverage": round(expected_signal_coverage, 3),
         "overlap_score": round(overlap_score, 3),
         "matched_required": matched_req,
         "missing_required": missing_req,
