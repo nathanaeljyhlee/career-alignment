@@ -61,6 +61,7 @@ CRITICAL RULES — READ BEFORE ANALYZING:
 3. GAPS MUST BE SPECIFIC: Each gap must reference a specific role requirement the candidate genuinely lacks. Do not list vague gaps like "lacks technical fluency" when the candidate has technical skills listed.
 4. DO NOT HALLUCINATE GAPS: If you cannot find clear evidence that the candidate lacks something, do not invent a gap.
 5. EVIDENCE REQUIRED: Every gap MUST include "evidence_source" — the specific data point proving the candidate lacks this. Reference the skill overlap data, the candidate skills list, or a specific absence in the profile text. If you cannot cite evidence, the gap is not real.
+6. BARRIER CONDITIONS MUST BE CANDIDATE-SPECIFIC: Before including any barrier condition as a gap, you MUST verify it applies to this specific candidate. Check the candidate profile and skills list. If you cannot cite specific evidence of absence from the profile, omit the barrier entirely. Do not flag barriers by default.
 
 GAP TYPES:
 1. hard_skills: Missing technical or functional skills from the role's REQUIRED or PREFERRED list that are NOT present in the candidate's skills
