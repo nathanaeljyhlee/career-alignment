@@ -240,6 +240,7 @@ def compare_role(
     mba_year: str = "1y_internship",
     skill_overlap: dict | None = None,
     optimization_priorities: list[str] | None = None,
+    n_samples_override: int | None = None,
 ) -> AggregatedRoleFit:
     """Compare candidate against a single role with self-consistency sampling.
 
@@ -255,7 +256,9 @@ def compare_role(
     matching_cfg = get_tuning("role_matching") or {}
     confidence_cfg = get_tuning("confidence") or {}
 
-    n_samples = matching_cfg.get("self_consistency_samples", 3)
+    default_samples = matching_cfg.get("self_consistency_samples", 3)
+    n_samples = n_samples_override if n_samples_override is not None else default_samples
+    n_samples = max(1, int(n_samples))
     sc_temperature = matching_cfg.get("self_consistency_temperature", 0.7)
     fit_weights = matching_cfg.get("fit_weights", {}).get(mba_year, {})
     fit_bands = matching_cfg.get("fit_bands", {})
@@ -329,6 +332,8 @@ def compare_roles(
     """Compare candidate against multiple roles in parallel. Returns sorted by composite score."""
     matching_cfg = get_tuning("role_matching") or {}
     max_workers = matching_cfg.get("parallel_workers", 3)
+    low_overlap_threshold = matching_cfg.get("low_overlap_single_sample_threshold", 0.35)
+    enable_dynamic_sampling = matching_cfg.get("dynamic_self_consistency", True)
 
     results: list[AggregatedRoleFit] = []
 
@@ -338,6 +343,13 @@ def compare_roles(
                 compare_role, profile, motivation, role, mba_year,
                 (skill_overlaps or {}).get(role.get("role_id", "")),
                 optimization_priorities,
+                (
+                    1
+                    if enable_dynamic_sampling and
+                    (skill_overlaps or {}).get(role.get("role_id", ""), {}).get("overlap_score", 0.0)
+                    < low_overlap_threshold
+                    else None
+                ),
             ): role
             for role in roles
         }

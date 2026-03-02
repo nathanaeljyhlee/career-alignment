@@ -267,11 +267,18 @@ def analyze_gaps_batch(
 ) -> list[RoleGapAnalysis]:
     """Run gap analysis for multiple roles."""
     results = []
-    for role, fit in zip(roles, fit_results):
+    fit_by_role_id = {f.get("role_id", ""): f for f in fit_results}
+
+    for role in roles:
+        role_id = role.get("role_id", "")
+        fit = fit_by_role_id.get(role_id)
+        if not fit:
+            logger.warning("Gap analysis batch: missing fit result for role %s", role_id)
+            continue
         try:
-            overlap = (skill_overlaps or {}).get(role.get("role_id", ""))
+            overlap = (skill_overlaps or {}).get(role_id)
             result = analyze_gaps(profile, skills, role, fit, skill_overlap=overlap)
             results.append(result)
         except Exception as e:
-            logger.error("Gap analysis batch: skipping role %s: %s", role.get("role_id"), e)
+            logger.error("Gap analysis batch: skipping role %s: %s", role_id, e)
     return results
