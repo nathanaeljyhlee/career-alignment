@@ -56,7 +56,7 @@ class CandidateProfile(BaseModel):
 
 
 SYNTHESIS_PROMPT = """You are a career profile synthesizer for MBA students. You receive structured skill data and resume/LinkedIn sections, and produce a unified candidate profile.
-
+{stated_target_section}
 INSTRUCTIONS:
 1. Group the extracted skills into meaningful clusters (e.g., "Product Management", "Data & Analytics", "Leadership", "Technical"). Max {max_clusters} clusters, max {max_per_cluster} skills each.
 2. Identify industry/domain signals from the experience sections.
@@ -99,6 +99,8 @@ def synthesize_profile(
     skills_data: list[dict[str, Any]],
     resume_sections: dict[str, str] | None = None,
     linkedin_sections: dict[str, str] | None = None,
+    stated_target: str = "",
+    stated_industry: str = "",
 ) -> CandidateProfile:
     """Run profile synthesis agent.
 
@@ -143,7 +145,22 @@ def synthesize_profile(
     if not resume_text:
         resume_text = "(No resume data provided)"
 
+    # Build optional stated-target block (from Tally intake)
+    stated_target_section = ""
+    if stated_target or stated_industry:
+        lines = ["--- CANDIDATE'S STATED TARGET ---"]
+        if stated_target:
+            lines.append(f"Role they are pursuing: {stated_target}")
+        if stated_industry:
+            lines.append(f"Industry preference: {stated_industry}")
+        lines.append(
+            "Use this to orient your interpretation of their background — "
+            "read their experience through the lens of this stated direction."
+        )
+        stated_target_section = "\n".join(lines) + "\n"
+
     prompt = SYNTHESIS_PROMPT.format(
+        stated_target_section=stated_target_section,
         max_clusters=8,
         max_per_cluster=max_per_cluster,
         w_resume=source_weights.get("resume", 0.50),

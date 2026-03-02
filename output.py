@@ -27,6 +27,7 @@ def build_output(
     warnings: list[str] | None = None,
     stage_timings: dict[str, float] | None = None,
     cross_role: dict | None = None,
+    tally_context: dict | None = None,
 ) -> dict[str, Any]:
     """Build the full output structure for the Streamlit UI.
 
@@ -37,7 +38,7 @@ def build_output(
     max_pivot = output_cfg.get("max_pivot_roles", 2)
 
     result = {
-        "section_1_snapshot": _build_snapshot(profile, motivation),
+        "section_1_snapshot": _build_snapshot(profile, motivation, tally_context),
         "section_2_skills": _build_skill_profile(skills_flat, profile),
         "section_3_win_now": [],
         "section_4_pivot": [],
@@ -92,6 +93,7 @@ def build_output(
 def _build_snapshot(
     profile: dict[str, Any] | None,
     motivation: dict[str, Any] | None,
+    tally_context: dict | None = None,
 ) -> dict[str, Any]:
     """Section 1: Candidate Snapshot."""
     if not profile:
@@ -112,6 +114,20 @@ def _build_snapshot(
         snapshot["secondary_driver"] = motivation.get("secondary_driver", "")
         snapshot["why_quality"] = motivation.get("why_quality", "")
         snapshot["motivation_summary"] = motivation.get("summary", "")
+
+    # Tally intake metadata (CMF-005) — present when submission came via form
+    if tally_context:
+        snapshot["tally_intake"] = {
+            "name": tally_context.get("name", ""),
+            "email": tally_context.get("email", ""),
+            "stated_target_role": tally_context.get("target_role_text", ""),
+            "stated_industry": tally_context.get("target_industry", ""),
+            "geography": tally_context.get("geography", ""),
+            "optimization_priorities": tally_context.get("optimization_priorities", []),
+            "self_assessment_score": tally_context.get("self_assessment_score"),
+            "self_assessment_reason": tally_context.get("self_assessment_reason", ""),
+            "desired_output": tally_context.get("desired_output", []),
+        }
 
     return snapshot
 

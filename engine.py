@@ -43,6 +43,25 @@ logger = logging.getLogger(__name__)
 RUNS_DIR = APP_DIR / "runs"
 
 
+# --- Tally intake context ---
+
+@dataclass
+class TallyContext:
+    """Structured context from a Tally form submission (CMF-005)."""
+    submission_id: str = ""
+    name: str = ""
+    email: str = ""
+    target_role_text: str = ""        # "What are you currently targeting? Why?"
+    target_industry: str = ""          # "Target industry"
+    geography: str = ""                # e.g. "No constraint" or "U.S."
+    optimization_priorities: list[str] = field(default_factory=list)  # checkboxes
+    self_assessment_score: int | None = None   # 1-10 linear scale
+    self_assessment_reason: str = ""
+    desired_output: list[str] = field(default_factory=list)  # report focus checkboxes
+    extra_context: str = ""            # additional background (optional field)
+    linkedin_url: str = ""             # URL string from form (not PDF)
+
+
 # --- Pipeline state ---
 
 @dataclass
@@ -53,6 +72,7 @@ class PipelineState:
     linkedin_path: str | None = None
     why_text: str = ""
     mba_year: str = "1y_internship"
+    tally_context: TallyContext | None = None
 
     # Stage 1 outputs
     resume_parsed: dict[str, Any] | None = None
@@ -293,8 +313,11 @@ def stage_2_profile_synthesis(state: PipelineState) -> PipelineState:
                     resume_sections = state.resume_parsed.get("sections") if state.resume_parsed else None
                     linkedin_sections = state.linkedin_parsed.get("sections") if state.linkedin_parsed else None
 
+                    tc = state.tally_context
                     profile_obj = synthesize_profile(
-                        state.skills_flat, resume_sections, linkedin_sections
+                        state.skills_flat, resume_sections, linkedin_sections,
+                        stated_target=tc.target_role_text if tc else "",
+                        stated_industry=tc.target_industry if tc else "",
                     )
                     state.profile = profile_obj.model_dump()
 
@@ -407,10 +430,12 @@ def stage_3_role_matching(state: PipelineState) -> PipelineState:
         # Agent 3: Role Comparison (with self-consistency)
         with _timed_substep(state, "agent3_role_comparator"):
             try:
+                tc = state.tally_context
                 fit_results = compare_roles(
                     state.profile, state.motivation or {},
                     state.matched_roles, state.mba_year,
                     skill_overlaps=state.skill_overlaps,
+                    optimization_priorities=tc.optimization_priorities if tc else None,
                 )
                 state.fit_results = [r.model_dump() for r in fit_results]
 
@@ -575,6 +600,16 @@ def _save_run_log(state: PipelineState) -> Path:
         "timestamp": datetime.now().isoformat(),
         "mba_year": state.mba_year,
         "why_length": len(state.why_text),
+        "tally_intake": {
+            "submission_id": state.tally_context.submission_id,
+            "name": state.tally_context.name,
+            "email": state.tally_context.email,
+            "target_role": state.tally_context.target_role_text,
+            "target_industry": state.tally_context.target_industry,
+            "optimization_priorities": state.tally_context.optimization_priorities,
+            "self_assessment_score": state.tally_context.self_assessment_score,
+            "desired_output": state.tally_context.desired_output,
+        } if state.tally_context else None,
         "timing": {**state.stage_timings, "substeps": state.substep_timings},
         "errors": state.errors,
         "warnings": state.warnings,
@@ -631,6 +666,7 @@ def run_pipeline(
     linkedin_path: str | None = None,
     why_text: str = "",
     mba_year: str = "1y_internship",
+    tally_context: TallyContext | None = None,
     progress_callback=None,
 ) -> PipelineState:
     """Run the full Candidate-Market Fit Engine pipeline.
@@ -640,6 +676,7 @@ def run_pipeline(
         linkedin_path: Path to LinkedIn PDF export
         why_text: Free-text WHY statement
         mba_year: "1y_internship" or "2y_fulltime"
+        tally_context: Optional structured context from Tally intake (CMF-005)
         progress_callback: Optional callable(stage_name, pct) for UI updates
 
     Returns:
@@ -650,6 +687,7 @@ def run_pipeline(
         linkedin_path=linkedin_path,
         why_text=why_text,
         mba_year=mba_year,
+        tally_context=tally_context,
     )
     state.run_id = datetime.now().strftime("%H%M%S")
     state._start_time = time.time()

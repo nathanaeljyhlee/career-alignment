@@ -88,7 +88,7 @@ EVIDENCE RULES:
 - Sum of all score_impacts should approximately equal the dimension score
 - If you cannot cite a specific source for a claim, do not include it
 
-Be specific. Reference actual skills, experiences, and motivation dimensions. Don't inflate scores.
+{optimization_priorities_section}Be specific. Reference actual skills, experiences, and motivation dimensions. Don't inflate scores.
 
 Return ONLY valid JSON:
 {{
@@ -175,14 +175,28 @@ def _single_comparison(
     thresholds: dict[str, float],
     temperature: float,
     skill_overlap: dict | None = None,
+    optimization_priorities: list[str] | None = None,
 ) -> RoleFitResult | None:
     """Run a single reasoning path for role comparison."""
+    # Build optional optimization priorities block (from Tally intake)
+    if optimization_priorities:
+        priorities_str = ", ".join(optimization_priorities)
+        optimization_priorities_section = (
+            f"--- CANDIDATE'S STATED PRIORITIES ---\n"
+            f"They are optimizing for: {priorities_str}\n"
+            f"Factor these into motivation_alignment_score: roles that deliver on their "
+            f"priorities should score higher on motivation alignment.\n\n"
+        )
+    else:
+        optimization_priorities_section = ""
+
     prompt = COMPARISON_PROMPT.format(
         w_structural=weights.get("structural_fit", 0.65),
         w_motivation=weights.get("motivation_alignment", 0.35),
         t_strong=thresholds.get("strong", 0.70),
         t_competitive=thresholds.get("competitive", 0.45),
         overlap_section=_format_overlap_section(skill_overlap),
+        optimization_priorities_section=optimization_priorities_section,
         profile_json=profile_json,
         motivation_json=motivation_json,
         role_json=role_json,
@@ -225,6 +239,7 @@ def compare_role(
     role: dict[str, Any],
     mba_year: str = "1y_internship",
     skill_overlap: dict | None = None,
+    optimization_priorities: list[str] | None = None,
 ) -> AggregatedRoleFit:
     """Compare candidate against a single role with self-consistency sampling.
 
@@ -256,6 +271,7 @@ def compare_role(
             profile_json, motivation_json, role_json,
             fit_weights, fit_bands, sc_temperature,
             skill_overlap=skill_overlap,
+            optimization_priorities=optimization_priorities,
         )
         if result:
             results.append(result)
@@ -308,6 +324,7 @@ def compare_roles(
     roles: list[dict[str, Any]],
     mba_year: str = "1y_internship",
     skill_overlaps: dict[str, dict] | None = None,
+    optimization_priorities: list[str] | None = None,
 ) -> list[AggregatedRoleFit]:
     """Compare candidate against multiple roles in parallel. Returns sorted by composite score."""
     matching_cfg = get_tuning("role_matching") or {}
@@ -319,7 +336,8 @@ def compare_roles(
         future_to_role = {
             executor.submit(
                 compare_role, profile, motivation, role, mba_year,
-                (skill_overlaps or {}).get(role.get("role_id", ""))
+                (skill_overlaps or {}).get(role.get("role_id", "")),
+                optimization_priorities,
             ): role
             for role in roles
         }
