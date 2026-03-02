@@ -77,6 +77,29 @@ streamlit run app.py
 
 ---
 
+
+
+### Fast iteration / cached stage runs
+
+- In the Streamlit sidebar, enable **Show debug info** to access **Debug Rerun from Previous Run**.
+  You can pick a prior run and re-run the whole engine or start directly from Stage 2/Stage 3 using stored intermediate outputs.
+
+For faster testing, you can run only portions of the pipeline and cache stage outputs:
+
+```bash
+python pipeline_runner.py \
+  --resume path/to/resume.pdf \
+  --why-text "I want to pivot into product strategy" \
+  --use-cache
+
+# Re-run only Stage 3 (Role Matching) from cached Stage 2 output
+python pipeline_runner.py \
+  --resume path/to/resume.pdf \
+  --why-text "I want to pivot into product strategy" \
+  --use-cache \
+  --start-stage role_matching
+```
+
 ## Configuration
 
 All scoring parameters are in `tuning.yaml` — weights, thresholds, model names, and parallel worker counts. Inline comments explain every parameter. No code changes needed for parameter tuning.

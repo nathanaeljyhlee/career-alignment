@@ -29,6 +29,45 @@ logging.basicConfig(
 
 RUNS_DIR = APP_DIR / "runs"
 
+
+def _store_pipeline_results(state: PipelineState):
+    """Build output + persist latest state in session."""
+    output = build_output(
+        profile=state.profile,
+        motivation=state.motivation,
+        fit_results=state.fit_results,
+        gap_results=state.gap_results,
+        confidence_results=state.confidence_results,
+        matched_roles=state.matched_roles,
+        skills_flat=state.skills_flat,
+        structural_gap_warning=state.structural_gap_warning,
+        errors=state.errors,
+        warnings=state.warnings,
+        stage_timings=state.stage_timings,
+        cross_role=getattr(state, "cross_role", None),
+    )
+    st.session_state["output"] = output
+    st.session_state["state"] = state
+    st.session_state["run_log_path"] = getattr(state, "_run_log_path", None)
+
+
+def _seed_payload_from_run(run_data: dict, start_stage: str) -> dict:
+    """Create a seed payload from a saved run for partial debug reruns."""
+    results = run_data.get("results", {})
+    payload: dict = {}
+
+    if start_stage in {"profile_synthesis", "role_matching"}:
+        payload["skills_flat"] = results.get("skills_flat")
+    if start_stage == "role_matching":
+        payload["profile"] = results.get("profile")
+        payload["motivation"] = results.get("motivation")
+
+    # Optional extras if present
+    if "skill_graph" in results:
+        payload["skill_graph"] = results.get("skill_graph")
+
+    return {k: v for k, v in payload.items() if v is not None}
+
 # --- Page config ---
 st.set_page_config(
     page_title="Candidate-Market Fit Engine",
@@ -227,26 +266,7 @@ if st.button("Analyze My Fit", type="primary", disabled=not can_run, use_contain
             timing_lines.append(f"    {substep}: {elapsed:.1f}s")
     timing_display.code("PIPELINE TIMING\n" + "\n".join(timing_lines), language="text")
 
-    # Build output
-    output = build_output(
-        profile=state.profile,
-        motivation=state.motivation,
-        fit_results=state.fit_results,
-        gap_results=state.gap_results,
-        confidence_results=state.confidence_results,
-        matched_roles=state.matched_roles,
-        skills_flat=state.skills_flat,
-        structural_gap_warning=state.structural_gap_warning,
-        errors=state.errors,
-        warnings=state.warnings,
-        stage_timings=state.stage_timings,
-        cross_role=getattr(state, "cross_role", None),
-    )
-
-    # Store in session state
-    st.session_state["output"] = output
-    st.session_state["state"] = state
-    st.session_state["run_log_path"] = getattr(state, "_run_log_path", None)
+    _store_pipeline_results(state)
 
 # --- Results display ---
 if "output" in st.session_state:
@@ -592,6 +612,62 @@ if "output" in st.session_state:
     # Debug info
     if show_debug:
         st.header("Debug Info")
+
+        st.subheader("Debug Rerun from Previous Run")
+        debug_run_files = sorted(RUNS_DIR.glob("run_*.json"), reverse=True) if RUNS_DIR.exists() else []
+        if debug_run_files:
+            selected_debug_run = st.selectbox(
+                "Source run",
+                options=[f.name for f in debug_run_files],
+                key="debug_source_run",
+            )
+            rerun_mode = st.radio(
+                "Rerun mode",
+                options=["whole_pipeline", "from_profile_synthesis", "from_role_matching"],
+                format_func=lambda m: {
+                    "whole_pipeline": "Whole pipeline (stages 1-3)",
+                    "from_profile_synthesis": "Start at Stage 2 (Profile Synthesis)",
+                    "from_role_matching": "Start at Stage 3 (Role Matching)",
+                }[m],
+                horizontal=False,
+                key="debug_rerun_mode",
+            )
+
+            if st.button("Run from selected previous run", key="debug_rerun_btn"):
+                run_path = RUNS_DIR / selected_debug_run
+                with open(run_path, "r", encoding="utf-8") as f:
+                    source_run = json.load(f)
+
+                inputs = source_run.get("inputs", {})
+                start_stage = {
+                    "whole_pipeline": "input_processing",
+                    "from_profile_synthesis": "profile_synthesis",
+                    "from_role_matching": "role_matching",
+                }[rerun_mode]
+
+                seed_payload = _seed_payload_from_run(source_run, start_stage=start_stage)
+                if start_stage != "input_processing" and not seed_payload:
+                    st.error(
+                        "Selected run does not contain enough intermediate outputs for partial rerun. "
+                        "Try Whole pipeline mode."
+                    )
+                else:
+                    with st.spinner(f"Running debug rerun: {rerun_mode}..."):
+                        rerun_state = run_pipeline(
+                            resume_path=inputs.get("resume_path"),
+                            linkedin_path=inputs.get("linkedin_path"),
+                            why_text=inputs.get("why_text", ""),
+                            mba_year=inputs.get("mba_year", "1y_internship"),
+                            start_stage=start_stage,
+                            end_stage="role_matching",
+                            seed_state_payload=seed_payload if start_stage != "input_processing" else None,
+                        )
+                    _store_pipeline_results(rerun_state)
+                    st.success("Debug rerun complete. Results refreshed.")
+                    st.rerun()
+        else:
+            st.caption("No prior run logs found in runs/ for debug rerun.")
+
         state = st.session_state.get("state")
         if state:
             try:

@@ -42,6 +42,8 @@ logger = logging.getLogger(__name__)
 
 RUNS_DIR = APP_DIR / "runs"
 
+STAGE_SEQUENCE = ["input_processing", "profile_synthesis", "role_matching"]
+
 
 # --- Tally intake context ---
 
@@ -101,6 +103,61 @@ class PipelineState:
     warnings: list[str] = field(default_factory=list)
     run_log: list[dict] = field(default_factory=list)
     run_id: str = ""
+
+
+def _state_to_cache_payload(state: PipelineState) -> dict[str, Any]:
+    """Serialize stage outputs needed for resumable execution."""
+    return {
+        "resume_parsed": state.resume_parsed,
+        "linkedin_parsed": state.linkedin_parsed,
+        "skills_by_section": state.skills_by_section,
+        "skills_flat": state.skills_flat,
+        "profile": state.profile,
+        "motivation": state.motivation,
+        "matched_roles": state.matched_roles,
+        "skill_overlaps": state.skill_overlaps,
+        "fit_results": state.fit_results,
+        "gap_results": state.gap_results,
+        "confidence_results": state.confidence_results,
+        "structural_gap_warning": state.structural_gap_warning,
+        "cross_role": state.cross_role,
+        "skill_graph": state.skill_graph,
+    }
+
+
+def _apply_cache_payload(state: PipelineState, payload: dict[str, Any]) -> None:
+    """Hydrate pipeline state from cached stage outputs."""
+    for field_name in _state_to_cache_payload(state).keys():
+        if field_name in payload:
+            setattr(state, field_name, payload[field_name])
+
+
+def _cache_file(cache_dir: str | Path, cache_key: str, stage_name: str) -> Path:
+    return Path(cache_dir) / f"{cache_key}__{stage_name}.json"
+
+
+def _save_stage_cache(state: PipelineState, cache_dir: str | Path, cache_key: str, stage_name: str) -> None:
+    """Persist stage outputs to disk for fast reruns."""
+    cache_path = _cache_file(cache_dir, cache_key, stage_name)
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "stage": stage_name,
+        "saved_at": datetime.now().isoformat(),
+        "state": _state_to_cache_payload(state),
+    }
+    with open(cache_path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2, default=_json_serializer)
+
+
+def _load_stage_cache(state: PipelineState, cache_dir: str | Path, cache_key: str, stage_name: str) -> bool:
+    """Load stage outputs from cache. Returns True when cache hit."""
+    cache_path = _cache_file(cache_dir, cache_key, stage_name)
+    if not cache_path.exists():
+        return False
+    with open(cache_path, encoding="utf-8") as f:
+        payload = json.load(f)
+    _apply_cache_payload(state, payload.get("state", {}))
+    return True
 
 
 def _log_event(state: PipelineState, event: str, data: dict | None = None):
@@ -695,6 +752,12 @@ def run_pipeline(
     mba_year: str = "1y_internship",
     tally_context: TallyContext | None = None,
     progress_callback=None,
+    start_stage: str = "input_processing",
+    end_stage: str = "role_matching",
+    cache_dir: str | Path | None = None,
+    cache_key: str | None = None,
+    use_cache: bool = False,
+    seed_state_payload: dict[str, Any] | None = None,
 ) -> PipelineState:
     """Run the full Candidate-Market Fit Engine pipeline.
 
@@ -705,6 +768,12 @@ def run_pipeline(
         mba_year: "1y_internship" or "2y_fulltime"
         tally_context: Optional structured context from Tally intake (CMF-005)
         progress_callback: Optional callable(stage_name, pct) for UI updates
+        start_stage: Earliest stage to execute (or resume from cache)
+        end_stage: Last stage to execute
+        cache_dir: Directory for stage cache artifacts
+        cache_key: Cache key namespace for this input set
+        use_cache: Whether to read/write stage cache
+        seed_state_payload: Optional preloaded intermediate state for debug reruns
 
     Returns:
         PipelineState with all intermediate and final results
@@ -724,7 +793,40 @@ def run_pipeline(
         "has_linkedin": linkedin_path is not None,
         "why_length": len(why_text),
         "mba_year": mba_year,
+        "start_stage": start_stage,
+        "end_stage": end_stage,
+        "use_cache": use_cache,
+        "cache_key": cache_key,
+        "has_seed_state": seed_state_payload is not None,
     })
+
+    if seed_state_payload:
+        _apply_cache_payload(state, seed_state_payload)
+        _log_event(state, "seed_state_applied", {
+            "fields": sorted(seed_state_payload.keys()),
+        })
+
+    if start_stage not in STAGE_SEQUENCE:
+        raise ValueError(f"Invalid start_stage: {start_stage}. Expected one of {STAGE_SEQUENCE}")
+    if end_stage not in STAGE_SEQUENCE:
+        raise ValueError(f"Invalid end_stage: {end_stage}. Expected one of {STAGE_SEQUENCE}")
+
+    start_idx = STAGE_SEQUENCE.index(start_stage)
+    end_idx = STAGE_SEQUENCE.index(end_stage)
+    if start_idx > end_idx:
+        raise ValueError(f"start_stage ({start_stage}) must be <= end_stage ({end_stage})")
+
+    cache_enabled = use_cache and cache_dir and cache_key
+
+    # Resume from closest available prior stage cache if requested.
+    if cache_enabled and start_idx > 0:
+        prior_stage = STAGE_SEQUENCE[start_idx - 1]
+        if _load_stage_cache(state, cache_dir, cache_key, prior_stage):
+            _log_event(state, "stage_cache_hit", {"stage": prior_stage, "cache_key": cache_key})
+        else:
+            raise FileNotFoundError(
+                f"Requested start_stage={start_stage} but no cache for prior stage {prior_stage}."
+            )
 
     stages = [
         ("Input Processing", stage_1_input_processing, 0.25),
@@ -732,11 +834,18 @@ def run_pipeline(
         ("Role Matching", stage_3_role_matching, 1.00),
     ]
 
-    for stage_name, stage_fn, pct in stages:
+    selected_stages = stages[start_idx:end_idx + 1]
+
+    for stage_name, stage_fn, pct in selected_stages:
         if progress_callback:
             progress_callback(stage_name, pct)
 
         state = stage_fn(state)
+
+        stage_key = stage_name.lower().replace(" ", "_")
+        if cache_enabled:
+            _save_stage_cache(state, cache_dir, cache_key, stage_key)
+            _log_event(state, "stage_cache_saved", {"stage": stage_key, "cache_key": cache_key})
 
         # Check for fatal errors (no point continuing)
         if state.errors and stage_name == "Input Processing" and not state.skills_flat:
