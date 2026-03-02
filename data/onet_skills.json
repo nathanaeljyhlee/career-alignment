@@ -6450,33 +6450,33 @@
       "skill_id": "valuation",
       "skill_name": "Valuation",
       "category": "finance",
-      "description": "Ability to determine the economic value of a business, asset, or investment using DCF, comparables, or other methods.",
+      "description": "Determining economic value of a business or asset using DCF, comparables, or precedent transactions.",
       "aliases": [
         "business valuation",
-        "company valuation",
         "dcf modeling",
         "valuation modeling",
-        "equity valuation"
+        "equity valuation",
+        "company valuation"
       ]
     },
     {
       "skill_id": "credit_analysis",
       "skill_name": "Credit Analysis",
       "category": "finance",
-      "description": "Assessment of the creditworthiness of a borrower or issuer by analyzing financial statements, cash flows, and risk factors.",
+      "description": "Assessing creditworthiness of a borrower by analyzing financial statements, cash flows, and risk factors.",
       "aliases": [
         "credit assessment",
         "credit underwriting",
         "loan analysis",
-        "debt analysis",
-        "credit evaluation"
+        "credit evaluation",
+        "debt analysis"
       ]
     },
     {
       "skill_id": "esg_analysis",
       "skill_name": "ESG Analysis",
       "category": "strategy",
-      "description": "Evaluation of environmental, social, and governance factors in investment decisions, business strategy, or reporting.",
+      "description": "Evaluating environmental, social, and governance factors in investment decisions or business strategy.",
       "aliases": [
         "esg",
         "environmental social governance",
@@ -6489,7 +6489,7 @@
       "skill_id": "impact_measurement",
       "skill_name": "Impact Measurement",
       "category": "strategy",
-      "description": "Designing and tracking metrics to quantify social, environmental, or mission-driven outcomes of programs or investments.",
+      "description": "Designing and tracking metrics to quantify social, environmental, or mission-driven outcomes.",
       "aliases": [
         "impact metrics",
         "social impact measurement",
@@ -6502,7 +6502,7 @@
       "skill_id": "innovation_management",
       "skill_name": "Innovation Management",
       "category": "management",
-      "description": "Structuring and driving innovation processes within organizations, including ideation, experimentation, and scaling new ventures.",
+      "description": "Structuring and driving innovation processes within organizations including ideation, experimentation, and scaling.",
       "aliases": [
         "corporate innovation",
         "innovation strategy",
@@ -6520,15 +6520,15 @@
         "human-centered design",
         "design sprint",
         "user-centered design",
-        "design process",
-        "empathy mapping"
+        "empathy mapping",
+        "design process"
       ]
     },
     {
       "skill_id": "crm",
       "skill_name": "CRM",
       "category": "technical",
-      "description": "Proficiency with customer relationship management platforms (e.g., Salesforce, HubSpot) to manage pipelines, accounts, and customer data.",
+      "description": "Proficiency with customer relationship management platforms (Salesforce, HubSpot) to manage pipelines and customer data.",
       "aliases": [
         "salesforce",
         "hubspot",
@@ -6542,7 +6542,7 @@
       "skill_id": "business_development",
       "skill_name": "Business Development",
       "category": "strategy",
-      "description": "Identifying and pursuing new business opportunities through partnerships, new markets, new products, or strategic relationships.",
+      "description": "Identifying and pursuing new business opportunities through partnerships, new markets, or strategic relationships.",
       "aliases": [
         "biz dev",
         "BD",
@@ -6556,7 +6556,7 @@
       "skill_id": "community_engagement",
       "skill_name": "Community Engagement",
       "category": "social",
-      "description": "Building relationships with external communities, stakeholders, or beneficiary groups to advance organizational goals.",
+      "description": "Building relationships with external communities or stakeholder groups to advance organizational goals.",
       "aliases": [
         "community outreach",
         "stakeholder engagement",
@@ -6574,7 +6574,6 @@
         "OD",
         "org design",
         "organizational effectiveness",
-        "talent development",
         "org effectiveness",
         "people development"
       ]
@@ -6596,7 +6595,7 @@
       "skill_id": "talent_management",
       "skill_name": "Talent Management",
       "category": "management",
-      "description": "Attracting, developing, retaining, and deploying talent to meet organizational needs and individual career goals.",
+      "description": "Attracting, developing, retaining, and deploying talent to meet organizational and individual goals.",
       "aliases": [
         "talent development",
         "talent pipeline",
@@ -6628,8 +6627,7 @@
         "budget planning",
         "annual budget",
         "budget oversight",
-        "financial budgeting",
-        "budget development"
+        "financial budgeting"
       ]
     }
   ]
