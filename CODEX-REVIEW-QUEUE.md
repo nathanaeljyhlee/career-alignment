@@ -233,28 +233,7 @@ All skill names MUST exactly match a `skill_name` in `onet_skills.json` (469 exi
 - `python -c "from engine import run_pipeline; print('imports OK')"` → should not raise ImportError
 - Update `feature-roadmap.csv`: set CMF-037 status to Done with a completion note
 
-### CMF-031 — Rename HIPAA Compliance + add international aliases + CMF-030 straggler
-**Type:** Data-only (no code changes)
-**Files:** `data/role_taxonomy.json`, `data/onet_skills.json`, `data/skill_aliases.json`
-**Problem:** (1) HIPAA Compliance is US-specific — non-US healthcare candidates (e.g., trained in Malaysia, UK) always get a false gap. (2) CMF-030 Pending Verification: the alias `"clinical experience"` → `"Healthcare Domain Knowledge"` was missing from PR #1 and never merged.
-**Fix — Part A (straggler from CMF-030):**
-- In `skill_aliases.json` (`aliases` dict): add `"clinical experience"` → `"Healthcare Domain Knowledge"`
-
-**Fix — Part B (CMF-031):**
-1. In `role_taxonomy.json` (`roles` array): find all roles listing `HIPAA Compliance` in `required_skills` or `preferred_skills`. Rename to `Healthcare Regulatory Compliance`.
-2. In `onet_skills.json` (`skills` array): add a new skill entry with `skill_name: "Healthcare Regulatory Compliance"`, `category: "domain"`. OR rename the existing `HIPAA Compliance` entry if it exists. Either way, keep `hipaa compliance` as an alias so US candidates still match.
-3. In `skill_aliases.json` (`aliases` dict): add entries mapping to `"Healthcare Regulatory Compliance"`:
-   - `"hipaa compliance"` → `"Healthcare Regulatory Compliance"`
-   - `"hipaa"` → `"Healthcare Regulatory Compliance"`
-   - `"clinical compliance"` → `"Healthcare Regulatory Compliance"`
-   - `"clinical governance"` → `"Healthcare Regulatory Compliance"`
-   - `"medical regulatory"` → `"Healthcare Regulatory Compliance"`
-   - `"healthcare compliance"` → `"Healthcare Regulatory Compliance"`
-   - `"data protection in healthcare"` → `"Healthcare Regulatory Compliance"`
-   - `"gdpr healthcare"` → `"Healthcare Regulatory Compliance"`
-**Verify:** `HIPAA Compliance` should not appear anywhere in `role_taxonomy.json`. `"Healthcare Regulatory Compliance"` must exist as a `skill_name` in `onet_skills.json` before any alias or role reference uses it.
-
-**CHANGES REQUESTED (2026-03-02):** PR `codex/apply-cmf-031-data-migration` submitted. Part B complete. Part A (CMF-030 straggler) missing: `"clinical experience"` → `"Healthcare Domain Knowledge"` not in diff. Add this one alias to `skill_aliases.json` and the PR is mergeable.
+~~### CMF-031 — MERGED (PR #6, 2026-03-02)~~
 
 ---
 
@@ -300,7 +279,8 @@ All skill names MUST exactly match a `skill_name` in `onet_skills.json` (469 exi
 
 | Item | Status | What's needed |
 |------|--------|--------------|
-| CMF-030 | Merged (PR #1) | Straggler alias (`"clinical experience"` → `"Healthcare Domain Knowledge"`) folded into CMF-031 spec above. |
+| CMF-030 | Resolved | Straggler alias (`"clinical experience"` → `"Healthcare Domain Knowledge"`) added via patch commit on main (2026-03-02). |
+| CMF-031 | Merged (PR #6) | Verify: `HIPAA Compliance` absent from role_taxonomy.json; `Healthcare Regulatory Compliance` exists in onet_skills.json; all 8 aliases present in skill_aliases.json. |
 | CMF-005 | Merged | `--dry-run` path merged. Verify: `python tally_intake.py --dry-run` processes fixture submission end-to-end without crashing. Live API path still needs real Tally key test. |
 | CMF-007 | Merged | Verify: `skills_flat` contains entries with `match_method: "transfer_label"` when run on a domain-specific resume (clinical, military, nonprofit). |
 | CMF-033 | Merged | Verify: second run on Amos profile should not flag "no multi-workstream" as a gap. |
@@ -318,6 +298,7 @@ All skill names MUST exactly match a `skill_name` in `onet_skills.json` (469 exi
 | #3 | CMF-005 | 2026-03-02 | `--dry-run` flag + fixture files (tally_submission_sample.json, resume_sample.pdf) added to tally_intake.py. Full code path exercisable without API key. |
 | #4 | CMF-007 | 2026-03-02 | `generate_transfer_labels()` in skills.py with anti-hallucination phrase-grounding guard. Wired into engine.py Stage 1. Bonus: infer_skills_against_taxonomy switched from format="json" to InferenceResult.model_json_schema(). Note: `transfer_num_predict` not added to tuning.yaml — `or 1024` fallback in code. |
 | #5 | CMF-035 | 2026-03-02 | `expected_signal_coverage` added to skill_overlap.py (cosine ≥ 0.50 vs profile text). Penalty applied in engine.py: `overlap_score = raw * (1 - 0.15 * (1 - coverage))`. `expected_signal_penalty_weight: 0.15` added to tuning.yaml with formula comment. |
+| #6 + patch | CMF-031 + CMF-030 straggler | 2026-03-02 | `HIPAA Compliance` renamed to `Healthcare Regulatory Compliance` in onet_skills.json + role_taxonomy.json. 7 aliases added to skill_aliases.json. Missing Part A alias (`clinical experience` → `Healthcare Domain Knowledge`) added as follow-up patch commit directly on main. |
 
 ---
 
