@@ -10,7 +10,10 @@ Matching logic (in order of precision):
   3. Embedding similarity >= skill_overlap.embedding_threshold (tuning.yaml) via Ollama nomic-embed-text (fallback)
 """
 import logging
+from pathlib import Path
 from typing import Any
+
+import json
 
 import numpy as np
 import ollama
@@ -18,6 +21,44 @@ import ollama
 from config import get_tuning
 
 logger = logging.getLogger(__name__)
+
+GENERIC_SKILL_FAMILIES_DEFAULT = {
+    "basic",
+    "social",
+    "resource_management",
+    "management",
+    "systems",
+    "complex_problem_solving",
+}
+
+_SKILL_FAMILY_LOOKUP: dict[str, str] | None = None
+
+
+def _build_skill_family_lookup() -> dict[str, str]:
+    """Build skill name/alias -> family(category) lookup from O*NET skill catalog."""
+    global _SKILL_FAMILY_LOOKUP
+    if _SKILL_FAMILY_LOOKUP is not None:
+        return _SKILL_FAMILY_LOOKUP
+
+    lookup: dict[str, str] = {}
+    onet_path = Path(__file__).resolve().parents[1] / "data" / "onet_skills.json"
+    try:
+        with open(onet_path, "r", encoding="utf-8") as f:
+            onet_skills = json.load(f).get("skills", [])
+        for skill in onet_skills:
+            category = str(skill.get("category") or "").strip().lower()
+            if not category:
+                continue
+            names = [skill.get("skill_name")] + (skill.get("aliases") or [])
+            for name in names:
+                norm_name = str(name or "").strip().lower()
+                if norm_name and norm_name not in lookup:
+                    lookup[norm_name] = category
+    except Exception as e:
+        logger.warning("Failed to load skill family lookup (non-fatal): %s", e)
+
+    _SKILL_FAMILY_LOOKUP = lookup
+    return _SKILL_FAMILY_LOOKUP
 
 
 def _embed_texts(texts: list[str]) -> np.ndarray:
@@ -73,6 +114,25 @@ def compute_skill_overlap(
     required_weight = overlap_cfg.get("required_weight", 0.70)
     preferred_weight = overlap_cfg.get("preferred_weight", 0.30)
     expected_signal_threshold = 0.50
+    generic_skill_families = {
+        str(f).strip().lower() for f in overlap_cfg.get("generic_skill_families", GENERIC_SKILL_FAMILIES_DEFAULT)
+    }
+    generic_required_weight = float(overlap_cfg.get("generic_required_weight", 0.85))
+    domain_required_weight = float(overlap_cfg.get("domain_specific_required_weight", 1.15))
+    unknown_family_weight = float(overlap_cfg.get("unknown_family_required_weight", 1.0))
+
+    logger.info(
+        "Skill overlap tuning loaded: required_weight=%.2f preferred_weight=%.2f generic_required_weight=%.2f "
+        "domain_specific_required_weight=%.2f unknown_family_required_weight=%.2f "
+        "domain_readiness_expected_signal_weight=%.2f domain_readiness_specificity_weight=%.2f",
+        required_weight,
+        preferred_weight,
+        generic_required_weight,
+        domain_required_weight,
+        unknown_family_weight,
+        float(overlap_cfg.get("domain_readiness_expected_signal_weight", 0.6)),
+        float(overlap_cfg.get("domain_readiness_specificity_weight", 0.4)),
+    )
 
     # Build candidate skill name set (canonical + original mentions, lowercased)
     candidate_names: set[str] = set()
@@ -189,12 +249,65 @@ def compute_skill_overlap(
         except Exception as e:
             logger.warning("Expected signal coverage embedding step failed (non-fatal): %s", e)
 
+    skill_family_lookup = _build_skill_family_lookup()
+    weighted_required_total = 0.0
+    weighted_required_matched = 0.0
+    domain_specific_required_total = 0
+    domain_specific_required_matched = 0
+    for skill in required_skills:
+        family = skill_family_lookup.get(skill.lower())
+        if family is None:
+            family_weight = unknown_family_weight
+            is_domain_specific = False
+        else:
+            is_domain_specific = family not in generic_skill_families
+            family_weight = domain_required_weight if is_domain_specific else generic_required_weight
+
+        weighted_required_total += family_weight
+        if skill in matched_req:
+            weighted_required_matched += family_weight
+            if is_domain_specific:
+                domain_specific_required_matched += 1
+        if is_domain_specific:
+            domain_specific_required_total += 1
+
+    required_specificity_weighted_coverage = (
+        weighted_required_matched / weighted_required_total if weighted_required_total else 1.0
+    )
+    domain_specific_required_coverage = (
+        domain_specific_required_matched / domain_specific_required_total if domain_specific_required_total else 1.0
+    )
+
+    expected_signal_component_weight = float(overlap_cfg.get("domain_readiness_expected_signal_weight", 0.6))
+    specificity_component_weight = float(overlap_cfg.get("domain_readiness_specificity_weight", 0.4))
+    component_weight_sum = expected_signal_component_weight + specificity_component_weight
+    if component_weight_sum <= 0:
+        expected_signal_component_weight = 0.6
+        specificity_component_weight = 0.4
+        component_weight_sum = 1.0
+
+    domain_readiness_composite = (
+        expected_signal_component_weight * expected_signal_coverage
+        + specificity_component_weight * required_specificity_weighted_coverage
+    ) / component_weight_sum
+
     overlap_score = required_weight * required_coverage + preferred_weight * preferred_coverage
 
     return {
         "required_coverage": round(required_coverage, 3),
         "preferred_coverage": round(preferred_coverage, 3),
         "expected_signal_coverage": round(expected_signal_coverage, 3),
+        "required_specificity_weighted_coverage": round(required_specificity_weighted_coverage, 3),
+        "domain_specific_required_coverage": round(domain_specific_required_coverage, 3),
+        "domain_readiness_composite": round(domain_readiness_composite, 3),
+        "domain_readiness_expected_signal_weight": expected_signal_component_weight,
+        "domain_readiness_specificity_weight": specificity_component_weight,
+        "required_specificity_weighting": {
+            "generic_required_weight": generic_required_weight,
+            "domain_specific_required_weight": domain_required_weight,
+            "unknown_family_required_weight": unknown_family_weight,
+            "generic_skill_families": sorted(generic_skill_families),
+        },
         "overlap_score": round(overlap_score, 3),
         "matched_required": matched_req,
         "missing_required": missing_req,
