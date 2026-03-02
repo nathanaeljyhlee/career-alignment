@@ -15,8 +15,12 @@ No external dependencies — pure Python with collections.
 """
 import json
 import logging
+import sys
 from collections import defaultdict
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from config import get_tuning
 
 logger = logging.getLogger(__name__)
 
@@ -93,11 +97,12 @@ def build_skill_graph(taxonomy_path: str | None = None) -> dict:
         data_node["degree"] = len(data_node["neighbors"])
         data_node["roles"] = list(data_node["roles"])  # Convert set to list for JSON
 
-    # Hub skills = top 10 by degree
+    # Hub skills = top N by degree
+    hub_skill_count = get_tuning("skill_graph", "hub_skill_count") or 10
     sorted_by_degree = sorted(
         adjacency.keys(), key=lambda s: adjacency[s]["degree"], reverse=True
     )
-    hub_skills = sorted_by_degree[:10]
+    hub_skills = sorted_by_degree[:hub_skill_count]
 
     # Clusters via connected components (BFS/DFS)
     clusters = _find_clusters(adjacency, roles)

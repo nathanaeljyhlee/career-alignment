@@ -423,7 +423,7 @@ def infer_skills_against_taxonomy(
     checklist_str = "\n".join(f"- {s}" for s in uncovered)
 
     # Truncate text to fit context window (leave room for prompt + response)
-    max_text_chars = 12000
+    max_text_chars = get_tuning("skill_extraction", "max_context_chars") or 12000
     text_for_inference = full_text[:max_text_chars]
 
     prompt = INFERENCE_PROMPT % (checklist_str, text_for_inference)

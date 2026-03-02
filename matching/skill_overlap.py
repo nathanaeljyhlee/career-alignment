@@ -7,7 +7,7 @@ requirements. Used as a structural anchor for LLM scoring in Agents 3 and 4.
 Matching logic (in order of precision):
   1. Exact lowercase match
   2. Substring match (either string is a substring of the other)
-  3. Embedding similarity >= 0.80 via Ollama nomic-embed-text (fallback)
+  3. Embedding similarity >= skill_overlap.embedding_threshold (tuning.yaml) via Ollama nomic-embed-text (fallback)
 """
 import logging
 from typing import Any
@@ -44,7 +44,7 @@ def _substring_match(candidate_names: set[str], role_skill: str) -> bool:
 def compute_skill_overlap(
     candidate_skills: list[dict],
     role: dict,
-    embedding_threshold: float = 0.80,
+    embedding_threshold: float | None = None,
 ) -> dict:
     """
     Compute weighted overlap between candidate skills and role requirements.
@@ -58,13 +58,19 @@ def compute_skill_overlap(
         {
             "required_coverage": float,     # 0-1, fraction of required_skills matched
             "preferred_coverage": float,    # 0-1, fraction of preferred_skills matched
-            "overlap_score": float,         # 0.7 * required + 0.3 * preferred
+            "overlap_score": float,         # required_weight * required + preferred_weight * preferred (from tuning.yaml)
             "matched_required": list[str],
             "missing_required": list[str],
             "matched_preferred": list[str],
             "missing_preferred": list[str],
         }
     """
+    overlap_cfg = get_tuning("skill_overlap") or {}
+    if embedding_threshold is None:
+        embedding_threshold = overlap_cfg.get("embedding_threshold", 0.80)
+    required_weight = overlap_cfg.get("required_weight", 0.70)
+    preferred_weight = overlap_cfg.get("preferred_weight", 0.30)
+
     # Build candidate skill name set (canonical + original mentions, lowercased)
     candidate_names: set[str] = set()
     for s in candidate_skills:
@@ -131,7 +137,7 @@ def compute_skill_overlap(
     # Compute coverage scores
     required_coverage = len(matched_req) / len(required_skills) if required_skills else 1.0
     preferred_coverage = len(matched_pref) / len(preferred_skills) if preferred_skills else 1.0
-    overlap_score = 0.7 * required_coverage + 0.3 * preferred_coverage
+    overlap_score = required_weight * required_coverage + preferred_weight * preferred_coverage
 
     return {
         "required_coverage": round(required_coverage, 3),

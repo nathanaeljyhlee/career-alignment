@@ -62,8 +62,19 @@ def compute_confidence_band(
             "Multiple reasoning paths produced different assessments."
         )
 
+    emb_coverage_threshold = confidence_cfg.get("embedding_coverage_threshold", 0.60)
+    input_good = confidence_cfg.get("input_completeness_good", 0.66)
+    input_partial = confidence_cfg.get("input_completeness_partial", 0.33)
+    weights = confidence_cfg.get("weights", {})
+    w_sc = weights.get("self_consistency", 0.50)
+    w_emb = weights.get("embedding_coverage", 0.30)
+    w_inp = weights.get("input_completeness", 0.20)
+    band_thresholds = confidence_cfg.get("band_thresholds", {})
+    band_high = band_thresholds.get("high", 0.75)
+    band_moderate = band_thresholds.get("moderate", 0.50)
+
     # Factor 2: Embedding coverage
-    if embedding_similarity >= 0.60:
+    if embedding_similarity >= emb_coverage_threshold:
         emb_assessment = "strong"
         emb_score = 1.0
     elif embedding_similarity >= structural_gap:
@@ -81,10 +92,10 @@ def compute_confidence_band(
     provided = sum(1 for v in source_coverage.values() if v)
     total = len(source_coverage) if source_coverage else 3
     completeness = provided / total
-    if completeness >= 0.66:
+    if completeness >= input_good:
         input_assessment = "good"
         input_score = 1.0
-    elif completeness >= 0.33:
+    elif completeness >= input_partial:
         input_assessment = "partial"
         input_score = 0.6
         warnings.append("Limited input sources. More data would improve accuracy.")
@@ -94,11 +105,11 @@ def compute_confidence_band(
         warnings.append("Very limited input. Results are based on incomplete data.")
 
     # Composite: weighted average (self-consistency matters most)
-    composite = sc_score * 0.50 + emb_score * 0.30 + input_score * 0.20
+    composite = sc_score * w_sc + emb_score * w_emb + input_score * w_inp
 
-    if composite >= 0.75:
+    if composite >= band_high:
         band = "high"
-    elif composite >= 0.50:
+    elif composite >= band_moderate:
         band = "moderate"
     else:
         band = "low"

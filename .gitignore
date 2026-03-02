@@ -16,8 +16,12 @@ latest_run.json
 
 # Internal planning docs
 PROJECT_LOG.md
+ROADMAP.md
 10x-effectiveness-brainstorm.md
 IMPLEMENTATION_PLAN_10x.md
+
+# Pip install artifacts
+=*
 
 # Virtual environments
 .venv/

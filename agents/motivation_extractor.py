@@ -108,10 +108,13 @@ def extract_motivation(why_text: str) -> MotivationProfile:
         profile = MotivationProfile.model_validate_json(content)
 
         # Apply label thresholds
+        label_thresholds = (get_tuning("motivation_extraction", "label_thresholds") or {})
+        threshold_high = label_thresholds.get("high", 0.65)
+        threshold_moderate = label_thresholds.get("moderate", 0.35)
         for theme in profile.themes:
-            if theme.score >= 0.65:
+            if theme.score >= threshold_high:
                 theme.label = "high"
-            elif theme.score >= 0.35:
+            elif theme.score >= threshold_moderate:
                 theme.label = "moderate"
             else:
                 theme.label = "low"

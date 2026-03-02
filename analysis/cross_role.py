@@ -10,15 +10,12 @@ Compares fit_results and gap_results across all matched roles to produce:
 All logic is purely deterministic (no Ollama calls).
 """
 import re
+import sys
+from pathlib import Path
 from typing import Any
 
-
-# Gap type weights for effort computation (mirrors tuning.yaml gap_analysis.gap_type_weights)
-_GAP_TYPE_WEIGHTS = {
-    "hard_skills": 0.50,
-    "market_signals": 0.35,
-    "narrative_coherence": 0.15,
-}
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from config import get_tuning
 
 
 def _normalize_gap_description(description: str) -> str:
@@ -174,7 +171,8 @@ def cross_role_analysis(
     for sg in shared_gaps:
         # Estimate improvement per role: severity * gap_type_weight
         # We don't know gap_type from the key alone, default to hard_skills weight
-        gap_type_weight = _GAP_TYPE_WEIGHTS.get("hard_skills", 0.50)
+        gap_type_weights = (get_tuning("gap_analysis", "gap_type_weights") or {})
+        gap_type_weight = gap_type_weights.get("hard_skills", 0.45)
         total_fit_improvement = round(
             sg["avg_severity"] * gap_type_weight * len(sg["roles_affected"]), 3
         )

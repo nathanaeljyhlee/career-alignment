@@ -50,6 +50,11 @@ skill_extraction:
   # coverage ratio on the strongest signal neighbors instead of the entire graph.
   graph_top_k_neighbors: 10
 
+  # Maximum characters of resume/LinkedIn text passed to the skill inference
+  # prompt. Keeps total prompt size within model context limits.
+  # Leave room for the prompt template + checklist + response.
+  max_context_chars: 12000
+
   # Surface-form alias matching threshold. When a skill mention
   # matches a known alias (e.g., "ML" -> "Machine Learning"),
   # it bypasses embedding matching entirely. This threshold
@@ -93,6 +98,13 @@ motivation_extraction:
   # theme extraction. Below this, the engine warns the user that
   # results may be shallow.
   min_why_length: 200
+
+  # Motivation theme label thresholds. The LLM returns a 0-1 score
+  # per theme dimension; these thresholds map scores to qualitative labels.
+  label_thresholds:
+    high: 0.65       # >= 0.65 = "high" — strong motivational signal
+    moderate: 0.35   # >= 0.35 = "moderate" — present but not dominant
+    # below 0.35 = "low"
 
   # Theme dimensions extracted from WHY statement, with default
   # neutral weights. Adjust to emphasize certain motivational
@@ -215,6 +227,29 @@ confidence:
   # any role in the taxonomy well. Triggers a special warning.
   structural_gap_threshold: 0.35
 
+  # Embedding coverage threshold. If the best role embedding similarity
+  # is >= this, the embedding factor is assessed as "strong."
+  embedding_coverage_threshold: 0.60
+
+  # Input completeness thresholds. Based on fraction of sources provided
+  # (resume, linkedin, coursework = 3 total).
+  input_completeness_good: 0.66     # >= 0.66 = "good" (2+ of 3 sources)
+  input_completeness_partial: 0.33  # >= 0.33 = "partial" (1 of 3 sources)
+  # below 0.33 = "minimal"
+
+  # Composite confidence weights. Must sum to 1.0.
+  # Self-consistency weighted highest as the most direct signal of LLM certainty.
+  weights:
+    self_consistency: 0.50
+    embedding_coverage: 0.30
+    input_completeness: 0.20
+
+  # Composite score thresholds for final band labels.
+  band_thresholds:
+    high: 0.75      # >= 0.75 = "high confidence"
+    moderate: 0.50  # >= 0.50 = "moderate confidence"
+    # below 0.50 = "low confidence"
+
 
 # --- OUTPUT CONTROLS ---
 # Controls what appears in the final results dashboard.
@@ -263,3 +298,25 @@ models:
   # the engine will retry with Claude for that specific step.
   claude_fallback_enabled: false
   claude_fallback_model: "claude-sonnet-4-6"
+
+
+# --- SKILL OVERLAP ---
+# Controls the deterministic skill overlap computation used as a structural
+# anchor for LLM scoring in Agents 3 and 4.
+skill_overlap:
+  # Weight of required vs preferred skill coverage in the composite overlap score.
+  # Required skills carry more weight because they are gatekeeping criteria.
+  required_weight: 0.70
+  preferred_weight: 0.30
+
+  # Minimum cosine similarity for embedding-based skill matching (fallback after
+  # exact and substring matching fail). Higher = more conservative matches.
+  embedding_threshold: 0.80
+
+
+# --- SKILL GRAPH ---
+# Controls the skill co-occurrence graph used for gap prioritization and inference.
+skill_graph:
+  # Number of top-degree skills to classify as "hub skills."
+  # Hub skills appear across many roles and are high-leverage acquisition targets.
+  hub_skill_count: 10

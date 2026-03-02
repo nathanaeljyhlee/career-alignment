@@ -117,14 +117,16 @@ candidate-market-fit/
 
 ## Status
 
-Active development. Current focus: calibration and quality validation.
+Active development. Current focus: bug fixes and calibration (Sessions 6-9 resolved schema enforcement, graph inference, and context window issues).
 
-Planned additions:
-- PDF export of candidate report
-- Gap-based follow-up questions (interactive clarification)
-- Internship vs. full-time toggle prominence
-- Role selection from taxonomy list (vs. free text)
-- Skill extraction observability (show match method per skill)
+**Full feature roadmap:** [`feature-roadmap.csv`](feature-roadmap.csv) — 27 items across Must / Should / Could / Won't tiers. [`ROADMAP.md`](ROADMAP.md) explains the update protocol and priority review cadence.
+
+Current Must-priority open items:
+- Fix cross_role_analysis silent failure (Section 7 not executing)
+- Fix performance regression to 476s (Agent 3 parallelization suspected dropped)
+- Internship/FT selector prominence (easy to miss on left sidebar only)
+- Role recommendation bias / unbiased role expansion (required for non-builder users)
+- Tally form intake pipeline (primary real-user onboarding path)
 
 ---
 
