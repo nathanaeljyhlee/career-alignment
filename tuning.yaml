@@ -319,12 +319,35 @@ skill_overlap:
   # exact and substring matching fail). Higher = more conservative matches.
   embedding_threshold: 0.80
 
-  # Penalty applied when role expected signals are weakly represented in the
-  # synthesized profile text. overlap_score is multiplied by:
-  #   (1 - expected_signal_penalty_weight * (1 - expected_signal_coverage))
-  # 0.15 means full coverage keeps score unchanged, while zero coverage gets
-  # up to a 15% reduction.
-  expected_signal_penalty_weight: 0.15
+  # Required-skill specificity weighting: generic families count slightly less,
+  # domain-specific families count slightly more in required coverage.
+  generic_required_weight: 0.85
+  domain_specific_required_weight: 1.15
+  # If a required skill cannot be mapped to a family, use neutral weighting.
+  unknown_family_required_weight: 1.00
+  # Skill families treated as generic/transferrable across domains.
+  generic_skill_families:
+    - basic
+    - social
+    - resource_management
+    - management
+    - systems
+    - complex_problem_solving
+
+  # Domain readiness composite = weighted blend of expected_signal_coverage and
+  # required_specificity_weighted_coverage.
+  domain_readiness_expected_signal_weight: 0.60
+  domain_readiness_specificity_weight: 0.40
+
+  # Penalty/boost envelope applied to overlap_score using domain readiness.
+  # adjustment_factor = 1 + domain_readiness_adjustment_weight *
+  #   (domain_readiness_composite - domain_readiness_adjustment_midpoint)
+  # then clamped to [domain_readiness_min_adjustment_factor,
+  #                 domain_readiness_max_adjustment_factor].
+  domain_readiness_adjustment_weight: 0.20
+  domain_readiness_adjustment_midpoint: 0.50
+  domain_readiness_min_adjustment_factor: 0.80
+  domain_readiness_max_adjustment_factor: 1.20
 
 
 # --- SKILL GRAPH ---

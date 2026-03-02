@@ -414,7 +414,17 @@ def stage_3_role_matching(state: PipelineState) -> PipelineState:
             try:
                 skill_overlaps: dict[str, dict] = {}
                 overlap_cfg = get_tuning("skill_overlap") or {}
-                penalty_weight = overlap_cfg.get("expected_signal_penalty_weight", 0.15)
+                readiness_adjustment_weight = overlap_cfg.get("domain_readiness_adjustment_weight", 0.20)
+                readiness_adjustment_midpoint = overlap_cfg.get("domain_readiness_adjustment_midpoint", 0.50)
+                min_adjustment_factor = overlap_cfg.get("domain_readiness_min_adjustment_factor", 0.80)
+                max_adjustment_factor = overlap_cfg.get("domain_readiness_max_adjustment_factor", 1.20)
+
+                _log_event(state, "skill_overlap_tuning", {
+                    "domain_readiness_adjustment_weight": readiness_adjustment_weight,
+                    "domain_readiness_adjustment_midpoint": readiness_adjustment_midpoint,
+                    "domain_readiness_min_adjustment_factor": min_adjustment_factor,
+                    "domain_readiness_max_adjustment_factor": max_adjustment_factor,
+                })
                 for role in state.matched_roles:
                     overlap = compute_skill_overlap(
                         state.skills_flat,
@@ -423,13 +433,30 @@ def stage_3_role_matching(state: PipelineState) -> PipelineState:
                     )
 
                     raw_overlap_score = overlap.get("overlap_score", 0.0)
-                    expected_signal_coverage = overlap.get("expected_signal_coverage", 1.0)
-                    adjusted_overlap_score = raw_overlap_score * (
-                        1 - penalty_weight * (1 - expected_signal_coverage)
+                    domain_readiness = overlap.get("domain_readiness_composite", 1.0)
+                    adjustment_factor = 1 + readiness_adjustment_weight * (
+                        domain_readiness - readiness_adjustment_midpoint
                     )
+                    adjustment_factor = max(min_adjustment_factor, min(max_adjustment_factor, adjustment_factor))
+                    adjusted_overlap_score = raw_overlap_score * adjustment_factor
+
                     overlap["overlap_score_raw"] = round(raw_overlap_score, 3)
                     overlap["overlap_score"] = round(adjusted_overlap_score, 3)
-                    overlap["expected_signal_penalty_weight"] = penalty_weight
+                    overlap["domain_readiness_adjustment_factor"] = round(adjustment_factor, 3)
+                    overlap["structural_components_raw"] = {
+                        "required_component": round(
+                            overlap_cfg.get("required_weight", 0.70) * overlap.get("required_coverage", 0.0), 3
+                        ),
+                        "preferred_component": round(
+                            overlap_cfg.get("preferred_weight", 0.30) * overlap.get("preferred_coverage", 0.0), 3
+                        ),
+                        "domain_readiness_composite": round(domain_readiness, 3),
+                        "overlap_score": round(raw_overlap_score, 3),
+                    }
+                    overlap["structural_components_adjusted"] = {
+                        "domain_readiness_adjustment_factor": round(adjustment_factor, 3),
+                        "overlap_score_adjusted": round(adjusted_overlap_score, 3),
+                    }
                     skill_overlaps[role["role_id"]] = overlap
                 state.skill_overlaps = skill_overlaps
 
@@ -443,7 +470,11 @@ def stage_3_role_matching(state: PipelineState) -> PipelineState:
                             "required_coverage": ov["required_coverage"],
                             "preferred_coverage": ov.get("preferred_coverage"),
                             "expected_signal_coverage": ov.get("expected_signal_coverage"),
-                            "expected_signal_penalty_weight": ov.get("expected_signal_penalty_weight"),
+                            "required_specificity_weighted_coverage": ov.get("required_specificity_weighted_coverage"),
+                            "domain_readiness_composite": ov.get("domain_readiness_composite"),
+                            "domain_readiness_adjustment_factor": ov.get("domain_readiness_adjustment_factor"),
+                            "structural_components_raw": ov.get("structural_components_raw"),
+                            "structural_components_adjusted": ov.get("structural_components_adjusted"),
                         }
                         for rid, ov in skill_overlaps.items()
                     ],

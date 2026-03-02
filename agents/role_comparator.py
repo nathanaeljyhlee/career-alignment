@@ -77,10 +77,13 @@ FIT BANDS:
 --- DETERMINISTIC SKILL OVERLAP (pre-computed, use as scoring anchor) ---
 {overlap_section}
 
-IMPORTANT: Your structural_fit_score should be anchored to the overlap score above.
-If overlap is 0.85, structural_fit should be in the 0.75-0.95 range (LLM adjusts for quality/depth, but cannot wildly deviate from the deterministic base).
-If overlap is 0.30, structural_fit should be in the 0.20-0.45 range.
-The overlap score is a floor/ceiling anchor, not a replacement for your judgment.
+IMPORTANT: Anchor structural_fit_score to BOTH raw and adjusted overlap values above.
+- Use the adjusted overlap score as the primary anchor for final structural_fit scoring.
+- Use the raw overlap score + component breakdown to explain what changed and why.
+- Do not ignore adjustment direction: if adjusted < raw, include at least one evidence item tied to weak domain readiness; if adjusted > raw, include one evidence item tied to strong domain readiness.
+If adjusted overlap is 0.85, structural_fit should usually land in the 0.75-0.95 range (LLM adjusts for quality/depth, but cannot wildly deviate).
+If adjusted overlap is 0.30, structural_fit should usually land in the 0.20-0.45 range.
+Deterministic overlap is a floor/ceiling anchor, not a replacement for your judgment.
 
 EVIDENCE RULES:
 - Every claim MUST have a "source" that references specific text from the candidate profile, skills list, or deterministic overlap data
@@ -148,13 +151,22 @@ def _format_overlap_section(skill_overlap: dict | None) -> str:
     """Format skill overlap data for inclusion in the prompt."""
     if not skill_overlap:
         return "No deterministic overlap data available."
+
     req_cov = skill_overlap.get("required_coverage", 0)
     pref_cov = skill_overlap.get("preferred_coverage", 0)
-    overlap_score = skill_overlap.get("overlap_score", 0)
+    expected_signal_cov = skill_overlap.get("expected_signal_coverage", 0)
+    specificity_cov = skill_overlap.get("required_specificity_weighted_coverage", 0)
+    domain_readiness = skill_overlap.get("domain_readiness_composite", 0)
+    overlap_score_raw = skill_overlap.get("overlap_score_raw", skill_overlap.get("overlap_score", 0))
+    overlap_score_adjusted = skill_overlap.get("overlap_score", 0)
+    adjustment_factor = skill_overlap.get("domain_readiness_adjustment_factor", 1.0)
     matched_req = skill_overlap.get("matched_required", [])
     missing_req = skill_overlap.get("missing_required", [])
     matched_pref = skill_overlap.get("matched_preferred", [])
     missing_pref = skill_overlap.get("missing_preferred", [])
+
+    raw_components = skill_overlap.get("structural_components_raw", {})
+    adjusted_components = skill_overlap.get("structural_components_adjusted", {})
 
     lines = [
         f"Required skills coverage: {req_cov:.0%} ({len(matched_req)}/{len(matched_req) + len(missing_req)})",
@@ -162,7 +174,14 @@ def _format_overlap_section(skill_overlap: dict | None) -> str:
         f"Missing required: {', '.join(missing_req) if missing_req else 'none'}",
         f"Preferred skills coverage: {pref_cov:.0%} ({len(matched_pref)}/{len(matched_pref) + len(missing_pref)})",
         f"Missing preferred: {', '.join(missing_pref) if missing_pref else 'none'}",
-        f"Overall overlap score: {overlap_score:.2f}",
+        f"Expected signal coverage: {expected_signal_cov:.0%}",
+        f"Required specificity-weighted coverage: {specificity_cov:.0%}",
+        f"Domain readiness composite: {domain_readiness:.2f}",
+        f"Raw overlap score (pre-adjustment): {overlap_score_raw:.2f}",
+        f"Adjusted overlap score (anchor): {overlap_score_adjusted:.2f}",
+        f"Domain readiness adjustment factor: {adjustment_factor:.3f}",
+        f"Raw structural components: {json.dumps(raw_components, sort_keys=True)}",
+        f"Adjusted structural components: {json.dumps(adjusted_components, sort_keys=True)}",
     ]
     return "\n".join(lines)
 
