@@ -10,9 +10,10 @@ Built as part of the Babson College MBA AI Fellowship.
 
 Upload a resume (PDF) and write a brief "why" statement. The engine runs a 3-stage pipeline:
 
-1. **Input Processing** — Extracts skills via alias matching, LLM extraction, and O*NET normalization. Builds a co-occurrence skill graph to infer skills demonstrated but not explicitly stated.
+1. **Input Processing** — Extracts skills via alias matching, LLM extraction, transferable language translation, and O*NET normalization. Builds a co-occurrence skill graph to infer skills demonstrated but not explicitly stated.
 2. **Profile Synthesis** — Two LLM agents produce a structured skill cluster profile and a 7-dimension motivational profile from the why statement.
-3. **Role Matching** — Deterministic skill overlap scoring anchors LLM fit classification. Two more agents run self-consistency role comparison and gap severity analysis. A cross-role analysis identifies shared gaps, leverage skills, and effort-to-fit rankings.
+3. **Role Matching** — Deterministic skill overlap scoring (with expected-signal coverage penalty) anchors LLM fit classification. Two more agents run self-consistency role comparison and gap severity analysis. A cross-role analysis identifies shared gaps, leverage skills, and effort-to-fit rankings.
+4. **Output Assembly** — Structured result assembled and rendered as 7 report sections in the UI; exportable as PDF.
 
 Output: 7 sections covering skill profile, motivation fit, win-now roles, pivot roles, gap analysis, leverage moves, and a cross-role comparative summary.
 
@@ -47,7 +48,7 @@ Pipeline Orchestrator (engine.py)
 - LLM agents: `qwen2.5:7b` (swap to `phi4:14b` for stronger reasoning)
 - Embeddings: `nomic-embed-text`
 
-**Data:** 18 MBA-relevant roles (O*NET-grounded), 98 standardized skills, 185 surface-form aliases.
+**Data:** 20 MBA-relevant roles (O*NET-grounded, expanding to 80 via CMF-037), 483 canonical skills, 1,832 surface-form aliases.
 
 ---
 
@@ -89,10 +90,12 @@ All scoring parameters are in `tuning.yaml` — weights, thresholds, model names
 candidate-market-fit/
 ├── app.py                    # Streamlit UI
 ├── config.py                 # Path config + tuning.yaml loader
-├── engine.py                 # Pipeline orchestrator (3 stages, auto-logging)
+├── engine.py                 # Pipeline orchestrator (4 stages, auto-logging)
 ├── output.py                 # Result formatter (7 sections)
 ├── parsers.py                # PDF parsing (pdfplumber)
-├── skills.py                 # Skill extraction + O*NET normalization
+├── pdf_export.py             # PDF export from output dict
+├── skills.py                 # Skill extraction + O*NET normalization + transfer labels
+├── tally_intake.py           # CLI: pull Tally form submissions, run pipeline
 ├── tuning.yaml               # All tunable parameters
 ├── requirements.txt
 ├── agents/
@@ -102,31 +105,34 @@ candidate-market-fit/
 │   └── gap_analyzer.py
 ├── matching/
 │   ├── embeddings.py
-│   ├── skill_overlap.py
+│   ├── skill_overlap.py      # Includes expected_signal_coverage penalty
 │   ├── skill_graph.py
 │   └── confidence.py
 ├── analysis/
 │   └── cross_role.py
+├── scripts/
+│   └── validate_role_taxonomy.py  # Schema + governance lint
+├── docs/
+│   └── taxonomy-governance.md
 └── data/
-    ├── role_taxonomy.json    # 18 MBA roles
-    ├── onet_skills.json      # 98 O*NET skills
-    └── skill_aliases.json    # 185 surface-form mappings
+    ├── role_taxonomy.json         # 20 MBA roles (expanding to 80)
+    ├── role_taxonomy.schema.json  # JSON schema for validation
+    ├── onet_skills.json           # 483 canonical skills
+    └── skill_aliases.json         # 1,832 surface-form mappings
 ```
 
 ---
 
 ## Status
 
-Active development. Current focus: bug fixes and calibration (Sessions 6-9 resolved schema enforcement, graph inference, and context window issues).
+Active development. Pipeline is functional and has been validated on multiple real user profiles including a non-builder (clinical-to-MBA pivot candidate). All core Must items from initial build are resolved.
 
-**Full feature roadmap:** [`feature-roadmap.csv`](feature-roadmap.csv) — 27 items across Must / Should / Could / Won't tiers. [`ROADMAP.md`](ROADMAP.md) explains the update protocol and priority review cadence.
+**Full feature roadmap:** [`feature-roadmap.csv`](feature-roadmap.csv) — MoSCoW prioritized.
 
-Current Must-priority open items:
-- Fix cross_role_analysis silent failure (Section 7 not executing)
-- Fix performance regression to 476s (Agent 3 parallelization suspected dropped)
-- Internship/FT selector prominence (easy to miss on left sidebar only)
-- Role recommendation bias / unbiased role expansion (required for non-builder users)
-- Tally form intake pipeline (primary real-user onboarding path)
+Current focus:
+- **CMF-037** — Expand role taxonomy from 20 to 80 roles (internship / FT tracks, MBA-specific, Babson entrepreneurial)
+- **CMF-038** — Decision Sprint output card (converts fit analysis to a 90-day action commitment)
+- **CMF-039 / 040** — Performance: skill graph caching + Stage 2 parallelization
 
 ---
 
