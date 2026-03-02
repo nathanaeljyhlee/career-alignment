@@ -1188,16 +1188,18 @@
     },
     {
       "skill_id": "mba-applied-051",
-      "skill_name": "HIPAA Compliance",
+      "skill_name": "Healthcare Regulatory Compliance",
       "category": "mba_applied",
-      "description": "Understanding and applying HIPAA regulations for protecting health information in technology and business contexts",
+      "description": "Understanding and applying healthcare regulations (including HIPAA) for protecting health information in technology and business contexts",
       "aliases": [
         "HIPAA",
         "HIPAA compliance",
         "health data privacy",
         "PHI protection",
         "healthcare compliance",
-        "health information security"
+        "health information security",
+        "hipaa",
+        "hipaa compliance"
       ]
     },
     {
