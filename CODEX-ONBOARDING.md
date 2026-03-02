@@ -111,7 +111,8 @@ Run output saved to `runs/` as `run_HHMMSS.json`. `latest_run.json` is always ov
 6. **`onet_skills.json` format:** `{"Canonical Skill Name": {"category": "...", "source": "...", ...}}` — all canonical names title-cased.
 7. **No external API calls at runtime** — all enrichment data is baked into `data/` files at build time.
 8. **Commit style:** `Session N: [one-line description]` — see git log for examples.
-9. **Never commit:** `runs/`, `latest_run.json`, `PROJECT_LOG.md`, `ROADMAP.md`, `=*` files — covered by `.gitignore`.
+9. **Taxonomy governance is mandatory for `data/role_taxonomy.json` edits** — run `python scripts/validate_role_taxonomy.py` and follow `docs/taxonomy-governance.md` checklist + cohort review process before merge.
+10. **Never commit:** `runs/`, `latest_run.json`, `PROJECT_LOG.md`, `ROADMAP.md`, `=*` files — covered by `.gitignore`.
 
 ---
 
