@@ -130,6 +130,14 @@ Current Must-priority open items:
 
 ---
 
+## 10x Exploration You Can Ship Today
+
+We documented a full implementation write-up for a shippable **Decision Sprint** feature (an action-oriented output card that converts analysis into a 90-day plan).
+
+Read the spec: [`DECISION-SPRINT.md`](DECISION-SPRINT.md)
+
+---
+
 ## License
 
 Copyright (c) 2026 Nathanael Lee. All rights reserved.
