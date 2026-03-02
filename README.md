@@ -77,6 +77,26 @@ streamlit run app.py
 
 ---
 
+
+
+### Fast iteration / cached stage runs
+
+For faster testing, you can run only portions of the pipeline and cache stage outputs:
+
+```bash
+python pipeline_runner.py \
+  --resume path/to/resume.pdf \
+  --why-text "I want to pivot into product strategy" \
+  --use-cache
+
+# Re-run only Stage 3 (Role Matching) from cached Stage 2 output
+python pipeline_runner.py \
+  --resume path/to/resume.pdf \
+  --why-text "I want to pivot into product strategy" \
+  --use-cache \
+  --start-stage role_matching
+```
+
 ## Configuration
 
 All scoring parameters are in `tuning.yaml` — weights, thresholds, model names, and parallel worker counts. Inline comments explain every parameter. No code changes needed for parameter tuning.
