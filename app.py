@@ -59,6 +59,60 @@ def get_available_models() -> list[str]:
         return []
 
 
+def _collect_evidence_snippets(fit: dict, max_items: int = 2) -> tuple[list[str], list[str]]:
+    supporting, gaps = [], []
+    for ev in fit.get("evidence", []) or []:
+        for item in ev.get("evidence_chain", []) or []:
+            line = f"{item.get('claim', '').strip()}"
+            if item.get("source"):
+                line = f"{line} ({item['source']})"
+            if item.get("direction") == "supporting":
+                supporting.append(line)
+            elif item.get("direction") == "gap":
+                gaps.append(line)
+    return supporting[:max_items], gaps[:max_items]
+
+
+def _render_role_explanation(entry: dict):
+    fit = entry.get("fit", {})
+    overlap = entry.get("skill_overlap", {})
+    req = overlap.get("required_coverage")
+    pref = overlap.get("preferred_coverage")
+    signal = overlap.get("expected_signal_coverage")
+    penalty_weight = overlap.get("expected_signal_penalty_weight", 0.0)
+    raw_overlap = overlap.get("overlap_score_raw")
+    adjusted_overlap = overlap.get("overlap_score")
+
+    st.write("**Why this score**")
+    if req is not None and pref is not None and signal is not None:
+        st.write(
+            f"- Structural coverage: required {req:.0%}, preferred {pref:.0%}, expected role signals {signal:.0%}."
+        )
+    if raw_overlap is not None and adjusted_overlap is not None:
+        adjustment = raw_overlap - adjusted_overlap
+        if adjustment > 0.001:
+            st.write(
+                f"- Coverage adjustment: role-signal match lowered structural score by {adjustment:.0%} "
+                f"(from {raw_overlap:.0%} to {adjusted_overlap:.0%})."
+            )
+        else:
+            st.write("- Coverage adjustment: no meaningful reduction applied for role-signal match.")
+        if penalty_weight:
+            st.caption(
+                "Role-signal adjustment reflects how closely your resume/profile shows context the role expects."
+            )
+
+    supporting, gaps = _collect_evidence_snippets(fit)
+    if supporting:
+        st.write("**Decisive supporting evidence**")
+        for item in supporting:
+            st.write(f"- {item}")
+    if gaps:
+        st.write("**Decisive gap evidence**")
+        for item in gaps:
+            st.write(f"- {item}")
+
+
 # --- Sidebar ---
 with st.sidebar:
     st.title("Settings")
@@ -236,6 +290,7 @@ if st.button("Analyze My Fit", type="primary", disabled=not can_run, use_contain
         confidence_results=state.confidence_results,
         matched_roles=state.matched_roles,
         skills_flat=state.skills_flat,
+        skill_overlaps=getattr(state, "skill_overlaps", None),
         structural_gap_warning=state.structural_gap_warning,
         errors=state.errors,
         warnings=state.warnings,
@@ -452,25 +507,7 @@ if "output" in st.session_state:
                     st.metric("Motivation Alignment", f"{fit.get('motivation_alignment_score', 0):.0%}")
                 st.write(fit.get("reasoning", ""))
 
-                # Evidence details
-                if fit.get("evidence"):
-                    for ev in fit["evidence"]:
-                        dim = ev.get("dimension", "").replace("_", " ").title()
-                        st.write(f"**{dim}** (score: {ev.get('score', 0):.0%})")
-                        # Support both evidence_chain (new) and supporting/gaps (legacy)
-                        if ev.get("evidence_chain"):
-                            for item in ev["evidence_chain"]:
-                                prefix = "+" if item.get("direction") == "supporting" else "-"
-                                impact = item.get("score_impact", "")
-                                st.write(f"  {prefix} [{impact}] {item.get('claim', '')}")
-                                st.caption(f"    Source: {item.get('source', '')}")
-                        else:
-                            if ev.get("supporting"):
-                                for point in ev["supporting"]:
-                                    st.write(f"  + {point}")
-                            if ev.get("gaps"):
-                                for gap in ev["gaps"]:
-                                    st.write(f"  - {gap}")
+                _render_role_explanation(entry)
 
                 if entry.get("gap") and entry["gap"].get("gaps"):
                     st.write("**Key Gaps:**")
@@ -496,6 +533,7 @@ if "output" in st.session_state:
                 f"{gap.get('severity_band', '').title()} gaps"
             ):
                 st.write(fit.get("reasoning", ""))
+                _render_role_explanation(entry)
                 st.write(f"**Pivot Rationale:** {gap.get('pivot_rationale', '')}")
                 if gap.get("top_leverage_moves"):
                     st.write("**Highest-Leverage Moves:**")
@@ -588,6 +626,17 @@ if "output" in st.session_state:
 
             if cross.get("comparative_narrative"):
                 st.markdown(f"**Summary:** {cross['comparative_narrative']}")
+
+            if cross.get("why_not_roles"):
+                st.subheader("Why not role X?")
+                for wn in cross["why_not_roles"]:
+                    with st.expander(f"Why not {wn.get('role_name', 'that role')}?"):
+                        st.write(
+                            f"Compared with **{wn.get('top_role', 'your top role')}**, this role is currently "
+                            f"{wn.get('score_gap_vs_top', 0):.0%} lower fit."
+                        )
+                        for reason in wn.get("reasons", []):
+                            st.write(f"- {reason}")
 
     # Debug info
     if show_debug:

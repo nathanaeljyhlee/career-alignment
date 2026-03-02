@@ -22,6 +22,7 @@ def build_output(
     confidence_results: list[dict[str, Any]] | None,
     matched_roles: list[dict[str, Any]] | None,
     skills_flat: list[dict[str, Any]] | None,
+    skill_overlaps: dict[str, dict[str, Any]] | None = None,
     structural_gap_warning: dict | None = None,
     errors: list[str] | None = None,
     warnings: list[str] | None = None,
@@ -63,12 +64,14 @@ def build_output(
         gap = gap_results[i] if gap_results and i < len(gap_results) else None
         conf = confidence_results[i] if confidence_results and i < len(confidence_results) else None
         role = matched_roles[i] if matched_roles and i < len(matched_roles) else None
+        overlap = skill_overlaps.get(fit.get("role_id", ""), {}) if skill_overlaps else {}
 
         entry = {
             "fit": fit,
             "gap": gap,
             "confidence": conf,
             "role": role,
+            "skill_overlap": overlap,
         }
 
         if fit.get("fit_band") in ("strong", "competitive"):

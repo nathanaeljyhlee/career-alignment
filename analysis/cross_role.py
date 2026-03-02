@@ -68,6 +68,7 @@ def cross_role_analysis(
     Returns:
         {
             "role_ranking": [...],
+            "why_not_roles": [...],
             "shared_gaps": [...],
             "leverage_skills": [...],
             "comparative_narrative": str,
@@ -77,6 +78,7 @@ def cross_role_analysis(
     if not fit_results:
         return {
             "role_ranking": [],
+            "why_not_roles": [],
             "shared_gaps": [],
             "leverage_skills": [],
             "comparative_narrative": "No roles to compare.",
@@ -124,6 +126,41 @@ def cross_role_analysis(
         ],
         key=lambda r: r["effort_to_fit"],
     )
+
+    # --- 2b. Why-not comparisons against top role ---
+    why_not_roles = []
+    top_role = role_ranking[0] if role_ranking else None
+    if top_role:
+        for other in role_ranking[1:]:
+            score_gap = round(top_role["composite_score"] - other["composite_score"], 3)
+            overlap_gap = round(top_role["overlap_score"] - other["overlap_score"], 3)
+            effort_gap = round(other["effort_to_fit"] - top_role["effort_to_fit"], 3)
+
+            reasons = []
+            if overlap_gap > 0.03:
+                reasons.append(
+                    f"Lower current skill coverage ({other['overlap_score']:.0%} vs {top_role['overlap_score']:.0%})."
+                )
+            if other["gap_severity"] > top_role["gap_severity"] + 0.05:
+                reasons.append(
+                    f"More severe gaps to close ({other['gap_severity']:.0%} vs {top_role['gap_severity']:.0%})."
+                )
+            if effort_gap > 0.05:
+                reasons.append(
+                    f"Needs more effort to become competitive ({other['effort_to_fit']:.2f} vs {top_role['effort_to_fit']:.2f})."
+                )
+            if not reasons:
+                reasons.append("Similar profile fit; ranking driven by small score differences.")
+
+            why_not_roles.append({
+                "top_role": top_role["role_name"],
+                "role_name": other["role_name"],
+                "composite_score": other["composite_score"],
+                "score_gap_vs_top": score_gap,
+                "overlap_gap_vs_top": overlap_gap,
+                "effort_gap_vs_top": effort_gap,
+                "reasons": reasons,
+            })
 
     # --- 3. Shared gaps ---
     # Collect all gap items tagged with their role
@@ -200,6 +237,7 @@ def cross_role_analysis(
 
     return {
         "role_ranking": role_ranking,
+        "why_not_roles": why_not_roles,
         "shared_gaps": shared_gaps[:5],  # Top 5 shared gaps
         "leverage_skills": leverage_skills[:3],  # Top 3 leverage skills
         "comparative_narrative": narrative,

@@ -137,6 +137,62 @@ def _fit_color(fit_band: str) -> colors.Color:
     }.get(fit_band, C_NEUTRAL)
 
 
+def _collect_evidence_snippets(fit: dict, max_items: int = 2) -> tuple[list[str], list[str]]:
+    supporting, gaps = [], []
+    for ev in fit.get("evidence", []) or []:
+        for item in ev.get("evidence_chain", []) or []:
+            line = item.get("claim", "").strip()
+            source = item.get("source", "").strip()
+            if source:
+                line = f"{line} ({source})"
+            if item.get("direction") == "supporting":
+                supporting.append(line)
+            elif item.get("direction") == "gap":
+                gaps.append(line)
+    return supporting[:max_items], gaps[:max_items]
+
+
+def _append_role_explanation(elements: list, entry: dict, styles: dict):
+    fit = entry.get("fit", {})
+    overlap = entry.get("skill_overlap", {}) or {}
+
+    req = overlap.get("required_coverage")
+    pref = overlap.get("preferred_coverage")
+    signal = overlap.get("expected_signal_coverage")
+    raw_overlap = overlap.get("overlap_score_raw")
+    adjusted_overlap = overlap.get("overlap_score")
+
+    elements.append(Paragraph("<b>Why this score</b>", styles["Bold"]))
+    if req is not None and pref is not None and signal is not None:
+        elements.append(Paragraph(
+            f"- Structural coverage: required {req:.0%}, preferred {pref:.0%}, expected role signals {signal:.0%}.",
+            styles["Bullet"],
+        ))
+    if raw_overlap is not None and adjusted_overlap is not None:
+        adjustment = raw_overlap - adjusted_overlap
+        if adjustment > 0.001:
+            elements.append(Paragraph(
+                f"- Coverage adjustment: role-signal match lowered structural score by {adjustment:.0%} "
+                f"(from {raw_overlap:.0%} to {adjusted_overlap:.0%}).",
+                styles["Bullet"],
+            ))
+        else:
+            elements.append(Paragraph(
+                "- Coverage adjustment: no meaningful reduction applied for role-signal match.",
+                styles["Bullet"],
+            ))
+
+    supporting, gaps = _collect_evidence_snippets(fit)
+    if supporting:
+        elements.append(Paragraph("<b>Decisive supporting evidence</b>", styles["Bold"]))
+        for item in supporting:
+            elements.append(Paragraph(f"- {item}", styles["Bullet"]))
+    if gaps:
+        elements.append(Paragraph("<b>Decisive gap evidence</b>", styles["Bold"]))
+        for item in gaps:
+            elements.append(Paragraph(f"- {item}", styles["Bullet"]))
+
+
 def _section_1(elements: list, snap: dict, styles: dict):
     if not snap.get("available"):
         return
@@ -336,6 +392,8 @@ def _section_3_4(elements: list, win_now: list, pivot: list, styles: dict):
                 elements.append(Spacer(1, 4))
                 elements.append(Paragraph(reasoning, styles["Body"]))
 
+            _append_role_explanation(elements, entry, styles)
+
             # Key gaps from this role's gap entry
             gap = entry.get("gap") or {}
             if gap.get("gaps"):
@@ -358,6 +416,7 @@ def _section_3_4(elements: list, win_now: list, pivot: list, styles: dict):
             gap = entry.get("gap") or {}
             elements.append(Paragraph(fit.get("role_name", "Unknown"), styles["RoleHeader"]))
             elements.append(Paragraph(fit.get("reasoning", ""), styles["Body"]))
+            _append_role_explanation(elements, entry, styles)
             if gap.get("pivot_rationale"):
                 elements.append(Paragraph(f"<b>Pivot Rationale:</b> {gap['pivot_rationale']}", styles["Body"]))
             if gap.get("top_leverage_moves"):
@@ -502,6 +561,18 @@ def _section_7(elements: list, cross: dict, section_num: int, styles: dict):
     if cross.get("comparative_narrative"):
         elements.append(Spacer(1, 6))
         elements.append(Paragraph(f"<b>Summary:</b> {cross['comparative_narrative']}", styles["Body"]))
+
+    if cross.get("why_not_roles"):
+        elements.append(Spacer(1, 6))
+        elements.append(Paragraph("<b>Why not role X?</b>", styles["Bold"]))
+        for wn in cross["why_not_roles"]:
+            elements.append(Paragraph(
+                f"- <b>{wn.get('role_name', 'Role')}</b>: {wn.get('score_gap_vs_top', 0):.0%} lower fit "
+                f"than {wn.get('top_role', 'top role')}",
+                styles["Bullet"],
+            ))
+            for reason in wn.get("reasons", []):
+                elements.append(Paragraph(f"  • {reason}", styles["BodySmall"]))
 
 
 def generate_pdf(output: dict[str, Any]) -> bytes:
