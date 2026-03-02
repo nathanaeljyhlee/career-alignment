@@ -6430,6 +6430,19 @@
         "processing data",
         "processing of data"
       ]
+    },
+    {
+      "skill_id": "custom-strategy-digital-transformation",
+      "skill_name": "Digital Transformation",
+      "category": "strategy",
+      "description": "Leading organizational change through digital technologies, operating model redesign, and data-enabled process improvement",
+      "aliases": [
+        "digital transformation",
+        "digital strategy",
+        "digital modernization",
+        "business transformation",
+        "technology transformation"
+      ]
     }
   ]
 }

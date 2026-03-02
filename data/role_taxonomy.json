@@ -557,7 +557,8 @@
         "Strategic Planning",
         "Cross-Functional Leadership",
         "Change Management",
-        "Critical Thinking"
+        "Critical Thinking",
+        "Digital Transformation"
       ],
       "preferred_skills": [
         "Agile Methodology",
@@ -973,6 +974,106 @@
         "bls_median_wage_2024": 206420,
         "bls_typical_education": "Bachelor's degree",
         "bls_employment_growth_pct_2024_34": 4.3
+      }
+    },
+    {
+      "role_id": "healthcare-technology-consulting",
+      "role_name": "Healthcare Technology Consulting",
+      "onet_code": "13-1111.00",
+      "category": "consulting",
+      "description": "Advises health systems, providers, and payers on digital transformation initiatives, operating model redesign, and technology-enabled care delivery improvements. Clinical experience is leveraged to translate frontline realities into pragmatic strategic recommendations.",
+      "required_skills": [
+        "Healthcare Domain Knowledge",
+        "Stakeholder Management",
+        "Project Management",
+        "Strategic Planning",
+        "Communication"
+      ],
+      "preferred_skills": [
+        "Clinical Workflow Understanding",
+        "Digital Transformation",
+        "Data Analysis",
+        "Change Management"
+      ],
+      "barrier_conditions": [
+        "No interest in healthcare systems or care delivery contexts",
+        "Discomfort with client-facing advisory work and ambiguity",
+        "Limited ability to synthesize operational and strategic recommendations"
+      ],
+      "expected_signals": [
+        "Clinical background or direct healthcare experience",
+        "Exposure to hospital or health system operations",
+        "Interest in digital health tools or transformation initiatives",
+        "Evidence of cross-functional leadership in complex environments"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "moderate",
+        "innovation": "moderate",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Problem solving and decision making",
+          "Adaptability",
+          "Speaking and listening"
+        ],
+        "bls_median_wage_2024": 99280,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 10.6
+      }
+    },
+    {
+      "role_id": "digital-health-strategy",
+      "role_name": "Digital Health Strategy",
+      "onet_code": "11-2021.00",
+      "category": "strategy",
+      "description": "Shapes strategy for digital health ventures and health system innovation teams, combining clinical context with product and business strategy to improve care access, quality, and operational performance.",
+      "required_skills": [
+        "Healthcare Domain Knowledge",
+        "Strategic Planning",
+        "Stakeholder Management",
+        "Communication",
+        "Project Management"
+      ],
+      "preferred_skills": [
+        "Clinical Workflow Understanding",
+        "Digital Transformation",
+        "Product Sense",
+        "Data Analysis"
+      ],
+      "barrier_conditions": [
+        "No interest in healthcare innovation or digital tools",
+        "Discomfort navigating ambiguity across business, clinical, and product stakeholders",
+        "Limited strategic synthesis capability for cross-functional initiatives"
+      ],
+      "expected_signals": [
+        "Clinical or healthcare background",
+        "Interest in health tech, digital tools, or care transformation",
+        "Evidence of strategic problem-solving in complex systems",
+        "MBA pivot narrative linking clinical insight to innovation goals"
+      ],
+      "motivation_attributes": {
+        "impact_orientation": "high",
+        "capital_allocation": "moderate",
+        "innovation": "high",
+        "leadership_scale": "moderate",
+        "autonomy": "moderate",
+        "stability_vs_volatility": "moderate",
+        "prestige_sensitivity": "moderate"
+      },
+      "bls_data": {
+        "bls_top_skills": [
+          "Problem solving and decision making",
+          "Adaptability",
+          "Speaking and listening"
+        ],
+        "bls_median_wage_2024": 161030,
+        "bls_typical_education": "Bachelor's degree",
+        "bls_employment_growth_pct_2024_34": 6.6
       }
     }
   ]
