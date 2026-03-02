@@ -8,6 +8,7 @@ Usage:
     python tally_intake.py           # Process all new submissions
     python tally_intake.py --list    # List new submissions without processing
     python tally_intake.py --rerun <submission_id>  # Re-run a specific submission
+    python tally_intake.py --dry-run # Process fixture data without network/API key
 """
 import argparse
 import json
@@ -32,6 +33,7 @@ FORM_ID = "gD5Qll"
 API_KEY_FILE = APP_DIR.parent.parent.parent.parent / "secrets" / "Tally API key.env"
 INTAKE_DIR = APP_DIR / "temp" / "tally_intake"
 PROCESSED_FILE = APP_DIR / "runs" / "processed_submissions.json"
+DRY_RUN_FIXTURE_FILE = Path(__file__).parent / "fixtures" / "tally_submission_sample.json"
 TALLY_BASE = "https://api.tally.so"
 
 MBA_YEAR_MAP = {
@@ -107,6 +109,13 @@ def _fetch_submissions(api_key: str) -> tuple[list[dict], dict[str, tuple[str, s
     return data.get("submissions", []), question_map
 
 
+def _load_fixture_submissions(fixture_path: Path) -> tuple[list[dict], dict[str, tuple[str, str]]]:
+    """Load submissions/questions from local fixture for dry-run mode."""
+    data = json.loads(fixture_path.read_text(encoding="utf-8"))
+    question_map = {q["id"]: (q["title"], q["type"]) for q in data.get("questions", [])}
+    return data.get("submissions", []), question_map
+
+
 def _parse_submission(sub: dict, qmap: dict[str, tuple]) -> dict:
     """Parse a raw Tally submission into a flat dict keyed by question title."""
     parsed = {"_id": sub["id"], "_submitted_at": sub.get("submittedAt", "")}
@@ -117,7 +126,7 @@ def _parse_submission(sub: dict, qmap: dict[str, tuple]) -> dict:
     return parsed
 
 
-def _download_resume(answer, sub_id: str) -> Path | None:
+def _download_resume(answer, sub_id: str, dry_run: bool = False) -> Path | None:
     """Download resume PDF from Tally signed URL. Returns local path or None."""
     if not answer or not isinstance(answer, list):
         print("  ERROR: No resume file in submission.")
@@ -136,6 +145,16 @@ def _download_resume(answer, sub_id: str) -> Path | None:
     dest_dir = INTAKE_DIR / sub_id
     dest_dir.mkdir(parents=True, exist_ok=True)
     dest = dest_dir / "resume.pdf"
+
+    if dry_run:
+        fixture_resume = Path(__file__).parent / "fixtures" / "resume_sample.pdf"
+        if not fixture_resume.exists():
+            print(f"  ERROR: Dry-run fixture resume not found: {fixture_resume}")
+            return None
+        content = fixture_resume.read_bytes()
+        dest.write_bytes(content)
+        print(f"  Resume [dry-run]: {filename} ({len(content):,} bytes) -> {dest.name}")
+        return dest
 
     # Signed URL — no auth header needed
     r = requests.get(url, timeout=60)
@@ -169,7 +188,7 @@ def _prompt_linkedin(sub_id: str, name: str) -> Path | None:
 
 # --- Core processor ---
 
-def process_submission(sub: dict, qmap: dict, api_key: str, processed_ids: set) -> bool:
+def process_submission(sub: dict, qmap: dict, api_key: str, processed_ids: set, dry_run: bool = False) -> bool:
     """Process one submission end-to-end. Returns True if pipeline ran successfully."""
     p = _parse_submission(sub, qmap)
     sub_id = p["_id"]
@@ -231,7 +250,7 @@ def process_submission(sub: dict, qmap: dict, api_key: str, processed_ids: set) 
     print(f"{'='*62}")
 
     # Download resume
-    resume_path = _download_resume(p.get(Q_RESUME), sub_id)
+    resume_path = _download_resume(p.get(Q_RESUME), sub_id, dry_run=dry_run)
     if not resume_path:
         print(f"  SKIPPED: No valid resume PDF.")
         return False
@@ -288,8 +307,11 @@ def process_submission(sub: dict, qmap: dict, api_key: str, processed_ids: set) 
     print(f"  Total time: {elapsed:.0f}s")
 
     # Mark as processed
-    processed_ids.add(sub_id)
-    _save_processed(processed_ids)
+    if dry_run:
+        print("  Dry-run mode: skipping processed_submissions.json update.")
+    else:
+        processed_ids.add(sub_id)
+        _save_processed(processed_ids)
     return True
 
 
@@ -299,14 +321,23 @@ def main():
     parser = argparse.ArgumentParser(description="CMF Engine — Tally Intake (CMF-005)")
     parser.add_argument("--list", action="store_true", help="List new submissions without processing")
     parser.add_argument("--rerun", metavar="SUB_ID", help="Re-run a specific submission by ID (ignores processed log)")
+    parser.add_argument("--dry-run", action="store_true", help="Use local fixture data and avoid API/network fetch")
     args = parser.parse_args()
 
     print("CMF Engine — Tally Intake")
     print(f"Form: {FORM_ID} | {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print()
 
-    api_key = _load_api_key()
-    subs, qmap = _fetch_submissions(api_key)
+    if args.dry_run:
+        fixture_path = DRY_RUN_FIXTURE_FILE
+        print("### DRY-RUN MODE (fixture) ###")
+        print(f"Fixture file: {fixture_path}")
+        print("No API key or Tally API calls will be used.\n")
+        api_key = ""
+        subs, qmap = _load_fixture_submissions(fixture_path)
+    else:
+        api_key = _load_api_key()
+        subs, qmap = _fetch_submissions(api_key)
     processed_ids = _load_processed()
 
     print(f"Total submissions: {len(subs)} | Already processed: {len(processed_ids)}")
@@ -346,7 +377,7 @@ def main():
 
     success_count = 0
     for sub in new_subs:
-        ok = process_submission(sub, qmap, api_key, processed_ids)
+        ok = process_submission(sub, qmap, api_key, processed_ids, dry_run=args.dry_run)
         if ok:
             success_count += 1
 
