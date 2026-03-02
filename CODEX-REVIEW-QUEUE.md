@@ -233,6 +233,64 @@ All skill names MUST exactly match a `skill_name` in `onet_skills.json` (469 exi
 - `python -c "from engine import run_pipeline; print('imports OK')"` → should not raise ImportError
 - Update `feature-roadmap.csv`: set CMF-037 status to Done with a completion note
 
+---
+
+### CMF-038 — Decision Sprint card (deterministic Phase 1)
+**Type:** Feature (new output section)
+**Files:** `output.py`, `app.py`, `tuning.yaml`
+**Problem:** Users understand their fit report but stall on action. The engine diagnoses well but doesn't convert to a commitment. User problem: "I understand my fit report but I don't know what to do first this week."
+**Fix:** Add a `build_decision_sprint(result_bundle)` function to `output.py` that produces a structured card with 4 sections using ONLY existing pipeline outputs (no new LLM calls):
+1. **90-day role bet:** pick `target_role` from ranked roles using `decision_score = 0.45 * fit_score + 0.30 * confidence_score + 0.25 * (1 - effort_rank_norm)`. Apply motivation guardrail: if role conflicts with top motivational constraints, demote one rank and promote next. Include `rationale` (1-2 sentences) and `confidence_band` (High/Medium/Low).
+2. **Top-2 skill closures:** rank missing required skills by `gap_severity * cross_role_frequency * leverage_weight`. Pick top 2. For each: note which other target roles it unlocks.
+3. **Weekly execution loop:** `project_block` (artifact task, 2-4 hrs/week), `market_block` (networking target), `pipeline_block` (applications/prep cadence). Keep these generic templates driven by role category.
+4. **Go/Pivot checkpoint:** `checkpoint_date` = today + 28 days, `go_criteria` (measurable signs to continue), `pivot_criteria` (signs to switch to backup role).
+
+Add `render_decision_sprint(card)` to `app.py` — render after existing recommendation sections as a compact numbered card. Include a copy-to-clipboard text block.
+
+Add decision weights to `tuning.yaml` under a `decision_sprint` section: `fit_weight: 0.45`, `confidence_weight: 0.30`, `effort_weight: 0.25`, `checkpoint_days: 28`.
+
+**Verify:** Card appears on every successful run. Card references only roles/skills present in computed outputs. If confidence is Low, card says "explore" not "commit". Copy block produces readable plain text.
+
+---
+
+### CMF-039 — Skill graph singleton (cache across runs)
+**Type:** Performance (no output change)
+**Files:** `skills.py`
+**Problem:** `build_skill_graph()` is called fresh every pipeline run in Stage 1. The graph is built from static taxonomy data (`onet_skills.json`) that doesn't change between runs. Rebuilding it repeatedly wastes time.
+**Fix:** Convert `build_skill_graph()` to a module-level cached singleton. Pattern:
+```python
+_SKILL_GRAPH: nx.DiGraph | None = None
+
+def get_skill_graph() -> nx.DiGraph:
+    global _SKILL_GRAPH
+    if _SKILL_GRAPH is None:
+        _SKILL_GRAPH = _build_skill_graph()
+    return _SKILL_GRAPH
+```
+Replace all `build_skill_graph()` call sites with `get_skill_graph()`. Keep `_build_skill_graph()` as the private builder (same logic as current `build_skill_graph()`). Export `get_skill_graph` from the module.
+**Verify:** `python -c "from skills import get_skill_graph; g1 = get_skill_graph(); g2 = get_skill_graph(); assert g1 is g2, 'not cached'"` passes without error.
+
+---
+
+### CMF-040 — Parallelize Stage 2 independent agents
+**Type:** Performance (no output change)
+**Files:** `engine.py`
+**Problem:** Stage 2 runs `synthesize_profile()` and `extract_motivation()` sequentially. These two agents are fully independent once Stage 1 completes — neither depends on the other's output. Running them serially wastes wall-clock time equal to the slower of the two.
+**Fix:** In `engine.py` Stage 2, wrap both calls in a `ThreadPoolExecutor(max_workers=2)` and submit them as concurrent futures:
+```python
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+with ThreadPoolExecutor(max_workers=2) as executor:
+    future_profile = executor.submit(synthesize_profile, state)
+    future_motivation = executor.submit(extract_motivation, state)
+    state.profile = future_profile.result()
+    state.motivation = future_motivation.result()
+```
+Preserve existing error handling — if either future raises, let the exception propagate as before. Do not change the agents themselves.
+**Verify:** `python -c "from engine import run_pipeline; print('imports OK')"` does not error. Stage 2 wall-clock time in run log should be ≤ max(profile_time, motivation_time) + small overhead, not their sum.
+
+---
+
 ~~### CMF-031 — MERGED (PR #6, 2026-03-02)~~
 
 ---
