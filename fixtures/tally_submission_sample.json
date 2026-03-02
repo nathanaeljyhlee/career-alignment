@@ -1,0 +1,51 @@
+{
+  "questions": [
+    {"id": "q_name", "title": "Name", "type": "INPUT_TEXT"},
+    {"id": "q_email", "title": "Babson Email", "type": "INPUT_EMAIL"},
+    {"id": "q_resume", "title": "📄Upload your current resume (PDF)", "type": "FILE_UPLOAD"},
+    {"id": "q_linkedin", "title": "LinkedIn Profile", "type": "INPUT_TEXT"},
+    {"id": "q_stage", "title": "Which recruiting stage are you in?", "type": "MULTIPLE_CHOICE"},
+    {"id": "q_vision", "title": "What is your long-term career goal and vision? ", "type": "TEXTAREA"},
+    {"id": "q_target", "title": "What are you currently targeting? Why?", "type": "TEXTAREA"},
+    {"id": "q_industry", "title": "🏢 What is your target industry?", "type": "INPUT_TEXT"},
+    {"id": "q_geo", "title": "🌍 Geography constraint", "type": "MULTIPLE_CHOICE"},
+    {"id": "q_geo_detail", "title": "What specific geographic constraints apply? ", "type": "INPUT_TEXT"},
+    {"id": "q_priorities", "title": "Right now, you are optimizing for: (select 2)", "type": "CHECKBOXES"},
+    {"id": "q_self_score", "title": "How competitive do you believe you are for your target role today?", "type": "INPUT_NUMBER"},
+    {"id": "q_self_reason", "title": "Why do you believe this? (1–2 sentences)", "type": "INPUT_TEXT"},
+    {"id": "q_desired", "title": "Which of the following would be most valuable in your report?", "type": "CHECKBOXES"},
+    {"id": "q_extra", "title": "Is there any information about your background, constraints, or goals that was not captured above that could improve report accuracy? ", "type": "TEXTAREA"}
+  ],
+  "submissions": [
+    {
+      "id": "dryrun-submission-001",
+      "submittedAt": "2026-02-17T14:33:02.000Z",
+      "responses": [
+        {"questionId": "q_name", "answer": "Avery Candidate"},
+        {"questionId": "q_email", "answer": "acandidate@babson.edu"},
+        {
+          "questionId": "q_resume",
+          "answer": [
+            {
+              "name": "Avery_Candidate_Resume.pdf",
+              "url": "https://example.invalid/dryrun-resume.pdf",
+              "mimeType": "application/pdf"
+            }
+          ]
+        },
+        {"questionId": "q_linkedin", "answer": "https://www.linkedin.com/in/avery-candidate"},
+        {"questionId": "q_stage", "answer": ["1st Year MBA: Summer internship"]},
+        {"questionId": "q_vision", "answer": "Build a long-term career in product strategy in climate-tech, bridging operations and commercialization."},
+        {"questionId": "q_target", "answer": "Targeting product strategy internships at growth-stage climate software firms to build PM and market-facing experience."},
+        {"questionId": "q_industry", "answer": "Climate-tech SaaS"},
+        {"questionId": "q_geo", "answer": ["Prefer Northeast"]},
+        {"questionId": "q_geo_detail", "answer": "Boston or NYC preferred due to spouse employment."},
+        {"questionId": "q_priorities", "answer": ["Brand/trajectory", "Role fit"]},
+        {"questionId": "q_self_score", "answer": "6"},
+        {"questionId": "q_self_reason", "answer": "I have strong operations background but limited direct product internship experience."},
+        {"questionId": "q_desired", "answer": ["Role/industry fit analysis", "Gap diagnosis with action plan"]},
+        {"questionId": "q_extra", "answer": "Open to internships that convert to full-time in 2027."}
+      ]
+    }
+  ]
+}
