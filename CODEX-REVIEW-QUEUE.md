@@ -332,3 +332,8 @@ All skill names MUST exactly match a `skill_name` in `onet_skills.json` (469 exi
 - [ ] Title format: `[CMF-XXX] Short description`
 - [ ] Body includes: what changed, which files, how to verify
 - [ ] Code changes are in their own PR (not bundled with data-only changes unless trivially coupled)
+
+**KPI impact (Claude notes after each merge):**
+- [ ] Speed: does this change expected run time? If yes, note est. delta and update ROADMAP.md KPI table
+- [ ] Accuracy: does this change which roles/gaps appear? If yes, flag for re-run verification
+- [ ] Comprehensiveness: does this expand or contract the role/skill space? If yes, update direction in ROADMAP.md
