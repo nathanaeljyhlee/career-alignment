@@ -413,16 +413,38 @@ def stage_3_role_matching(state: PipelineState) -> PipelineState:
         with _timed_substep(state, "skill_overlap_computation"):
             try:
                 skill_overlaps: dict[str, dict] = {}
+                overlap_cfg = get_tuning("skill_overlap") or {}
+                penalty_weight = overlap_cfg.get("expected_signal_penalty_weight", 0.15)
                 for role in state.matched_roles:
-                    overlap = compute_skill_overlap(state.skills_flat, role)
+                    overlap = compute_skill_overlap(
+                        state.skills_flat,
+                        role,
+                        candidate_profile=state.profile,
+                    )
+
+                    raw_overlap_score = overlap.get("overlap_score", 0.0)
+                    expected_signal_coverage = overlap.get("expected_signal_coverage", 1.0)
+                    adjusted_overlap_score = raw_overlap_score * (
+                        1 - penalty_weight * (1 - expected_signal_coverage)
+                    )
+                    overlap["overlap_score_raw"] = round(raw_overlap_score, 3)
+                    overlap["overlap_score"] = round(adjusted_overlap_score, 3)
+                    overlap["expected_signal_penalty_weight"] = penalty_weight
                     skill_overlaps[role["role_id"]] = overlap
                 state.skill_overlaps = skill_overlaps
 
                 _log_event(state, "skill_overlap_complete", {
                     "roles_computed": len(skill_overlaps),
                     "summary": [
-                        {"role_id": rid, "overlap_score": ov["overlap_score"],
-                         "required_coverage": ov["required_coverage"]}
+                        {
+                            "role_id": rid,
+                            "overlap_score": ov["overlap_score"],
+                            "overlap_score_raw": ov.get("overlap_score_raw"),
+                            "required_coverage": ov["required_coverage"],
+                            "preferred_coverage": ov.get("preferred_coverage"),
+                            "expected_signal_coverage": ov.get("expected_signal_coverage"),
+                            "expected_signal_penalty_weight": ov.get("expected_signal_penalty_weight"),
+                        }
                         for rid, ov in skill_overlaps.items()
                     ],
                 })
