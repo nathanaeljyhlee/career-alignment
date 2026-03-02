@@ -89,14 +89,6 @@ with st.sidebar:
         st.error("Ollama: Not running")
         st.info("Start Ollama with `ollama serve` or the desktop app.")
 
-    st.divider()
-    st.caption("Tuning")
-    mba_year = st.selectbox(
-        "MBA Stage",
-        options=["1y_internship", "2y_fulltime"],
-        format_func=lambda x: "1Y Internship" if x == "1y_internship" else "2Y Full-time",
-    )
-
     show_debug = st.checkbox("Show debug info", value=False)
 
     # Previous runs
@@ -134,6 +126,20 @@ with col2:
         "LinkedIn Export (PDF)", type=["pdf"], key="linkedin",
         help="Export your LinkedIn profile as PDF (optional but recommended)",
     )
+
+st.divider()
+mba_year = st.radio(
+    "Which MBA track are you on?",
+    options=["1y_internship", "2y_fulltime"],
+    format_func=lambda x: "1-Year MBA — Internship Search" if x == "1y_internship" else "2-Year MBA — Full-time Search",
+    horizontal=True,
+    help=(
+        "This changes how structural skills vs. motivation alignment are weighted. "
+        "Internship: 65% skills / 35% motivation. Full-time: 50% / 50%. "
+        "Getting this wrong will shift all your fit scores."
+    ),
+)
+st.divider()
 
 why_text = st.text_area(
     "WHY Statement",

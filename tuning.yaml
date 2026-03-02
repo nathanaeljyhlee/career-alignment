@@ -141,9 +141,12 @@ role_matching:
 
   # Self-consistency: number of independent reasoning paths
   # sampled for each role comparison. More = more stable but slower.
-  # 3 is minimum for meaningful majority vote.
-  # 5 gives better stability but doubles inference time.
-  self_consistency_samples: 3
+  # 2 gives meaningful agreement signal (2/2 = high, 1/2 = low) with 33% speedup vs 3.
+  # 3 is better for majority vote stability. 1 eliminates agreement-based confidence.
+  # NOTE: Ollama serializes requests by default (OLLAMA_NUM_PARALLEL=1), so
+  # parallel_workers only helps if Ollama is configured for concurrent requests.
+  # Set OLLAMA_NUM_PARALLEL=3 (env var, before Ollama server starts) for true parallel.
+  self_consistency_samples: 2
 
   # Temperature for self-consistency sampling. Higher = more
   # diverse reasoning paths (good for self-consistency).
@@ -280,7 +283,10 @@ models:
   # Using qwen2.5:7b for now (already downloaded). Upgrade to phi4:14b
   # for better reasoning quality: just change value + run `ollama pull phi4:14b`
   reasoning_model: "qwen2.5:7b"
-  reasoning_context_window: 16384
+  # Role comparator prompts are ~4000-5500 tokens; 8192 is sufficient and halves
+  # KV cache allocation vs 16384, reducing per-call inference time on CPU.
+  # Raise to 16384 if using phi4:14b or if prompts grow with larger profiles.
+  reasoning_context_window: 8192
   reasoning_temperature: 0.3     # moderate = thoughtful but focused
 
   # Embedding model for skill/role similarity matching
