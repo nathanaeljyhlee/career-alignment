@@ -59,6 +59,46 @@ def get_available_models() -> list[str]:
         return []
 
 
+def render_decision_sprint(card: dict):
+    """Render compact numbered Decision Sprint card with copyable text."""
+    if not card:
+        return
+
+    role_bet = card.get("role_bet", {})
+    closures = card.get("skill_closures", [])
+    loop = card.get("weekly_execution_loop", {})
+    checkpoint = card.get("go_pivot_checkpoint", {})
+
+    st.header("Decision Sprint")
+    st.write(f"**1) 90-day role bet:** {role_bet.get('target_role', 'N/A')} ({role_bet.get('confidence_band', 'N/A')} confidence)")
+    if role_bet.get("decision_mode") == "explore":
+        st.info("Low confidence detected: explore this role before making a hard commit.")
+    st.caption(role_bet.get("rationale", ""))
+
+    st.write("**2) Top-2 skill closures**")
+    if closures:
+        for idx, skill in enumerate(closures, 1):
+            unlocked = ", ".join(skill.get("roles_unlocked", [])[:3]) or "adjacent roles"
+            st.write(f"{idx}. **{skill.get('skill', 'N/A')}** — unlocks {unlocked}")
+    else:
+        st.write("1. No shared high-severity gaps detected; continue deepening target-role skills.")
+
+    st.write("**3) Weekly execution loop**")
+    st.write(f"- **Project block:** {loop.get('project_block', '')}")
+    st.write(f"- **Market block:** {loop.get('market_block', '')}")
+    st.write(f"- **Pipeline block:** {loop.get('pipeline_block', '')}")
+
+    st.write("**4) Go/Pivot checkpoint**")
+    st.write(f"- **Checkpoint date:** {checkpoint.get('checkpoint_date', '')}")
+    for criterion in checkpoint.get("go_criteria", []):
+        st.write(f"- ✅ Go if: {criterion}")
+    for criterion in checkpoint.get("pivot_criteria", []):
+        st.write(f"- 🔄 Pivot if: {criterion}")
+
+    st.write("**Copy-ready sprint plan**")
+    st.code(card.get("copy_text", ""), language="text")
+
+
 # --- Sidebar ---
 with st.sidebar:
     st.title("Settings")
@@ -545,6 +585,11 @@ if "output" in st.session_state:
             st.info(strategic.get("summary", ""))
         else:
             st.warning(strategic.get("summary", ""))
+
+    # Section: Decision Sprint
+    decision_sprint = output.get("section_8_decision_sprint", {})
+    if decision_sprint:
+        render_decision_sprint(decision_sprint)
 
     # Section: Cross-Role Analysis
     cross = output.get("section_7_cross_role")

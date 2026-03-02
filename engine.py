@@ -16,6 +16,7 @@ import json
 import logging
 import time
 import traceback
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -35,7 +36,7 @@ from agents.gap_analyzer import analyze_gaps_batch, RoleGapAnalysis
 from matching.embeddings import match_roles
 from matching.confidence import compute_confidence_band, assess_structural_gap
 from matching.skill_overlap import compute_skill_overlap
-from matching.skill_graph import build_skill_graph, infer_from_graph
+from matching.skill_graph import get_skill_graph, infer_from_graph
 from analysis.cross_role import cross_role_analysis, prioritize_gaps_by_graph
 
 logger = logging.getLogger(__name__)
@@ -160,7 +161,7 @@ def stage_1_input_processing(state: PipelineState) -> PipelineState:
     """Parse PDFs and extract + normalize skills."""
     # Build skill co-occurrence graph (used for inference and gap prioritization)
     try:
-        state.skill_graph = build_skill_graph()
+        state.skill_graph = get_skill_graph()
         logger.info("Skill graph built: %d skills, %d hub skills",
                     len(state.skill_graph.get("adjacency", {})),
                     len(state.skill_graph.get("hub_skills", [])))
@@ -311,56 +312,107 @@ def stage_1_input_processing(state: PipelineState) -> PipelineState:
 def stage_2_profile_synthesis(state: PipelineState) -> PipelineState:
     """Run Agent 1 (Profile Synthesizer) and Agent 2 (Motivation Extractor)."""
     with _time_stage(state, "profile_synthesis"):
-        # Agent 1: Profile Synthesis
-        if state.skills_flat:
-            with _timed_substep(state, "agent1_profile_synthesizer"):
-                try:
-                    resume_sections = state.resume_parsed.get("sections") if state.resume_parsed else None
-                    linkedin_sections = state.linkedin_parsed.get("sections") if state.linkedin_parsed else None
+        run_agent1 = bool(state.skills_flat)
+        run_agent2 = bool(state.why_text.strip())
 
-                    tc = state.tally_context
-                    profile_obj = synthesize_profile(
-                        state.skills_flat, resume_sections, linkedin_sections,
-                        stated_target=tc.target_role_text if tc else "",
-                        stated_industry=tc.target_industry if tc else "",
+        if run_agent1 and run_agent2:
+            with _timed_substep(state, "stage2_parallel_agents"):
+                tc = state.tally_context
+                resume_sections = state.resume_parsed.get("sections") if state.resume_parsed else None
+                linkedin_sections = state.linkedin_parsed.get("sections") if state.linkedin_parsed else None
+
+                with ThreadPoolExecutor(max_workers=2) as executor:
+                    future_profile = executor.submit(
+                        synthesize_profile,
+                        state.skills_flat,
+                        resume_sections,
+                        linkedin_sections,
+                        tc.target_role_text if tc else "",
+                        tc.target_industry if tc else "",
                     )
-                    state.profile = profile_obj.model_dump()
+                    future_motivation = executor.submit(extract_motivation, state.why_text)
 
-                    _log_event(state, "agent1_complete", {
-                        "clusters": len(state.profile.get("skill_clusters", [])),
-                        "industries": len(state.profile.get("industry_signals", [])),
-                        "coherence_score": state.profile.get("narrative_coherence_score"),
-                        "coherence_band": state.profile.get("narrative_coherence_band"),
-                        "years_experience": state.profile.get("years_total_experience"),
-                    })
-                except Exception as e:
-                    state.errors.append(f"Profile synthesis (Agent 1) failed: {e}")
-                    _log_event(state, "agent1_error", {
-                        "error": str(e), "traceback": traceback.format_exc(),
-                    })
+                    try:
+                        profile_obj = future_profile.result()
+                        state.profile = profile_obj.model_dump()
+                        _log_event(state, "agent1_complete", {
+                            "clusters": len(state.profile.get("skill_clusters", [])),
+                            "industries": len(state.profile.get("industry_signals", [])),
+                            "coherence_score": state.profile.get("narrative_coherence_score"),
+                            "coherence_band": state.profile.get("narrative_coherence_band"),
+                            "years_experience": state.profile.get("years_total_experience"),
+                        })
+                    except Exception as e:
+                        state.errors.append(f"Profile synthesis (Agent 1) failed: {e}")
+                        _log_event(state, "agent1_error", {
+                            "error": str(e), "traceback": traceback.format_exc(),
+                        })
 
-        # Agent 2: Motivation Extraction
-        if state.why_text.strip():
-            with _timed_substep(state, "agent2_motivation_extractor"):
-                try:
-                    motivation_obj = extract_motivation(state.why_text)
-                    state.motivation = motivation_obj.model_dump()
-
-                    _log_event(state, "agent2_complete", {
-                        "primary_driver": state.motivation.get("primary_driver"),
-                        "secondary_driver": state.motivation.get("secondary_driver"),
-                        "why_quality": state.motivation.get("why_quality"),
-                        "themes": {t["dimension"]: t["score"]
-                                   for t in state.motivation.get("themes", [])},
-                    })
-                except Exception as e:
-                    state.errors.append(f"Motivation extraction (Agent 2) failed: {e}")
-                    _log_event(state, "agent2_error", {
-                        "error": str(e), "traceback": traceback.format_exc(),
-                    })
+                    try:
+                        motivation_obj = future_motivation.result()
+                        state.motivation = motivation_obj.model_dump()
+                        _log_event(state, "agent2_complete", {
+                            "primary_driver": state.motivation.get("primary_driver"),
+                            "secondary_driver": state.motivation.get("secondary_driver"),
+                            "why_quality": state.motivation.get("why_quality"),
+                            "themes": {t["dimension"]: t["score"]
+                                       for t in state.motivation.get("themes", [])},
+                        })
+                    except Exception as e:
+                        state.errors.append(f"Motivation extraction (Agent 2) failed: {e}")
+                        _log_event(state, "agent2_error", {
+                            "error": str(e), "traceback": traceback.format_exc(),
+                        })
         else:
-            state.warnings.append("No WHY statement provided. Motivation-based matching will be limited.")
-            _log_event(state, "agent2_skipped", {"reason": "no WHY text"})
+            # Fallback to existing single-agent behavior when one input is missing
+            if run_agent1:
+                with _timed_substep(state, "agent1_profile_synthesizer"):
+                    try:
+                        resume_sections = state.resume_parsed.get("sections") if state.resume_parsed else None
+                        linkedin_sections = state.linkedin_parsed.get("sections") if state.linkedin_parsed else None
+
+                        tc = state.tally_context
+                        profile_obj = synthesize_profile(
+                            state.skills_flat, resume_sections, linkedin_sections,
+                            stated_target=tc.target_role_text if tc else "",
+                            stated_industry=tc.target_industry if tc else "",
+                        )
+                        state.profile = profile_obj.model_dump()
+
+                        _log_event(state, "agent1_complete", {
+                            "clusters": len(state.profile.get("skill_clusters", [])),
+                            "industries": len(state.profile.get("industry_signals", [])),
+                            "coherence_score": state.profile.get("narrative_coherence_score"),
+                            "coherence_band": state.profile.get("narrative_coherence_band"),
+                            "years_experience": state.profile.get("years_total_experience"),
+                        })
+                    except Exception as e:
+                        state.errors.append(f"Profile synthesis (Agent 1) failed: {e}")
+                        _log_event(state, "agent1_error", {
+                            "error": str(e), "traceback": traceback.format_exc(),
+                        })
+
+            if run_agent2:
+                with _timed_substep(state, "agent2_motivation_extractor"):
+                    try:
+                        motivation_obj = extract_motivation(state.why_text)
+                        state.motivation = motivation_obj.model_dump()
+
+                        _log_event(state, "agent2_complete", {
+                            "primary_driver": state.motivation.get("primary_driver"),
+                            "secondary_driver": state.motivation.get("secondary_driver"),
+                            "why_quality": state.motivation.get("why_quality"),
+                            "themes": {t["dimension"]: t["score"]
+                                       for t in state.motivation.get("themes", [])},
+                        })
+                    except Exception as e:
+                        state.errors.append(f"Motivation extraction (Agent 2) failed: {e}")
+                        _log_event(state, "agent2_error", {
+                            "error": str(e), "traceback": traceback.format_exc(),
+                        })
+            else:
+                state.warnings.append("No WHY statement provided. Motivation-based matching will be limited.")
+                _log_event(state, "agent2_skipped", {"reason": "no WHY text"})
 
     return state
 

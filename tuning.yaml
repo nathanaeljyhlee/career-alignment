@@ -270,6 +270,15 @@ output:
   show_raw_scores: false
 
 
+# --- DECISION SPRINT ---
+# Weights for deterministic 90-day role bet card.
+decision_sprint:
+  fit_weight: 0.45
+  confidence_weight: 0.30
+  effort_weight: 0.25
+  checkpoint_days: 28
+
+
 # --- MODEL CONFIGURATION ---
 # Which models to use for each pipeline stage.
 # Swap models without touching code — just change these values.
