@@ -280,22 +280,26 @@ def build_decision_sprint(result_bundle: dict[str, Any]) -> dict[str, Any]:
     # CMF P0: read optimization priorities from tally_intake path first
     # with backward-compatible fallback to legacy top-level location.
     top_constraints = {
-        c for c in (
+        c.strip().lower() for c in (
             ((snapshot.get("tally_intake") or {}).get("optimization_priorities", []))
             or snapshot.get("optimization_priorities", [])
             or []
         )
-        if isinstance(c, str)
+        if isinstance(c, str) and c.strip()
     }
+
+    # Prefer the highest decision_score role that does not conflict with
+    # explicit candidate constraints. Fallback to the top-scored role.
     for i, (_, _, entry) in enumerate(scored):
-        fit = entry.get("fit") or {}
         role = entry.get("role") or {}
         motivation = role.get("motivation_fit") or {}
-        role_constraints = {c for c in motivation.get("constraints", []) if isinstance(c, str) and c}
+        role_constraints = {
+            c.strip().lower()
+            for c in motivation.get("constraints", [])
+            if isinstance(c, str) and c.strip()
+        }
         if top_constraints and role_constraints and role_constraints.isdisjoint(top_constraints):
-            if i + 1 < len(scored):
-                top_idx = i + 1
-            break
+            continue
         top_idx = i
         break
 
