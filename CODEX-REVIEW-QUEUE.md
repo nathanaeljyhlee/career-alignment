@@ -21,69 +21,55 @@ how_to_use: |
 
 ## Next Up (priority order — Codex works top to bottom)
 
-`policy-analyst` — role_name: "Policy Analyst" | onet: 19-3094.00 | category: government | functional_category: government | track: both | mba_track: false | babson_fit: false | required: Data Analysis, Policy Analysis, Communication, Critical Thinking, Writing | preferred: Statistical Analysis, Program Evaluation, Policy Knowledge, Presentation Skills, Market Research | motivation: impact=high, capital=low, innovation=moderate, leadership=low, autonomy=moderate, volatility=high (stable), prestige=low | bls: 69200, 7.0%, Master's degree
+1. **CMF-041 Phase 2 Decision** (WAITING ON PROFILING DATA)
+   - Nathanael: run CMF-041 end-to-end on Nathanael + Amos profiles (6 roles each)
+   - Collect `runs/<run_id>_agent3_profile.json` artifacts
+   - Analyze LLM vs Python time ratio, token counts
+   - Decide Phase 2 optimization: (A) simplify prompt, (B) pre-filter roles, (C) truncate descriptions, or (D) swap model
+   - Codex implements chosen fix
 
-`nonprofit-program-manager` — role_name: "Nonprofit Program Manager" | onet: 11-9151.00 | category: nonprofit | functional_category: nonprofit | track: both | mba_track: false | babson_fit: true | required: Project Management, Stakeholder Management, Communication, Data Analysis, Strategic Planning | preferred: Grant Writing, Impact Measurement, Program Evaluation, Community Engagement, Change Management | motivation: impact=high, capital=low, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 74240, 9.0%, Bachelor's
+2. **CMF-005 — Tally intake end-to-end run test**
+   - Type: Verification / minor bug fixes expected
+   - Run `python tally_intake.py` against real submissions or implement `--dry-run` with fixture if API key unavailable
+   - Verify submission parsing, routing, and `processed_submissions.json` updates
 
-`healthcare-administrator` — role_name: "Healthcare Administrator" | onet: 11-9111.00 | category: healthcare | functional_category: healthcare | track: both | mba_track: false | babson_fit: false | required: Healthcare Domain Knowledge, Stakeholder Management, Project Management, Communication, Data Analysis | preferred: Process Improvement, Regulatory Awareness, Financial Analysis, Change Management, ERP Systems | motivation: impact=moderate, capital=low, innovation=low, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 110680, 28.0%, Bachelor's
+3. **CMF-033 — Gap analyzer prompt guardrail (optional post-heuristic)**
+   - Current: heuristic filter `_is_unverified_barrier_gap()` deployed (PR #10)
+   - Optional: add explicit system prompt instruction as preventive guard ("Before including any barrier condition...")
+   - Test on Amos profile to verify "no multi-workstream" is not flagged
 
-`hospital-operations-manager` — role_name: "Hospital Operations Manager" | onet: 11-9111.00 | category: healthcare | functional_category: healthcare | track: both | mba_track: false | babson_fit: false | required: Healthcare Domain Knowledge, Process Improvement, Cross-Functional Leadership, Data Analysis, Communication | preferred: Clinical Workflow Understanding, Change Management, Stakeholder Management, ERP Systems, Lean Six Sigma | motivation: impact=moderate, capital=low, innovation=moderate, leadership=high, autonomy=moderate, volatility=high (stable), prestige=moderate | bls: 110680, 28.0%, Bachelor's
+4. **CMF-007 — Transferable language enrichment layer**
+   - New substep `generate_transfer_labels()` in skills.py
+   - Batched LLM call with anti-hallucination grounding guard
+   - Output tagged with `match_method: "transfer_label"`
 
-`clinical-program-manager` — role_name: "Clinical Program Manager" | onet: 11-9111.00 | category: healthcare | functional_category: healthcare | track: both | mba_track: false | babson_fit: false | required: Healthcare Domain Knowledge, Project Management, Stakeholder Management, Communication, Data Analysis | preferred: Clinical Workflow Understanding, Regulatory Awareness, Change Management, Process Improvement, Program Evaluation | motivation: impact=high, capital=low, innovation=moderate, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 110680, 28.0%, Bachelor's
-
-`health-informatics-analyst` — role_name: "Health Informatics Analyst" | onet: 15-1211.01 | category: healthcare | functional_category: healthcare | track: both | mba_track: false | babson_fit: false | required: Data Analysis, SQL, Healthcare Domain Knowledge, Communication, Critical Thinking | preferred: Python, Statistical Analysis, Tableau or Power BI, Regulatory Awareness, ERP Systems | motivation: impact=moderate, capital=low, innovation=moderate, leadership=low, autonomy=moderate, volatility=high (stable), prestige=low | bls: 112590, 33.5%, Bachelor's
-
-`grants-manager` — role_name: "Grants Manager" | onet: 13-1131.00 | category: nonprofit | functional_category: nonprofit | track: both | mba_track: false | babson_fit: false | required: Communication, Project Management, Financial Analysis, Stakeholder Management, Writing | preferred: Grant Writing, Program Evaluation, Data Analysis, Impact Measurement, Regulatory Awareness | motivation: impact=high, capital=low, innovation=low, leadership=low, autonomy=moderate, volatility=high (stable), prestige=low | bls: 74240, 9.0%, Bachelor's
-
-`development-fundraising-manager` — role_name: "Development & Fundraising Manager" | onet: 11-2033.00 | category: nonprofit | functional_category: nonprofit | track: both | mba_track: false | babson_fit: true | required: Communication, Stakeholder Management, Strategic Planning, Networking, Presentation Skills | preferred: Market Research, Data Analysis, Impact Measurement, Project Management, CRM | motivation: impact=high, capital=low, innovation=low, leadership=moderate, autonomy=moderate, volatility=high (stable), prestige=low | bls: 74240, 9.0%, Bachelor's
-
-`customer-success-manager` — role_name: "Customer Success Manager" | onet: 11-2021.00 | category: product | functional_category: product | track: both | mba_track: false | babson_fit: true | required: Communication, Stakeholder Management, Data Analysis, Problem Solving, Critical Thinking | preferred: CRM, Product Sense, Strategic Planning, SQL, Process Improvement | motivation: impact=moderate, capital=low, innovation=low, leadership=moderate, autonomy=moderate, volatility=moderate, prestige=low | bls: 120000, 6.0%, Bachelor's
-
-**Verify after writing both files:**
-- `python -c "import json; d=json.load(open('data/role_taxonomy.json')); print(len(d['roles']), 'roles')"`  → should print 80
-- `python -c "import json; d=json.load(open('data/onet_skills.json')); print(len(d['skills']), 'skills')"` → should print 483 (469 + 14)
-- `python -c "from engine import run_pipeline; print('imports OK')"` → should not raise ImportError
-- Update `feature-roadmap.csv`: set CMF-037 status to Done with a completion note
+5. **Embedding reuse optimization (shipped in PR #10)**
+   - Candidate-side embeddings (skill names + profile text) precomputed once per run
+   - Reused across all role iterations in Stage 3
+   - Expected latency reduction for Stage 3 with larger role sets
+   - Next: profile to measure actual speedup
 
 ---
 
-### CMF-041 — Profile and optimize Agent 3 (role comparator) bottleneck
+### CMF-041 — Profile and optimize Agent 3 (role comparator) bottleneck (PHASE 1 COMPLETE)
 
-**Type:** Performance optimization (code change)
-**Files:** `engine.py`, `agents/role_comparator.py` (Agent 3 implementation)
-**Problem:** Agent 3 (role comparator) consumes 172-254s per pipeline run (46-82% of total). This is the critical blocker for hitting Speed KPI <5 min. With CMF-037 (80 roles), Agent 3 time will worsen further. Need to profile where time is spent and optimize.
+**Phase 1 Status: ✅ MERGED (PR #9, 2026-03-02)**
 
-**Fix approach — Two-phase:**
+Phase 1 profiling instrumentation is now shipped. Codex implemented:
+- Per-role timing breakdown (LLM vs Python) in `agents/role_comparator.py`
+- Per-sample token counts with fallback estimation
+- Automatic export to `runs/<run_id>_agent3_profile.json`
+- Non-fatal error handling (profile export failures don't crash pipeline)
 
-**Phase 1: Profiling (required, no code changes)**
-- Add detailed timing instrumentation to Agent 3 in engine.py. Capture:
-  - Time per role (how long does Agent 3 spend on each of 6 roles?)
-  - Breakdown: LLM inference vs Python logic
-  - Token count per role (input + output)
-- Run on Nathanael + Amos profiles. Collect:
-  - `profile_name`, `num_roles`, `total_agent3_time`, `time_per_role[]`, `tokens_in[]`, `tokens_out[]`, `inference_time_est`
-  - Log to: `runs/<run_id>_agent3_profile.json`
-- Goal: Identify where the time is spent. Is it:
-  - (A) LLM inference is inherently slow (unavoidable without model swap)
-  - (B) Prompt is doing unnecessary work (fixable by simplification)
-  - (C) Role descriptions are too verbose (fixable by truncation)
-  - (D) No caching of static data (fixable by caching)
-
-**Phase 2: Optimization (code change, post-profiling)**
-- Codex will NOT write code in this phase. Claude will review profiling results and decide which of 4 options to pursue:
-  1. **Simplify Agent 3 prompt** — remove reasoning steps, lower max_tokens — Low effort, Medium risk (may hurt accuracy)
-  2. **Pre-filter roles to top 4-5** before Agent 3 — pass only ranked roles from Stage 1 — Low effort, Medium risk (reduces comprehensiveness)
-  3. **Truncate role descriptions** — reduce context window by cutting verbose fields — Medium effort, Low risk
-  4. **Test faster model (Qwen 7B)** for Agent 3 — Medium effort, High risk (must validate accuracy doesn't drop)
-
-  Decision will be made by Claude post-profiling based on root cause from Phase 1.
-
-**Verify Phase 1:**
-- `runs/<run_id>_agent3_profile.json` exists and is readable
-- Profile shows time breakdown (LLM vs Python)
-- Token counts logged for both test profiles
-
-**Next step after Phase 1:** Claude reviews profiling results, makes decision on Phase 2 optimization, updates this item with chosen approach.
+**Next step (Phase 2 — optimization decision):**
+1. Run CMF-041 end-to-end on Nathanael + Amos profiles (6 roles each)
+2. Collect profiling artifacts and analyze where time is spent (LLM vs Python ratio, token counts)
+3. Claude decides optimization approach based on profiling root cause:
+   - (A) → Simplify Agent 3 prompt (low effort, medium risk)
+   - (B) → Pre-filter to top 4-5 roles (low effort, medium risk)
+   - (C) → Truncate role descriptions (medium effort, low risk)
+   - (D) → Test faster model like Qwen 7B (medium effort, high risk)
+4. Codex implements chosen fix in Phase 2 PR
 
 ---
 
@@ -108,13 +94,21 @@ how_to_use: |
 
 ---
 
-### CMF-033 — Validate barrier conditions against candidate profile before flagging as gaps
-**Type:** Prompt engineering
+### CMF-033 — Validate barrier conditions against candidate profile before flagging as gaps (PARTIAL FIX SHIPPED)
+**Type:** Prompt engineering + heuristic filtering
 **Files:** `agents/gap_analyzer.py`
 **Problem:** `barrier_conditions` from `role_taxonomy.json` are passed verbatim to the gap analyzer prompt and appear in `evidence_source` without verifying they actually apply to the candidate. Example: "No experience managing multi-workstream initiatives" appeared as a gap for a physician who managed multiple clinical departments simultaneously.
-**Fix:** In the gap_analyzer system prompt, add an explicit instruction before the barrier_conditions list:
-> "Before including any barrier condition as a gap, you MUST verify it applies to this specific candidate. Check the candidate profile and skills list. If you cannot cite specific evidence of absence from the profile, omit the barrier entirely. Do not flag barriers by default."
-**Verify:** After the prompt change, a second run on the Amos profile should not flag "no multi-workstream" as a gap given his clinical department management experience is in the profile.
+
+**Status:** Partially addressed in code alignment PR (2026-03-02):
+- Added `_is_unverified_barrier_gap()` heuristic filter that removes barrier-condition gaps lacking candidate-specific evidence markers (profile/skills/overlap/resume/linkedin/missing)
+- Filter runs post-LLM, catching cases where LLM flags barriers without grounding in profile
+
+**Remaining work (optional):**
+- Original spec: add explicit instruction to gap_analyzer system prompt ("Before including any barrier condition..."). This would be preventive (pre-LLM guardrail).
+- Current approach: post-LLM filter (reactive, heuristic-based).
+- If additional tests show the heuristic alone is insufficient, implement the prompt-side guard as well.
+
+**Verify (next run):** Run on Amos profile; should not flag "no multi-workstream" as a gap given clinical department management in profile.
 
 ---
 
@@ -175,6 +169,8 @@ how_to_use: |
 | #5 | CMF-035 | 2026-03-02 | `expected_signal_coverage` added to skill_overlap.py (cosine ≥ 0.50 vs profile text). Penalty applied in engine.py: `overlap_score = raw * (1 - 0.15 * (1 - coverage))`. `expected_signal_penalty_weight: 0.15` added to tuning.yaml with formula comment. |
 | #6 + patch | CMF-031 + CMF-030 straggler | 2026-03-02 | `HIPAA Compliance` renamed to `Healthcare Regulatory Compliance` in onet_skills.json + role_taxonomy.json. 7 aliases added to skill_aliases.json. Missing Part A alias (`clinical experience` → `Healthcare Domain Knowledge`) added as follow-up patch commit directly on main. |
 | #7 | CMF-038/039/040 | 2026-03-02 | Decision Sprint card (output.py + app.py + tuning.yaml). Skill graph singleton cache (matching/skill_graph.py). Stage 2 parallel agents via ThreadPoolExecutor. Follow-up: verify motivation guardrail direction (isdisjoint check) on real profile run; confirm section_8 vs section_7 display order is intentional. |
+| #9 | CMF-041 Phase 1 | 2026-03-02 | Agent 3 profiling instrumentation: per-role timing (LLM vs Python), token counts, sample-level diagnostics. Automatic export to `runs/<run_id>_agent3_profile.json`. Next: run on Nathanael + Amos profiles to diagnose bottleneck, then decide Phase 2 optimization approach (simplify prompt, pre-filter roles, truncate descriptions, or swap model). |
+| #10 | Alignment audit + fixes | 2026-03-02 | Code audit (docs/current-state-alignment-review.md + python-code-alignment-proposals.md). P0 fixes: Decision Sprint optimization-priority guardrail (was reading wrong path), checkpoint header made dynamic. P1 optimization: embedding precomputation for skill_overlap (reuse across role iterations). Gap analyzer barrier-condition heuristic filter added. README updated (section count 7→8). |
 
 ---
 
