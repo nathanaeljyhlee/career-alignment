@@ -525,11 +525,18 @@ def stage_3_role_matching(state: PipelineState) -> PipelineState:
                 )
                 state.agent3_profile = agent3_profile
 
-                profile_path = RUNS_DIR / f"{state.run_id}_agent3_profile.json"
-                RUNS_DIR.mkdir(exist_ok=True)
-                with open(profile_path, "w", encoding="utf-8") as pf:
-                    json.dump(agent3_profile, pf, indent=2, default=_json_serializer)
-                _log_event(state, "agent3_profile_saved", {"path": str(profile_path)})
+                try:
+                    profile_path = RUNS_DIR / f"{state.run_id}_agent3_profile.json"
+                    RUNS_DIR.mkdir(exist_ok=True)
+                    with open(profile_path, "w", encoding="utf-8") as pf:
+                        json.dump(agent3_profile, pf, indent=2, default=_json_serializer)
+                    _log_event(state, "agent3_profile_saved", {"path": str(profile_path)})
+                except Exception as e:
+                    state.warnings.append(f"Agent 3 profile export failed (non-fatal): {e}")
+                    _log_event(state, "agent3_profile_error", {
+                        "error": str(e), "traceback": traceback.format_exc(),
+                    })
+
                 state.fit_results = [r.model_dump() for r in fit_results]
 
                 _log_event(state, "agent3_complete", {
