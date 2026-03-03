@@ -276,16 +276,30 @@ def build_decision_sprint(result_bundle: dict[str, Any]) -> dict[str, Any]:
     scored.sort(key=lambda x: x[0], reverse=True)
 
     top_idx = 0
+    snapshot = result_bundle.get("section_1_snapshot", {}) or {}
+    # CMF P0: read optimization priorities from tally_intake path first
+    # with backward-compatible fallback to legacy top-level location.
+    top_constraints = {
+        c.strip().lower() for c in (
+            ((snapshot.get("tally_intake") or {}).get("optimization_priorities", []))
+            or snapshot.get("optimization_priorities", [])
+            or []
+        )
+        if isinstance(c, str) and c.strip()
+    }
+
+    # Prefer the highest decision_score role that does not conflict with
+    # explicit candidate constraints. Fallback to the top-scored role.
     for i, (_, _, entry) in enumerate(scored):
-        fit = entry.get("fit") or {}
         role = entry.get("role") or {}
         motivation = role.get("motivation_fit") or {}
-        role_constraints = {c for c in motivation.get("constraints", []) if isinstance(c, str) and c}
-        top_constraints = {c for c in (result_bundle.get("section_1_snapshot", {}).get("optimization_priorities", []) or []) if isinstance(c, str)}
+        role_constraints = {
+            c.strip().lower()
+            for c in motivation.get("constraints", [])
+            if isinstance(c, str) and c.strip()
+        }
         if top_constraints and role_constraints and role_constraints.isdisjoint(top_constraints):
-            if i + 1 < len(scored):
-                top_idx = i + 1
-            break
+            continue
         top_idx = i
         break
 
@@ -364,7 +378,7 @@ def _render_decision_sprint_text(role_name: str, conf_band: str, low_conf: bool,
                                  project_block: str, market_block: str, pipeline_block: str, checkpoint_days: int) -> str:
     mode = "Explore" if low_conf else "Commit"
     lines = [
-        "Decision Sprint (28-Day Checkpoint)",
+        f"Decision Sprint ({checkpoint_days}-Day Checkpoint)",
         f"1) 90-day role bet: {mode} on {role_name} ({conf_band} confidence).",
         "2) Top-2 skill closures:",
     ]

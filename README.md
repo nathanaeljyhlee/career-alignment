@@ -13,9 +13,9 @@ Upload a resume (PDF) and write a brief "why" statement. The engine runs a 3-sta
 1. **Input Processing** — Extracts skills via alias matching, LLM extraction, transferable language translation, and O*NET normalization. Builds a co-occurrence skill graph to infer skills demonstrated but not explicitly stated.
 2. **Profile Synthesis** — Two LLM agents produce a structured skill cluster profile and a 7-dimension motivational profile from the why statement.
 3. **Role Matching** — Deterministic skill overlap scoring (with expected-signal coverage penalty) anchors LLM fit classification. Two more agents run self-consistency role comparison and gap severity analysis. A cross-role analysis identifies shared gaps, leverage skills, and effort-to-fit rankings.
-4. **Output Assembly** — Structured result assembled and rendered as 7 report sections in the UI; exportable as PDF.
+4. **Output Assembly** — Structured result assembled and rendered as 8 report sections in the UI; exportable as PDF.
 
-Output: 7 sections covering skill profile, motivation fit, win-now roles, pivot roles, gap analysis, leverage moves, and a cross-role comparative summary.
+Output: 8 sections covering snapshot, skill profile, win-now roles, pivot roles, gap analysis, strategic recommendation, cross-role comparative summary, and a Decision Sprint action card.
 
 ---
 
@@ -91,7 +91,7 @@ candidate-market-fit/
 ├── app.py                    # Streamlit UI
 ├── config.py                 # Path config + tuning.yaml loader
 ├── engine.py                 # Pipeline orchestrator (4 stages, auto-logging)
-├── output.py                 # Result formatter (7 sections)
+├── output.py                 # Result formatter (8 sections + Decision Sprint)
 ├── parsers.py                # PDF parsing (pdfplumber)
 ├── pdf_export.py             # PDF export from output dict
 ├── skills.py                 # Skill extraction + O*NET normalization + transfer labels
@@ -113,7 +113,9 @@ candidate-market-fit/
 ├── scripts/
 │   └── validate_role_taxonomy.py  # Schema + governance lint
 ├── docs/
-│   └── taxonomy-governance.md
+│   ├── taxonomy-governance.md
+│   ├── current-state-alignment-review.md
+│   └── python-code-alignment-proposals.md
 └── data/
     ├── role_taxonomy.json         # 20 MBA roles (expanding to 80)
     ├── role_taxonomy.schema.json  # JSON schema for validation
@@ -128,6 +130,10 @@ candidate-market-fit/
 Active development. Pipeline is functional and has been validated on multiple real user profiles including a non-builder (clinical-to-MBA pivot candidate). All core Must items from initial build are resolved.
 
 **Full feature roadmap:** [`feature-roadmap.csv`](feature-roadmap.csv) — MoSCoW prioritized.
+
+**Current architecture/product alignment review:** [`docs/current-state-alignment-review.md`](docs/current-state-alignment-review.md).
+
+**Python file-by-file proposal backlog:** [`docs/python-code-alignment-proposals.md`](docs/python-code-alignment-proposals.md).
 
 Current focus:
 - **CMF-037** — Expand role taxonomy from 20 to 80 roles (internship / FT tracks, MBA-specific, Babson entrepreneurial)

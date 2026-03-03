@@ -35,7 +35,7 @@ from agents.gap_analyzer import analyze_gaps_batch, RoleGapAnalysis
 
 from matching.embeddings import match_roles
 from matching.confidence import compute_confidence_band, assess_structural_gap
-from matching.skill_overlap import compute_skill_overlap
+from matching.skill_overlap import compute_skill_overlap, build_overlap_context
 from matching.skill_graph import get_skill_graph, infer_from_graph
 from analysis.cross_role import cross_role_analysis, prioritize_gaps_by_graph
 
@@ -468,11 +468,16 @@ def stage_3_role_matching(state: PipelineState) -> PipelineState:
                 skill_overlaps: dict[str, dict] = {}
                 overlap_cfg = get_tuning("skill_overlap") or {}
                 penalty_weight = overlap_cfg.get("expected_signal_penalty_weight", 0.15)
+                overlap_context = build_overlap_context(
+                    state.skills_flat,
+                    candidate_profile=state.profile,
+                )
                 for role in state.matched_roles:
                     overlap = compute_skill_overlap(
                         state.skills_flat,
                         role,
                         candidate_profile=state.profile,
+                        overlap_context=overlap_context,
                     )
 
                     raw_overlap_score = overlap.get("overlap_score", 0.0)

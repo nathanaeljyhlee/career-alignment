@@ -22,6 +22,8 @@ logger = logging.getLogger(__name__)
 
 def _embed_texts(texts: list[str]) -> np.ndarray:
     """Embed texts using Ollama nomic-embed-text. Returns L2-normalized float32 array."""
+    if not texts:
+        return np.empty((0, 0), dtype=np.float32)
     model_name = get_tuning("models", "embedding_model") or "nomic-embed-text"
     response = ollama.embed(model=model_name, input=texts)
     embeddings = np.array(response["embeddings"], dtype=np.float32)
@@ -41,52 +43,8 @@ def _substring_match(candidate_names: set[str], role_skill: str) -> bool:
     return False
 
 
-def compute_skill_overlap(
-    candidate_skills: list[dict],
-    role: dict,
-    candidate_profile: dict[str, Any] | None = None,
-    embedding_threshold: float | None = None,
-) -> dict:
-    """
-    Compute weighted overlap between candidate skills and role requirements.
-
-    Args:
-        candidate_skills: NormalizedSkill dicts from skills_flat
-        role: Single role dict from role_taxonomy.json
-        embedding_threshold: Cosine similarity threshold for embedding fallback
-
-    Returns:
-        {
-            "required_coverage": float,     # 0-1, fraction of required_skills matched
-            "preferred_coverage": float,    # 0-1, fraction of preferred_skills matched
-            "expected_signal_coverage": float,  # 0-1, expected_signals coverage vs profile text embeddings
-            "overlap_score": float,         # required_weight * required + preferred_weight * preferred (from tuning.yaml)
-            "matched_required": list[str],
-            "missing_required": list[str],
-            "matched_preferred": list[str],
-            "missing_preferred": list[str],
-        }
-    """
-    overlap_cfg = get_tuning("skill_overlap") or {}
-    if embedding_threshold is None:
-        embedding_threshold = overlap_cfg.get("embedding_threshold", 0.80)
-    required_weight = overlap_cfg.get("required_weight", 0.70)
-    preferred_weight = overlap_cfg.get("preferred_weight", 0.30)
-    expected_signal_threshold = 0.50
-
-    # Build candidate skill name set (canonical + original mentions, lowercased)
-    candidate_names: set[str] = set()
-    for s in candidate_skills:
-        if s.get("canonical_name"):
-            candidate_names.add(s["canonical_name"].lower())
-        if s.get("original_mention"):
-            candidate_names.add(s["original_mention"].lower())
-
-    required_skills: list[str] = role.get("required_skills", [])
-    preferred_skills: list[str] = role.get("preferred_skills", [])
-    expected_signals: list[str] = role.get("expected_signals", [])
-
-    # Build compact profile text snippets for expected signal semantic coverage.
+def _build_profile_text_chunks(candidate_profile: dict[str, Any] | None, candidate_names: set[str]) -> list[str]:
+    """Build compact profile text snippets for expected signal semantic coverage."""
     profile_text_chunks: list[str] = []
     if candidate_profile:
         narrative_summary = candidate_profile.get("narrative_summary")
@@ -120,6 +78,89 @@ def compute_skill_overlap(
     if not profile_text_chunks:
         profile_text_chunks = list(candidate_names)
 
+    return profile_text_chunks
+
+
+def build_overlap_context(
+    candidate_skills: list[dict],
+    candidate_profile: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Precompute candidate-side overlap artifacts for reuse across roles."""
+    candidate_names: set[str] = set()
+    for s in candidate_skills:
+        if s.get("canonical_name"):
+            candidate_names.add(s["canonical_name"].lower())
+        if s.get("original_mention"):
+            candidate_names.add(s["original_mention"].lower())
+
+    candidate_name_list = list(candidate_names)
+    profile_text_chunks = _build_profile_text_chunks(candidate_profile, candidate_names)
+
+    context: dict[str, Any] = {
+        "candidate_names": candidate_names,
+        "candidate_name_list": candidate_name_list,
+        "profile_text_chunks": profile_text_chunks,
+        "candidate_skill_embeddings": None,
+        "profile_text_embeddings": None,
+    }
+
+    try:
+        if candidate_name_list:
+            context["candidate_skill_embeddings"] = _embed_texts(candidate_name_list)
+    except Exception as e:
+        logger.warning("Candidate skill embedding precompute failed (non-fatal): %s", e)
+
+    try:
+        if profile_text_chunks:
+            context["profile_text_embeddings"] = _embed_texts(profile_text_chunks)
+    except Exception as e:
+        logger.warning("Profile text embedding precompute failed (non-fatal): %s", e)
+
+    return context
+
+
+def compute_skill_overlap(
+    candidate_skills: list[dict],
+    role: dict,
+    candidate_profile: dict[str, Any] | None = None,
+    embedding_threshold: float | None = None,
+    overlap_context: dict[str, Any] | None = None,
+) -> dict:
+    """
+    Compute weighted overlap between candidate skills and role requirements.
+
+    Args:
+        candidate_skills: NormalizedSkill dicts from skills_flat
+        role: Single role dict from role_taxonomy.json
+        embedding_threshold: Cosine similarity threshold for embedding fallback
+        overlap_context: Optional precomputed context from build_overlap_context()
+
+    Returns:
+        {
+            "required_coverage": float,
+            "preferred_coverage": float,
+            "expected_signal_coverage": float,
+            "overlap_score": float,
+            "matched_required": list[str],
+            "missing_required": list[str],
+            "matched_preferred": list[str],
+            "missing_preferred": list[str],
+        }
+    """
+    overlap_cfg = get_tuning("skill_overlap") or {}
+    if embedding_threshold is None:
+        embedding_threshold = overlap_cfg.get("embedding_threshold", 0.80)
+    required_weight = overlap_cfg.get("required_weight", 0.70)
+    preferred_weight = overlap_cfg.get("preferred_weight", 0.30)
+    expected_signal_threshold = overlap_cfg.get("expected_signal_threshold", 0.50)
+
+    context = overlap_context or build_overlap_context(candidate_skills, candidate_profile)
+    candidate_names: set[str] = context.get("candidate_names") or set()
+
+    required_skills: list[str] = role.get("required_skills", [])
+    preferred_skills: list[str] = role.get("preferred_skills", [])
+    expected_signals: list[str] = role.get("expected_signals", [])
+
     # Phase 1: exact + substring matching
     matched_req: list[str] = []
     missing_req: list[str] = []
@@ -139,14 +180,16 @@ def compute_skill_overlap(
 
     # Phase 2: embedding fallback for remaining unmatched skills
     all_missing = missing_req + missing_pref
-    if all_missing and candidate_names:
+    candidate_name_list = context.get("candidate_name_list") or []
+    candidate_skill_embeddings = context.get("candidate_skill_embeddings")
+    if all_missing and candidate_name_list:
         try:
-            candidate_name_list = list(candidate_names)
-            candidate_embeddings = _embed_texts(candidate_name_list)
+            if candidate_skill_embeddings is None:
+                candidate_skill_embeddings = _embed_texts(candidate_name_list)
             role_embeddings = _embed_texts(all_missing)
 
             # Similarity matrix: shape (n_missing_role_skills, n_candidate_skills)
-            sim_matrix = role_embeddings @ candidate_embeddings.T
+            sim_matrix = role_embeddings @ candidate_skill_embeddings.T
 
             still_missing_req: list[str] = []
             for i, skill in enumerate(missing_req):
@@ -170,16 +213,18 @@ def compute_skill_overlap(
 
         except Exception as e:
             logger.warning("Embedding fallback in skill_overlap failed (non-fatal): %s", e)
-            # Keep substring-based results as-is
 
-    # Compute coverage scores
     required_coverage = len(matched_req) / len(required_skills) if required_skills else 1.0
     preferred_coverage = len(matched_pref) / len(preferred_skills) if preferred_skills else 1.0
+
     expected_signal_coverage = 1.0
+    profile_text_chunks = context.get("profile_text_chunks") or []
+    profile_text_embeddings = context.get("profile_text_embeddings")
     if expected_signals and profile_text_chunks:
         try:
             expected_signal_embeddings = _embed_texts(expected_signals)
-            profile_text_embeddings = _embed_texts(profile_text_chunks)
+            if profile_text_embeddings is None:
+                profile_text_embeddings = _embed_texts(profile_text_chunks)
             signal_sim_matrix = expected_signal_embeddings @ profile_text_embeddings.T
             signal_matches = sum(
                 1 for i in range(len(expected_signals))
