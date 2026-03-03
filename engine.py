@@ -102,6 +102,7 @@ class PipelineState:
     warnings: list[str] = field(default_factory=list)
     run_log: list[dict] = field(default_factory=list)
     run_id: str = ""
+    agent3_profile: dict[str, Any] | None = None
 
 
 def _log_event(state: PipelineState, event: str, data: dict | None = None):
@@ -510,12 +511,25 @@ def stage_3_role_matching(state: PipelineState) -> PipelineState:
         with _timed_substep(state, "agent3_role_comparator"):
             try:
                 tc = state.tally_context
+                agent3_profile: dict[str, Any] = {
+                    "run_id": state.run_id,
+                    "profile_name": (state.tally_context.name if state.tally_context else None) or "unknown",
+                    "timestamp": datetime.now().isoformat(),
+                }
                 fit_results = compare_roles(
                     state.profile, state.motivation or {},
                     state.matched_roles, state.mba_year,
                     skill_overlaps=state.skill_overlaps,
                     optimization_priorities=tc.optimization_priorities if tc else None,
+                    agent3_profile=agent3_profile,
                 )
+                state.agent3_profile = agent3_profile
+
+                profile_path = RUNS_DIR / f"{state.run_id}_agent3_profile.json"
+                RUNS_DIR.mkdir(exist_ok=True)
+                with open(profile_path, "w", encoding="utf-8") as pf:
+                    json.dump(agent3_profile, pf, indent=2, default=_json_serializer)
+                _log_event(state, "agent3_profile_saved", {"path": str(profile_path)})
                 state.fit_results = [r.model_dump() for r in fit_results]
 
                 _log_event(state, "agent3_complete", {
@@ -663,6 +677,7 @@ def _save_run_log(state: PipelineState) -> Path:
             "gap_results": state.gap_results,
             "confidence_results": state.confidence_results,
             "structural_gap_warning": state.structural_gap_warning,
+            "agent3_profile": state.agent3_profile,
         },
         "run_log": state.run_log,
     }
@@ -718,6 +733,7 @@ def _save_run_log(state: PipelineState) -> Path:
         "fit_results": state.fit_results,
         "gap_results": state.gap_results,
         "confidence_results": state.confidence_results,
+        "agent3_profile": state.agent3_profile,
         "cross_role": state.cross_role,
         "skill_graph_stats": {
             "total_skills_in_graph": len((state.skill_graph or {}).get("adjacency", {})),
