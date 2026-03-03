@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from engine import run_pipeline, PipelineState
 from output import build_output
 from config import get_tuning, OLLAMA_ENDPOINT, APP_DIR
+from tally_intake import list_tally_submissions, process_submission, _parse_submission, _load_processed
 
 # Configure logging to terminal
 logging.basicConfig(
@@ -148,6 +149,83 @@ with st.sidebar:
                 st.rerun()
         else:
             st.caption("No previous runs yet.")
+
+    st.divider()
+    st.caption("Tally Intake")
+    st.session_state.setdefault("tally_submissions", None)
+    st.session_state.setdefault("tally_qmap", None)
+    st.session_state.setdefault("tally_processed", set())
+
+    dry_run_tally = st.checkbox("Use dry-run fixture", value=False, key="tally_dry_run")
+    if st.button("Refresh Tally submissions", use_container_width=True):
+        try:
+            subs, qmap, processed = list_tally_submissions(dry_run=dry_run_tally)
+            st.session_state["tally_submissions"] = subs
+            st.session_state["tally_qmap"] = qmap
+            st.session_state["tally_processed"] = processed
+            st.success(f"Loaded {len(subs)} submission(s).")
+        except Exception as exc:
+            st.error(f"Failed to load Tally submissions: {exc}")
+
+    tally_submissions = st.session_state.get("tally_submissions")
+    tally_qmap = st.session_state.get("tally_qmap")
+    tally_processed = st.session_state.get("tally_processed") or set()
+
+    if tally_submissions and tally_qmap:
+        new_subs = [s for s in tally_submissions if s.get("id") not in tally_processed]
+        st.caption(f"New submissions: {len(new_subs)}")
+        options = []
+        for sub in new_subs:
+            parsed = _parse_submission(sub, tally_qmap)
+            name = parsed.get("Name") or "Unknown"
+            submitted = parsed.get("_submitted_at", "")[:10]
+            options.append((sub["id"], f"{name} ({submitted})"))
+
+        if options:
+            selected_id = st.selectbox(
+                "Submission to process",
+                options=[o[0] for o in options],
+                format_func=lambda sid: next(lbl for oid, lbl in options if oid == sid),
+                key="tally_selected_id",
+            )
+            linkedin_override = st.file_uploader(
+                "LinkedIn PDF override (optional)",
+                type=["pdf"],
+                key="tally_linkedin_override",
+                help="Upload LinkedIn PDF for the selected Tally submission before running.",
+            )
+            if st.button("Run selected Tally submission", use_container_width=True, type="primary"):
+                sub = next((s for s in new_subs if s["id"] == selected_id), None)
+                if not sub:
+                    st.error("Selected submission no longer available.")
+                else:
+                    linkedin_path = None
+                    if linkedin_override:
+                        tmp = tempfile.NamedTemporaryFile(suffix=".pdf", delete=False)
+                        tmp.write(linkedin_override.getbuffer())
+                        tmp.close()
+                        linkedin_path = Path(tmp.name)
+
+                    try:
+                        processed_ref = _load_processed()
+                        ok = process_submission(
+                            sub,
+                            tally_qmap,
+                            api_key="",
+                            processed_ids=processed_ref,
+                            dry_run=dry_run_tally,
+                            linkedin_path_override=linkedin_path,
+                            interactive_linkedin_prompt=False,
+                            mark_processed=not dry_run_tally,
+                        )
+                        if ok:
+                            st.success("Tally submission processed. Check runs/ for output log.")
+                        else:
+                            st.warning("Submission did not complete successfully. Check terminal logs.")
+                    except Exception as exc:
+                        st.error(f"Failed to process submission: {exc}")
+        else:
+            st.caption("No new submissions available.")
 
 # --- Main UI ---
 st.title("Candidate-Market Fit Engine")

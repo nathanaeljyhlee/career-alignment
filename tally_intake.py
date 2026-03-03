@@ -186,9 +186,78 @@ def _prompt_linkedin(sub_id: str, name: str) -> Path | None:
         return None
 
 
+def _build_tally_context(parsed_submission: dict) -> tuple[TallyContext, str, str]:
+    """Convert parsed Tally submission dict into TallyContext + pipeline inputs."""
+    stage_raw_list = parsed_submission.get(Q_STAGE)
+    stage_raw = stage_raw_list[0] if isinstance(stage_raw_list, list) and stage_raw_list else ""
+    mba_year = MBA_YEAR_MAP.get(stage_raw, "1y_internship")
+
+    why_text = (parsed_submission.get(Q_VISION) or "").strip()
+    target_role_text = (parsed_submission.get(Q_TARGET) or "").strip()
+    target_industry = (parsed_submission.get(Q_INDUSTRY) or "").strip()
+    linkedin_url = parsed_submission.get(Q_LINKEDIN_URL) or ""
+
+    geo_list = parsed_submission.get(Q_GEO)
+    geo_str = geo_list[0] if isinstance(geo_list, list) and geo_list else ""
+    geo_detail = (parsed_submission.get(Q_GEO_DETAIL) or "").strip()
+    geography = f"{geo_str}: {geo_detail}".strip(": ") if geo_detail else geo_str
+
+    opt_list = parsed_submission.get(Q_PRIORITIES)
+    optimization_priorities = opt_list if isinstance(opt_list, list) else []
+
+    desired_list = parsed_submission.get(Q_DESIRED)
+    desired_output = desired_list if isinstance(desired_list, list) else []
+
+    self_score_raw = parsed_submission.get(Q_SELF_SCORE)
+    try:
+        self_assessment_score = int(self_score_raw) if self_score_raw is not None else None
+    except (TypeError, ValueError):
+        self_assessment_score = None
+    self_assessment_reason = (parsed_submission.get(Q_SELF_REASON) or "").strip()
+
+    extra_context = (parsed_submission.get(Q_EXTRA) or "").strip()
+    if extra_context.lower() in ("n/a", "none", "na", ""):
+        extra_context = ""
+
+    tally_context = TallyContext(
+        submission_id=parsed_submission.get("_id", ""),
+        name=parsed_submission.get(Q_NAME) or "Unknown",
+        email=parsed_submission.get(Q_EMAIL) or "",
+        target_role_text=target_role_text,
+        target_industry=target_industry,
+        geography=geography,
+        optimization_priorities=optimization_priorities,
+        self_assessment_score=self_assessment_score,
+        self_assessment_reason=self_assessment_reason,
+        desired_output=desired_output,
+        extra_context=extra_context,
+        linkedin_url=linkedin_url,
+    )
+    return tally_context, why_text, mba_year
+
+
+def list_tally_submissions(dry_run: bool = False) -> tuple[list[dict], dict[str, tuple[str, str]], set[str]]:
+    """Load submissions, question map, and processed IDs for UI/API consumers."""
+    if dry_run:
+        subs, qmap = _load_fixture_submissions(DRY_RUN_FIXTURE_FILE)
+    else:
+        api_key = _load_api_key()
+        subs, qmap = _fetch_submissions(api_key)
+    return subs, qmap, _load_processed()
+
+
 # --- Core processor ---
 
-def process_submission(sub: dict, qmap: dict, api_key: str, processed_ids: set, dry_run: bool = False) -> bool:
+def process_submission(
+    sub: dict,
+    qmap: dict,
+    api_key: str,
+    processed_ids: set,
+    dry_run: bool = False,
+    linkedin_path_override: Path | None = None,
+    interactive_linkedin_prompt: bool = True,
+    mark_processed: bool = True,
+) -> bool:
     """Process one submission end-to-end. Returns True if pipeline ran successfully."""
     p = _parse_submission(sub, qmap)
     sub_id = p["_id"]
@@ -198,41 +267,15 @@ def process_submission(sub: dict, qmap: dict, api_key: str, processed_ids: set, 
     email = p.get(Q_EMAIL) or ""
     linkedin_url = p.get(Q_LINKEDIN_URL) or ""
 
-    # MBA year
+    tally_context, why_text, mba_year = _build_tally_context(p)
     stage_raw_list = p.get(Q_STAGE)
     stage_raw = stage_raw_list[0] if isinstance(stage_raw_list, list) and stage_raw_list else ""
-    mba_year = MBA_YEAR_MAP.get(stage_raw, "1y_internship")
-
-    # Text fields
-    why_text = (p.get(Q_VISION) or "").strip()
-    target_role_text = (p.get(Q_TARGET) or "").strip()
-    target_industry = (p.get(Q_INDUSTRY) or "").strip()
-
-    # Geography
-    geo_list = p.get(Q_GEO)
-    geo_str = geo_list[0] if isinstance(geo_list, list) and geo_list else ""
-    geo_detail = (p.get(Q_GEO_DETAIL) or "").strip()
-    geography = f"{geo_str}: {geo_detail}".strip(": ") if geo_detail else geo_str
-
-    # Checkboxes
-    opt_list = p.get(Q_PRIORITIES)
-    optimization_priorities = opt_list if isinstance(opt_list, list) else []
-
-    desired_list = p.get(Q_DESIRED)
-    desired_output = desired_list if isinstance(desired_list, list) else []
-
-    # Self-assessment
-    self_score_raw = p.get(Q_SELF_SCORE)
-    try:
-        self_assessment_score = int(self_score_raw) if self_score_raw is not None else None
-    except (TypeError, ValueError):
-        self_assessment_score = None
-    self_assessment_reason = (p.get(Q_SELF_REASON) or "").strip()
-
-    # Extra context
-    extra_context = (p.get(Q_EXTRA) or "").strip()
-    if extra_context.lower() in ("n/a", "none", "na", ""):
-        extra_context = ""
+    target_role_text = tally_context.target_role_text
+    target_industry = tally_context.target_industry
+    geography = tally_context.geography
+    optimization_priorities = tally_context.optimization_priorities
+    self_assessment_score = tally_context.self_assessment_score
+    desired_output = tally_context.desired_output
 
     # Print summary
     target_preview = target_role_text[:80] + "..." if len(target_role_text) > 80 else target_role_text
@@ -256,23 +299,16 @@ def process_submission(sub: dict, qmap: dict, api_key: str, processed_ids: set, 
         return False
 
     # Prompt for LinkedIn PDF
-    linkedin_path = _prompt_linkedin(sub_id, name)
-
-    # Build TallyContext
-    tally_context = TallyContext(
-        submission_id=sub_id,
-        name=name,
-        email=email,
-        target_role_text=target_role_text,
-        target_industry=target_industry,
-        geography=geography,
-        optimization_priorities=optimization_priorities,
-        self_assessment_score=self_assessment_score,
-        self_assessment_reason=self_assessment_reason,
-        desired_output=desired_output,
-        extra_context=extra_context,
-        linkedin_url=linkedin_url,
-    )
+    linkedin_path = linkedin_path_override
+    if linkedin_path is None and interactive_linkedin_prompt:
+        linkedin_path = _prompt_linkedin(sub_id, name)
+    elif linkedin_path is None:
+        print("  No LinkedIn PDF override provided. Pipeline will run on resume only.")
+    elif not linkedin_path.exists():
+        print(f"  WARNING: LinkedIn PDF override does not exist: {linkedin_path}")
+        linkedin_path = None
+    else:
+        print(f"  LinkedIn PDF override: {linkedin_path.name} ({linkedin_path.stat().st_size:,} bytes)")
 
     # Run pipeline
     print(f"\n  Running CMF pipeline for {name}...")
@@ -307,7 +343,7 @@ def process_submission(sub: dict, qmap: dict, api_key: str, processed_ids: set, 
     print(f"  Total time: {elapsed:.0f}s")
 
     # Mark as processed
-    if dry_run:
+    if dry_run or not mark_processed:
         print("  Dry-run mode: skipping processed_submissions.json update.")
     else:
         processed_ids.add(sub_id)
