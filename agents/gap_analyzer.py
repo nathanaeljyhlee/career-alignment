@@ -149,6 +149,23 @@ def _format_overlap_for_gap_prompt(skill_overlap: dict | None) -> str:
     return "\n".join(lines)
 
 
+
+
+def _is_unverified_barrier_gap(gap: GapItem, role: dict[str, Any]) -> bool:
+    """Heuristic filter: barrier-condition gaps must cite candidate-specific evidence."""
+    barriers = [str(b).strip().lower() for b in role.get("barrier_conditions", []) if str(b).strip()]
+    if not barriers:
+        return False
+    desc = (gap.description or "").lower()
+    matched_barrier = any(b in desc or desc in b for b in barriers if len(b) >= 12)
+    if not matched_barrier:
+        return False
+
+    evidence = (gap.evidence_source or "").lower()
+    evidence_markers = ("profile", "skills", "overlap", "resume", "linkedin", "missing")
+    return not any(marker in evidence for marker in evidence_markers)
+
+
 def analyze_gaps(
     profile: dict[str, Any],
     skills: list[dict[str, Any]],
@@ -216,6 +233,9 @@ def analyze_gaps(
                     m in g.description.lower() for m in matched_lower if len(m) >= 8
                 )
             ]
+
+        # Filter barrier-condition gaps lacking candidate-specific evidence
+        analysis.gaps = [g for g in analysis.gaps if not _is_unverified_barrier_gap(g, role)]
 
         # Recompute composite severity using tuning weights
         if analysis.gaps:

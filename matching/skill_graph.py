@@ -16,7 +16,7 @@ No external dependencies — pure Python with collections.
 import json
 import logging
 import sys
-from collections import defaultdict
+from collections import defaultdict, deque
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -137,9 +137,9 @@ def _find_clusters(adjacency: dict, roles: list[dict]) -> list[dict]:
 
     def bfs(start: str) -> set[str]:
         component: set[str] = set()
-        queue = [start]
+        queue = deque([start])
         while queue:
-            node = queue.pop(0)
+            node = queue.popleft()
             if node in visited:
                 continue
             visited.add(node)

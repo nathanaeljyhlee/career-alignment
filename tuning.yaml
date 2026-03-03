@@ -328,6 +328,10 @@ skill_overlap:
   # exact and substring matching fail). Higher = more conservative matches.
   embedding_threshold: 0.80
 
+  # Minimum cosine similarity for considering an expected_signal semantically
+  # represented in candidate profile text chunks.
+  expected_signal_threshold: 0.50
+
   # Penalty applied when role expected signals are weakly represented in the
   # synthesized profile text. overlap_score is multiplied by:
   #   (1 - expected_signal_penalty_weight * (1 - expected_signal_coverage))
