@@ -8,6 +8,7 @@ Outputs: fit classification, evidence, confidence bands per role.
 """
 import json
 import logging
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 
@@ -176,6 +177,7 @@ def _single_comparison(
     temperature: float,
     skill_overlap: dict | None = None,
     optimization_priorities: list[str] | None = None,
+    sample_profile: dict[str, Any] | None = None,
 ) -> RoleFitResult | None:
     """Run a single reasoning path for role comparison."""
     # Build optional optimization priorities block (from Tally intake)
@@ -202,14 +204,20 @@ def _single_comparison(
         role_json=role_json,
     )
 
+    prompt_token_estimate = max(1, len(prompt) // 4)
+    total_start = time.perf_counter()
+
     try:
+        llm_start = time.perf_counter()
         response = ollama.chat(
             model=reasoning_model(),
             messages=[{"role": "user", "content": prompt}],
             format=RoleFitResult.model_json_schema(),
             options=reasoning_options({"temperature": temperature, "num_predict": 2048}),
         )
+        llm_elapsed = time.perf_counter() - llm_start
         content = response["message"]["content"]
+        output_token_estimate = max(1, len(content) // 4)
         result = RoleFitResult.model_validate_json(content)
 
         # Enforce composite score calculation from tuning weights
@@ -226,10 +234,34 @@ def _single_comparison(
         else:
             result.fit_band = "developmental"
 
+        if sample_profile is not None:
+            total_elapsed = time.perf_counter() - total_start
+            sample_profile.update(
+                {
+                    "status": "ok",
+                    "llm_time_s": round(llm_elapsed, 3),
+                    "total_time_s": round(total_elapsed, 3),
+                    "python_time_s": round(max(0.0, total_elapsed - llm_elapsed), 3),
+                    "tokens_in": response.get("prompt_eval_count") or prompt_token_estimate,
+                    "tokens_out": response.get("eval_count") or output_token_estimate,
+                    "tokens_in_estimate": prompt_token_estimate,
+                    "tokens_out_estimate": output_token_estimate,
+                }
+            )
+
         return result
 
     except Exception as e:
         logger.error("Single comparison failed: %s", e)
+        if sample_profile is not None:
+            sample_profile.update(
+                {
+                    "status": "error",
+                    "error": str(e),
+                    "total_time_s": round(time.perf_counter() - total_start, 3),
+                    "tokens_in_estimate": prompt_token_estimate,
+                }
+            )
         return None
 
 
@@ -240,6 +272,7 @@ def compare_role(
     mba_year: str = "1y_internship",
     skill_overlap: dict | None = None,
     optimization_priorities: list[str] | None = None,
+    profiler: dict[str, Any] | None = None,
 ) -> AggregatedRoleFit:
     """Compare candidate against a single role with self-consistency sampling.
 
@@ -264,15 +297,21 @@ def compare_role(
     motivation_json = json.dumps(motivation, indent=2)
     role_json = json.dumps(role, indent=2)
 
+    role_start = time.perf_counter()
+
     # Run N independent reasoning paths
     results: list[RoleFitResult] = []
+    sample_profiles: list[dict[str, Any]] = []
     for i in range(n_samples):
+        sample_profile: dict[str, Any] = {"sample_index": i, "temperature": sc_temperature}
         result = _single_comparison(
             profile_json, motivation_json, role_json,
             fit_weights, fit_bands, sc_temperature,
             skill_overlap=skill_overlap,
             optimization_priorities=optimization_priorities,
+            sample_profile=sample_profile,
         )
+        sample_profiles.append(sample_profile)
         if result:
             results.append(result)
 
@@ -304,7 +343,7 @@ def compare_role(
     # Use the result closest to the average composite as the representative
     representative = min(results, key=lambda r: abs(r.composite_score - avg_composite))
 
-    return AggregatedRoleFit(
+    aggregate = AggregatedRoleFit(
         role_id=role.get("role_id", ""),
         role_name=role.get("role_name", ""),
         composite_score=round(avg_composite, 3),
@@ -317,6 +356,29 @@ def compare_role(
         evidence=representative.evidence,
     )
 
+    if profiler is not None:
+        llm_time = sum(s.get("llm_time_s", 0.0) for s in sample_profiles if s.get("status") == "ok")
+        sample_total_time = sum(s.get("total_time_s", 0.0) for s in sample_profiles)
+        profiler.update({
+            "status": "ok",
+            "role_id": role.get("role_id", ""),
+            "role_name": role.get("role_name", ""),
+            "n_samples": n_samples,
+            "successful_samples": len(results),
+            "agreement_ratio": round(agreement_ratio, 3),
+            "fit_band": majority_band,
+            "composite_score": round(avg_composite, 3),
+            "total_time_s": round(time.perf_counter() - role_start, 3),
+            "sample_time_s": round(sample_total_time, 3),
+            "llm_time_s": round(llm_time, 3),
+            "python_time_s": round(max(0.0, sample_total_time - llm_time), 3),
+            "tokens_in": sum(s.get("tokens_in", 0) for s in sample_profiles if s.get("status") == "ok"),
+            "tokens_out": sum(s.get("tokens_out", 0) for s in sample_profiles if s.get("status") == "ok"),
+            "samples": sample_profiles,
+        })
+
+    return aggregate
+
 
 def compare_roles(
     profile: dict[str, Any],
@@ -325,29 +387,62 @@ def compare_roles(
     mba_year: str = "1y_internship",
     skill_overlaps: dict[str, dict] | None = None,
     optimization_priorities: list[str] | None = None,
+    agent3_profile: dict[str, Any] | None = None,
 ) -> list[AggregatedRoleFit]:
     """Compare candidate against multiple roles in parallel. Returns sorted by composite score."""
     matching_cfg = get_tuning("role_matching") or {}
     max_workers = matching_cfg.get("parallel_workers", 3)
 
     results: list[AggregatedRoleFit] = []
+    role_profiles: list[dict[str, Any]] = []
 
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        future_to_role = {
-            executor.submit(
+        future_to_role: dict[Any, dict[str, Any]] = {}
+        future_to_profile: dict[Any, dict[str, Any]] = {}
+        for role in roles:
+            profiler: dict[str, Any] = {}
+            future = executor.submit(
                 compare_role, profile, motivation, role, mba_year,
                 (skill_overlaps or {}).get(role.get("role_id", "")),
                 optimization_priorities,
-            ): role
-            for role in roles
-        }
+                profiler,
+            )
+            future_to_role[future] = role
+            future_to_profile[future] = profiler
+
         for future in as_completed(future_to_role):
             role = future_to_role[future]
+            profiler = future_to_profile[future]
             try:
                 result = future.result()
                 results.append(result)
+                role_profiles.append(profiler)
             except Exception as e:
+                profiler.update({
+                    "status": "error",
+                    "role_id": role.get("role_id", ""),
+                    "role_name": role.get("role_name", ""),
+                    "error": str(e),
+                })
+                role_profiles.append(profiler)
                 logger.error("Failed to compare role %s: %s", role.get("role_id"), e)
+
+    if agent3_profile is not None:
+        role_profiles.sort(key=lambda r: r.get("total_time_s", 0.0), reverse=True)
+        total_time = sum(r.get("total_time_s", 0.0) for r in role_profiles)
+        total_llm = sum(r.get("llm_time_s", 0.0) for r in role_profiles)
+        total_python = sum(r.get("python_time_s", 0.0) for r in role_profiles)
+        agent3_profile.update({
+            "num_roles": len(roles),
+            "parallel_workers": max_workers,
+            "total_agent3_time_s": round(total_time, 3),
+            "inference_time_est_s": round(total_llm, 3),
+            "python_time_est_s": round(total_python, 3),
+            "estimated_parallel_wall_clock_s": round(max((r.get("total_time_s", 0.0) for r in role_profiles), default=0.0), 3),
+            "tokens_in_total": sum(r.get("tokens_in", 0) for r in role_profiles),
+            "tokens_out_total": sum(r.get("tokens_out", 0) for r in role_profiles),
+            "time_per_role": role_profiles,
+        })
 
     results.sort(key=lambda r: r.composite_score, reverse=True)
     return results
